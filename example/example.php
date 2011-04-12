@@ -12,7 +12,7 @@ ini_set("display_errors", 1);
 
 /*
  * On every page you need to use the API you
- * need to include the file Payson-php-sdk/paysonapi.php
+ * need to include the file lib/paysonapi.php
  * from where you installed it.
  */
 
