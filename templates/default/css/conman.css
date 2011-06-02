@@ -1,0 +1,31 @@
+	body {
+		background-color: #1b1b1b;
+		text-align: center;
+	}
+	#content {
+		position: relative;
+		width: 1024px;
+		background-image: url("images/conman_repeat.png");
+		background-repeat: repeat-y;
+		margin-left: auto;
+		margin-right: auto;
+		text-align: left;
+	}
+	#content_top {
+		position: absolute;
+		top: 0;
+		left: 0;
+		background-image: url("images/conman_top.png");
+		height: 109px;
+		width: 1024px;
+	}
+	#content_content {
+		background-image: url("images/conman_bottom.png");
+		min-height: 659px;
+		padding-left: 100px;
+		padding-top: 109px;
+		padding-right: 100px;
+		padding-bottom: 109px;
+		background-repeat: no-repeat;
+		background-position: bottom left;
+	}

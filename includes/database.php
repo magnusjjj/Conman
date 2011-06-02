@@ -14,6 +14,7 @@
 		{
 			mysql_connect(Settings::$DbHost, Settings::$DbUser, Settings::$DbPassword);
 			mysql_select_db(Settings::$DbName);
+			mysql_query("SET NAMES utf8;");
 		}
 		
 		function safe($var)

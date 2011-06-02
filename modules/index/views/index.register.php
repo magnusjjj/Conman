@@ -1,29 +1,29 @@
 <?php if($status == 'emailsent'):?>
 Ett mail har skickats till din registrerade mail, <?php echo $email;?>.
-Klicka på länken i mailet för att fortsätta :).
+Klicka pÃ¥ lÃ¤nken i mailet fÃ¶r att fortsÃ¤tta :).
 
-Är det inte din mail? Kontakta <a href="mailto:magnusjjj@gmail.com">magnusjjj@gmail.com - Magnus Johnsson</a>
+Ã„r det inte din mail? Kontakta <a href="mailto:magnusjjj@gmail.com">magnusjjj@gmail.com - Magnus Johnsson</a>
 <?php elseif($status == 'wrong_ssid'):?>
-Tyvärr är personnummret du skrev in inte giltligt. <a href="<?php echo Router::url('index');?>">Försök igen</a>
+TyvÃ¤rr Ã¤r personnummret du skrev in inte giltligt. <a href="<?php echo Router::url('index');?>">FÃ¶rsÃ¶k igen</a>
 <?php elseif($status == 'not_member'):?>
-Vi hittade dig inte i databasen. Är detta fel? Kontakta <a href="mailto:magnusjjj@gmail.com">magnusjjj@gmail.com - Magnus Johnsson</a><br/>
+Vi hittade dig inte i databasen. Ã„r detta fel? Kontakta <a href="mailto:magnusjjj@gmail.com">magnusjjj@gmail.com - Magnus Johnsson</a><br/>
 <br/>
-Om detta, inte är fel, så får du (måste) du göra något så peppigt som att lbli medlem i Hikari-Kai :).<br/>
-Fyll i uppgifterna nedan, klicka på nästa. När du betalar din medlemsavgift blir du medlem :).<br/>
-Du måste fylla i alla uppgifter markerade med *<br/>
+Om detta, inte Ã¤r fel, sÃ¥ fÃ¥r du (mÃ¥ste) du gÃ¶ra nÃ¥got sÃ¥ peppigt som att lbli medlem i Hikari-Kai :).<br/>
+Fyll i uppgifterna nedan, klicka pÃ¥ nÃ¤sta. NÃ¤r du betalar din medlemsavgift blir du medlem :).<br/>
+Du mÃ¥ste fylla i alla uppgifter markerade med *<br/>
 <?php
 	if(@$not_accepted || @$not_filled)
 		echo "<ul>";
 	if(@$not_accepted)
-		echo "<li>Du fyllde i allt rätt, men du glömde godkänna stadgarna</li>";
+		echo "<li>Du fyllde i allt rÃ¤tt, men du glÃ¶mde godkÃ¤nna stadgarna</li>";
 	if(@$not_filled)
-		echo "<li>Du har tyvärr inte fyllt i alla fält du behövde (de är markerade med *). Försök igen.</li>";
+		echo "<li>Du har tyvÃ¤rr inte fyllt i alla fÃ¤lt du behÃ¶vde (de Ã¤r markerade med *). FÃ¶rsÃ¶k igen.</li>";
 	if(@$not_accepted || @$not_filled)
 		echo "</ul>";
 ?>
 <form action="<?php echo Router::url('register')?>" method="post">
-	Juridiskt kön*: <input type="radio" value="K" name="memberdata[gender]"<?php echo @$_REQUEST['memberdata']['gender'] == 'K' ? 'checked="checked"' : '';?>/>Kvinna<input type="radio" value="M" name="memberdata[gender]" <?php echo @$_REQUEST['memberdata']['gender'] == 'M' ? 'checked="checked"' : '';?>/>Man<br/>
-	Förnamn*: <input type="text" name="memberdata[firstName]" value="<?php echo @$_REQUEST['memberdata']['firstName'];?>"/><br/>
+	Juridiskt kÃ¶n*: <input type="radio" value="K" name="memberdata[gender]"<?php echo @$_REQUEST['memberdata']['gender'] == 'K' ? 'checked="checked"' : '';?>/>Kvinna<input type="radio" value="M" name="memberdata[gender]" <?php echo @$_REQUEST['memberdata']['gender'] == 'M' ? 'checked="checked"' : '';?>/>Man<br/>
+	FÃ¶rnamn*: <input type="text" name="memberdata[firstName]" value="<?php echo @$_REQUEST['memberdata']['firstName'];?>"/><br/>
 	Efternamn*: <input type="text" name="memberdata[lastName]" value="<?php echo @$_REQUEST['memberdata']['lastName'];?>"/><br/>
 	CO-adress: <input type="text" name="memberdata[coAddress]" value="<?php echo @$_REQUEST['memberdata']['coAddress'];?>"/><br/>
 	Adress*: <input type="text" name="memberdata[streetAddress]" value="<?php echo @$_REQUEST['memberdata']['streetAddress'];?>"/><br/>
@@ -37,75 +37,75 @@ Du måste fylla i alla uppgifter markerade med *<br/>
 	<input type="hidden" name="pnr[1]" value="<?php echo @$_REQUEST['pnr'][1];?>"/>
 	Stadgar:<br/>
 	<textarea rows="20" cols="50">
-§1 FÖRENINGENS NAMN
-Föreningens namn är Hikari-Kai.
+Â§1 FÃ–RENINGENS NAMN
+FÃ¶reningens namn Ã¤r Hikari-Kai.
 
-§2 FÖRENINGENS SÄTE
-Styrelsen har sitt säte i Göteborg.
+Â§2 FÃ–RENINGENS SÃ„TE
+Styrelsen har sitt sÃ¤te i GÃ¶teborg.
 
-§3 FÖRENINGSFORM
-Föreningen är en ideell förening.
+Â§3 FÃ–RENINGSFORM
+FÃ¶reningen Ã¤r en ideell fÃ¶rening.
 
-§4 FÖRENINGENS SYFTE
-Hikari-kai existerar i syfte att sprida östasiatisk kultur, i huvudsak den Japanska kulturen, främst i form av arkadspel, Tv-Spel, musikspel, karaoke, anime, manga och film.
+Â§4 FÃ–RENINGENS SYFTE
+Hikari-kai existerar i syfte att sprida Ã¶stasiatisk kultur, i huvudsak den Japanska kulturen, frÃ¤mst i form av arkadspel, Tv-Spel, musikspel, karaoke, anime, manga och film.
 
-§5 OBEROENDE
-Föreningen är religiöst och partipolitiskt obunden.
+Â§5 OBEROENDE
+FÃ¶reningen Ã¤r religiÃ¶st och partipolitiskt obunden.
 
-§6 VERKSAMHETSÅR
-Verksamhetsåret är 1 januari till 31 december.
+Â§6 VERKSAMHETSÃ…R
+VerksamhetsÃ¥ret Ã¤r 1 januari till 31 december.
 
-§7 MEDLEMMAR
-Som medlem antas intresserad som godkänner dessa stadgar och aktivt tar ställning för ett medlemskap genom att årligen betala föreningens medlemsavgift och göra en skriftlig anmälan till föreningen. Avgiftens storlek beslutas på årsmötet. En medlem som allvarligt skadar föreningen kan avstängas av styrelsen. Avstängd medlem måste diskuteras på nästa årsmöte, medlemmen får rösta i sin egen sak. Antingen så upphävs då avstängningen eller så utesluts medlemmen. Styrelsen eller årsmöte kan alltså upphäva avstängning och uteslutning.
+Â§7 MEDLEMMAR
+Som medlem antas intresserad som godkÃ¤nner dessa stadgar och aktivt tar stÃ¤llning fÃ¶r ett medlemskap genom att Ã¥rligen betala fÃ¶reningens medlemsavgift och gÃ¶ra en skriftlig anmÃ¤lan till fÃ¶reningen. Avgiftens storlek beslutas pÃ¥ Ã¥rsmÃ¶tet. En medlem som allvarligt skadar fÃ¶reningen kan avstÃ¤ngas av styrelsen. AvstÃ¤ngd medlem mÃ¥ste diskuteras pÃ¥ nÃ¤sta Ã¥rsmÃ¶te, medlemmen fÃ¥r rÃ¶sta i sin egen sak. Antingen sÃ¥ upphÃ¤vs dÃ¥ avstÃ¤ngningen eller sÃ¥ utesluts medlemmen. Styrelsen eller Ã¥rsmÃ¶te kan alltsÃ¥ upphÃ¤va avstÃ¤ngning och uteslutning.
 
-§8 STYRELSEN
-Styrelsen ansvarar för föreningens medlemslista, bidragsansökningar, medlemsvärvning, beslut som tas på årsmöten och övrig verksamhet. Föreningens styrelse består av ordförande, kassör och sekreterare. Vid behov kan även vice ordförande och extra ledamöter väljas. Samma person får inte ha flera poster i styrelsen. Styrelsen väljs på årsmöte och tillträder direkt efter valet. Valbar är medlem i föreningen.
+Â§8 STYRELSEN
+Styrelsen ansvarar fÃ¶r fÃ¶reningens medlemslista, bidragsansÃ¶kningar, medlemsvÃ¤rvning, beslut som tas pÃ¥ Ã¥rsmÃ¶ten och Ã¶vrig verksamhet. FÃ¶reningens styrelse bestÃ¥r av ordfÃ¶rande, kassÃ¶r och sekreterare. Vid behov kan Ã¤ven vice ordfÃ¶rande och extra ledamÃ¶ter vÃ¤ljas. Samma person fÃ¥r inte ha flera poster i styrelsen. Styrelsen vÃ¤ljs pÃ¥ Ã¥rsmÃ¶te och tilltrÃ¤der direkt efter valet. Valbar Ã¤r medlem i fÃ¶reningen.
 
-§9 REVISORER
-För granskning av föreningens räkenskaper och förvaltning väljs på årsmöte en eller två revisorer. Valbar är person som inte sitter i styrelsen. Revisor behöver inte vara medlem i föreningen.
+Â§9 REVISORER
+FÃ¶r granskning av fÃ¶reningens rÃ¤kenskaper och fÃ¶rvaltning vÃ¤ljs pÃ¥ Ã¥rsmÃ¶te en eller tvÃ¥ revisorer. Valbar Ã¤r person som inte sitter i styrelsen. Revisor behÃ¶ver inte vara medlem i fÃ¶reningen.
 
-§10 VALBEREDNING
-För att ta fram förslag på personer till de i stadgarna föreskrivna valen kan årsmötet välja en eller flera valberedare. Valbar är medlem i föreningen.
+Â§10 VALBEREDNING
+FÃ¶r att ta fram fÃ¶rslag pÃ¥ personer till de i stadgarna fÃ¶reskrivna valen kan Ã¥rsmÃ¶tet vÃ¤lja en eller flera valberedare. Valbar Ã¤r medlem i fÃ¶reningen.
 
-§11 ORDINARIE ÅRSMÖTE
-Ordinarie årsmöte ska hållas senast den 31 mars varje år. Styrelsen beslutar om tid och plats. För att vara behörigt måste föreningens medlemmar meddelas minst två veckor i förväg. Följande ärenden ska alltid behandlas på ordinarie årsmöte:
-1. ) mötets öppnande
-2. ) mötets behörighet
-3. ) val av mötets ordförande
-4. ) val av mötets sekreterare
-5. ) val av två personer att justera protokollet
-6. ) styrelsens verksamhetsberättelse för förra året
-7. ) ekonomisk berättelse för förra året
-8. ) revisorernas berättelse för förra året
-9. ) ansvarsfrihet för förra årets styrelse
-10. ) årets verksamhetsplan
-11. ) årets budget och fastställande av medlemsavgift
-12. ) val av årets styrelse
-13. ) val av årets revisor
-14. ) val av årets valberedare
-15. ) övriga frågor
-16. ) mötets avslutande
+Â§11 ORDINARIE Ã…RSMÃ–TE
+Ordinarie Ã¥rsmÃ¶te ska hÃ¥llas senast den 31 mars varje Ã¥r. Styrelsen beslutar om tid och plats. FÃ¶r att vara behÃ¶rigt mÃ¥ste fÃ¶reningens medlemmar meddelas minst tvÃ¥ veckor i fÃ¶rvÃ¤g. FÃ¶ljande Ã¤renden ska alltid behandlas pÃ¥ ordinarie Ã¥rsmÃ¶te:
+1. ) mÃ¶tets Ã¶ppnande
+2. ) mÃ¶tets behÃ¶righet
+3. ) val av mÃ¶tets ordfÃ¶rande
+4. ) val av mÃ¶tets sekreterare
+5. ) val av tvÃ¥ personer att justera protokollet
+6. ) styrelsens verksamhetsberÃ¤ttelse fÃ¶r fÃ¶rra Ã¥ret
+7. ) ekonomisk berÃ¤ttelse fÃ¶r fÃ¶rra Ã¥ret
+8. ) revisorernas berÃ¤ttelse fÃ¶r fÃ¶rra Ã¥ret
+9. ) ansvarsfrihet fÃ¶r fÃ¶rra Ã¥rets styrelse
+10. ) Ã¥rets verksamhetsplan
+11. ) Ã¥rets budget och faststÃ¤llande av medlemsavgift
+12. ) val av Ã¥rets styrelse
+13. ) val av Ã¥rets revisor
+14. ) val av Ã¥rets valberedare
+15. ) Ã¶vriga frÃ¥gor
+16. ) mÃ¶tets avslutande
 
-§12 EXTRA ÅRSMÖTE
-Om styrelsen eller revisor vill eller minst hälften av föreningens medlemmar kräver det skall styrelsen kalla till extra årsmöte. Vid giltigt krav på extra årsmöte kan den som krävt det sköta kallelsen. För att vara behörigt måste föreningens medlemmar meddelas minst två veckor i förväg. På extra årsmöte kan bara de ärenden som nämnts i kallelsen behandlas.
+Â§12 EXTRA Ã…RSMÃ–TE
+Om styrelsen eller revisor vill eller minst hÃ¤lften av fÃ¶reningens medlemmar krÃ¤ver det skall styrelsen kalla till extra Ã¥rsmÃ¶te. Vid giltigt krav pÃ¥ extra Ã¥rsmÃ¶te kan den som krÃ¤vt det skÃ¶ta kallelsen. FÃ¶r att vara behÃ¶rigt mÃ¥ste fÃ¶reningens medlemmar meddelas minst tvÃ¥ veckor i fÃ¶rvÃ¤g. PÃ¥ extra Ã¥rsmÃ¶te kan bara de Ã¤renden som nÃ¤mnts i kallelsen behandlas.
 
-§13 FIRMATECKNING
-Föreningens firma tecknas av ordförande och kassör var för sig. Om särskilda skäl föreligger kan annan person utses att teckna föreningens firma.
+Â§13 FIRMATECKNING
+FÃ¶reningens firma tecknas av ordfÃ¶rande och kassÃ¶r var fÃ¶r sig. Om sÃ¤rskilda skÃ¤l fÃ¶religger kan annan person utses att teckna fÃ¶reningens firma.
 
-§14 RÖSTRÄTT
-Endast fullt betalande närvarande medlem har rösträtt på årsmöte. På styrelsemöten har endast närvarande ur styrelsen rösträtt. Röstning via fullmakt godtas vid beslut av årsmötet
+Â§14 RÃ–STRÃ„TT
+Endast fullt betalande nÃ¤rvarande medlem har rÃ¶strÃ¤tt pÃ¥ Ã¥rsmÃ¶te. PÃ¥ styrelsemÃ¶ten har endast nÃ¤rvarande ur styrelsen rÃ¶strÃ¤tt. RÃ¶stning via fullmakt godtas vid beslut av Ã¥rsmÃ¶tet
 
-§15 RÖSTETAL
-Alla frågor som behandlas på årsmöte eller styrelsemöte avgörs med enkel röstövervikt om inget annat står i stadgarna. Nedlagda röster räknas ej. Varje person med rösträtt har en röst. Vid lika röstetal får ordförandet avgöra.
+Â§15 RÃ–STETAL
+Alla frÃ¥gor som behandlas pÃ¥ Ã¥rsmÃ¶te eller styrelsemÃ¶te avgÃ¶rs med enkel rÃ¶stÃ¶vervikt om inget annat stÃ¥r i stadgarna. Nedlagda rÃ¶ster rÃ¤knas ej. Varje person med rÃ¶strÃ¤tt har en rÃ¶st. Vid lika rÃ¶stetal fÃ¥r ordfÃ¶randet avgÃ¶ra.
 
-§16 STADGAÄNDRING
-Dessa stadgar kan ändras endast vid årsmöte eller extra årsmöte. I kallelsen måste det stå att stadgeändring kommer att behandlas. För att ändra i stadgarna krävs att minst två tredjedelar av de avgivna rösterna bifaller ändringen. För ändring av stadgan om (föreningens syfte) §4, Stadgeändring §16 och Upplösning §17 krävs att beslutet tas på två på varandra följande ordinarie årsmöten.
+Â§16 STADGAÃ„NDRING
+Dessa stadgar kan Ã¤ndras endast vid Ã¥rsmÃ¶te eller extra Ã¥rsmÃ¶te. I kallelsen mÃ¥ste det stÃ¥ att stadgeÃ¤ndring kommer att behandlas. FÃ¶r att Ã¤ndra i stadgarna krÃ¤vs att minst tvÃ¥ tredjedelar av de avgivna rÃ¶sterna bifaller Ã¤ndringen. FÃ¶r Ã¤ndring av stadgan om (fÃ¶reningens syfte) Â§4, StadgeÃ¤ndring Â§16 och UpplÃ¶sning Â§17 krÃ¤vs att beslutet tas pÃ¥ tvÃ¥ pÃ¥ varandra fÃ¶ljande ordinarie Ã¥rsmÃ¶ten.
 
-§17 UPPLÖSNING
-Upplösning av föreningen kan endast ske genom beslut på årsmöte. Beslut om upplösning skall fattas med minst två tredjedelars majoritet. Förslag om upplösning skall finnas upptaget på kallelsen till årsmötet.Vid föreningens upplösning överlämnas eventuella tillgångar till av årsmötet beslutat ändamål.
+Â§17 UPPLÃ–SNING
+UpplÃ¶sning av fÃ¶reningen kan endast ske genom beslut pÃ¥ Ã¥rsmÃ¶te. Beslut om upplÃ¶sning skall fattas med minst tvÃ¥ tredjedelars majoritet. FÃ¶rslag om upplÃ¶sning skall finnas upptaget pÃ¥ kallelsen till Ã¥rsmÃ¶tet.Vid fÃ¶reningens upplÃ¶sning Ã¶verlÃ¤mnas eventuella tillgÃ¥ngar till av Ã¥rsmÃ¶tet beslutat Ã¤ndamÃ¥l.
 	</textarea>
 	<br/>
-<input type="checkbox" name="seen_rules" value="1"/> * Jag godkänner dessa stadgar, och tillåter Hikari-Kai att spara mina uppgifter
-<input type="submit" value="Nästa!"/>
+<input type="checkbox" name="seen_rules" value="1"/> * Jag godkÃ¤nner dessa stadgar, och tillÃ¥ter Hikari-Kai att spara mina uppgifter
+<input type="submit" value="NÃ¤sta!"/>
 </form>
 <?php endif;?>

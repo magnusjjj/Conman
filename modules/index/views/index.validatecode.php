@@ -1,14 +1,14 @@
 <?php if(!$valid):?>
-Tyvärr så stämde inte din aktiveringskod överrens med vad vi har lagrat. Kontakta administratören av sidan :).
+TyvÃ¤rr sÃ¥ stÃ¤mde inte din aktiveringskod Ã¶verrens med vad vi har lagrat. Kontakta administratÃ¶ren av sidan :).
 <?php else:?>
 Bara ett steg kvar!
-Nu ska du bara knyta en användare till ditt medlemskap, sedan är du klar :D
+Nu ska du bara knyta en anvÃ¤ndare till ditt medlemskap, sedan Ã¤r du klar :D
 <form action="<?php echo Router::url('createuser')?>" method="post">
-	Användarnamn: <input type="text" name="username"/><br/>
-	Lösenord: <input type="password" name="password"/><br/>
-	Lösenord (igen):<input type="password" name="password_again"/><br/>
+	AnvÃ¤ndarnamn: <input type="text" name="username"/><br/>
+	LÃ¶senord: <input type="password" name="password"/><br/>
+	LÃ¶senord (igen):<input type="password" name="password_again"/><br/>
 	<input type="hidden" name="SSN" value="<?php echo $SSN;?>"/>
 	<input type="hidden" name="code" value="<?php echo $code;?>"/>
-	<input type="submit" value="Skapa användare!"/>
+	<input type="submit" value="Skapa anvÃ¤ndare!"/>
 </form>
 <?php endif;?>

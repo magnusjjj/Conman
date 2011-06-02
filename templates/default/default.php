@@ -2,10 +2,17 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title></title>
+	<title></title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="stylesheet" type="text/css" href="<?php echo Settings::$path;?>templates/default/css/conman.css"/>
 </head>
 <body>
-	<h1>Simpelt tema</h1>
-	<?php $con->render();?>
+	<div id="content">
+		<div id="content_top">
+		</div>
+		<div id="content_content">
+			<?php $con->render();?>
+		</div>
+	</div>
 </body>
 </html>
