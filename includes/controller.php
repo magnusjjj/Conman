@@ -21,7 +21,8 @@
 			{
 				$$key = $var;
 			}
-			include('modules/'.$this->name.'/views/'.$this->view);
+			if(file_exists('modules/'.$this->name.'/views/'.$this->view))
+				include('modules/'.$this->name.'/views/'.$this->view);
 		}
 	}
 ?>

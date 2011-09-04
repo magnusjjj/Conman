@@ -1,26 +1,58 @@
 <?php
-
-	include("includes/auth.php");
-	header('content-type: text/html; charset: utf-8');
-	Auth::initSession();	
-	error_reporting(E_ALL);
-	include("config.php");
+	header('content-type: text/html; charset: utf-8'); // Sätt rätt encoding, så att åäö blir rätt.
+	include("includes/auth.php"); // Innehåller alla säkerhets och sessionshanteringar
+	
+	Auth::initSession(); // Fixar sessionerna.
+	
+	include("config.php"); // Inställningarna för Conman
+	
 	include("includes/controller.php");
 	include("includes/database.php");
-	include("includes/session.php");
-	include("includes/router.php");
 	include("includes/model.php");
+	//include("includes/session.php"); // Stub!
+	include("includes/router.php");
 	include("includes/cfactory.php");
-	$q = @$_REQUEST['q']; // The query string :)
-	$qe = explode('/', $q);
-	$controller = !empty($qe[0]) && preg_match("/^[A-Za-z0-9_]+\z/", $qe[0]) ? $qe[0] : 'index'; // Set the controller to be 'index' if no controller is supplied
-	$action = !empty($qe[1]) && preg_match("/^[A-Za-z0-9_]+\z/", $qe[1]) ? $qe[1] : 'index'; // Set the action to be 'index' if no action is supplied
-	include('modules/'.$controller.'/'.$controller.'_controller.php');
-	Router::$controller = $controller;
-	$controllername = ucfirst(strtolower($controller)) . "Controller";
-	$con = new $controllername();
-	$con->name = strtolower($controller);
-	$con->view = $controller.'.'.$action.'.php';
-	call_user_func_array(array($con, $action), array_slice($qe, 2));
-	include("templates/default/default.php");
+	include("includes/error.php");
+	
+	ErrorHelper::setup(); // Instansiates a bunch of really helpfull error helper functions
+	
+	error_reporting(Settings::$ErrorReporting); // Vi vill ha error reporting på, så vi vet vad som händer.
+	
+
+	/* Säg att conman ligger på /conman/, och användaren går in på /conman/index/logout
+	 q nedan kommer innnehålla index/logout
+	 Den kommer sedan delas upp till en array, där den första saken, index, är controllern
+	 och logout är actionen. Controllern är en klass från modules/controllernamn/controllernamn_controller.php
+	 och action är en funktion i den som kommer köras.
+	 Har man extra parametrar, säg, /conman/pages/view/1, så kommer 1 bli första parametern till funktionen.
+	*/
+	$q = @$_REQUEST['q']; // Den här kommer innehålla alla requests.
+	
+	$qe = explode('/', $q); // Dela upp, splitta på /
+	
+	$controller = !empty($qe[0]) && preg_match("/^[A-Za-z0-9_]+\z/", $qe[0]) ? $qe[0] : 'index'; // Sätter controllern till att vara index om inget annat är sagt
+	$action = !empty($qe[1]) && preg_match("/^[A-Za-z0-9_]+\z/", $qe[1]) ? $qe[1] : 'index'; // Sätter actionen till index om inget annat är satt
+	
+	if(file_exists('modules/'.$controller.'/'.$controller.'_controller.php'))
+	{
+		include('modules/'.$controller.'/'.$controller.'_controller.php'); // Hämta rätt controller
+			Router::$controller = $controller; // Routern använder namnet på controllern för att generera URL'er senare
+		// Instansiera controllern, och kalla på actionen:
+		$controllername = ucfirst(strtolower($controller)) . "Controller"; 
+		$con = new $controllername();
+		$con->name = strtolower($controller);
+		$con->view = $controller.'.'.$action.'.php';
+		if(method_exists($con, $action))
+		{
+			call_user_func_array(array($con, $action), array_slice($qe, 2)); // Pang, iväg!
+		} else {
+			// Felmeddelande här
+			ErrorHelper::error('Någon har fumlat, den här sidan finns inte. Kontakta admin :)');
+		}
+	} else {
+		ErrorHelper::error('Någon har fumlat, den här sidan finns inte. Kontakta admin :)');
+	}
+	
+
+	include("templates/default/default.php"); // Visa templaten
 ?>

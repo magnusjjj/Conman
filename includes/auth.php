@@ -24,7 +24,8 @@
 				return @$_SESSION['id'];
 			} else {
 				$user = Model::getModel('user');
-				return $user->get($_SESSION['id']);
+				$user = $user->get($_SESSION['id']);
+				return $user[0];
 			}
 		}
 	}

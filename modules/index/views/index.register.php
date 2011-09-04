@@ -1,11 +1,11 @@
-<?php if($status == 'emailsent'):?>
+<?php if(@$status == 'emailsent'):?>
 Ett mail har skickats till din registrerade mail, <?php echo $email;?>.
 Klicka på länken i mailet för att fortsätta :).
 
 Är det inte din mail? Kontakta <a href="mailto:magnusjjj@gmail.com">magnusjjj@gmail.com - Magnus Johnsson</a>
-<?php elseif($status == 'wrong_ssid'):?>
+<?php elseif(@$status == 'wrong_ssid'):?>
 Tyvärr är personnummret du skrev in inte giltligt. <a href="<?php echo Router::url('index');?>">Försök igen</a>
-<?php elseif($status == 'not_member'):?>
+<?php elseif(@$status == 'not_member'):?>
 Vi hittade dig inte i databasen. Är detta fel? Kontakta <a href="mailto:magnusjjj@gmail.com">magnusjjj@gmail.com - Magnus Johnsson</a><br/>
 <br/>
 Om detta, inte är fel, så får du (måste) du göra något så peppigt som att lbli medlem i Hikari-Kai :).<br/>
@@ -21,18 +21,18 @@ Du måste fylla i alla uppgifter markerade med *<br/>
 	if(@$not_accepted || @$not_filled)
 		echo "</ul>";
 ?>
-<form action="<?php echo Router::url('register')?>" method="post">
-	Juridiskt kön*: <input type="radio" value="K" name="memberdata[gender]"<?php echo @$_REQUEST['memberdata']['gender'] == 'K' ? 'checked="checked"' : '';?>/>Kvinna<input type="radio" value="M" name="memberdata[gender]" <?php echo @$_REQUEST['memberdata']['gender'] == 'M' ? 'checked="checked"' : '';?>/>Man<br/>
-	Förnamn*: <input type="text" name="memberdata[firstName]" value="<?php echo @$_REQUEST['memberdata']['firstName'];?>"/><br/>
-	Efternamn*: <input type="text" name="memberdata[lastName]" value="<?php echo @$_REQUEST['memberdata']['lastName'];?>"/><br/>
-	CO-adress: <input type="text" name="memberdata[coAddress]" value="<?php echo @$_REQUEST['memberdata']['coAddress'];?>"/><br/>
-	Adress*: <input type="text" name="memberdata[streetAddress]" value="<?php echo @$_REQUEST['memberdata']['streetAddress'];?>"/><br/>
-	Postnummer*: <input type="text" name="memberdata[zipCode]" value="<?php echo @$_REQUEST['memberdata']['zipCode'];?>"/><br/>
-	Postort*: <input type="text" name="memberdata[city]" value="<?php echo @$_REQUEST['memberdata']['city'];?>"/><br/>
-	Land*: <input type="text" name="memberdata[country]" value="<?php echo @$_REQUEST['memberdata']['country'];?>"/><br/>
-	Telefonnummer*: <input type="text" name="memberdata[phoneNr]" value="<?php echo @$_REQUEST['memberdata']['phoneNr'];?>"/><br/>
-	Mobilnummer: <input type="text" name="memberdata[altPhoneNr]" value="<?php echo @$_REQUEST['memberdata']['altPhoneNr'];?>"/><br/>
-	Email*: <input type="text" name="memberdata[eMail]" value="<?php echo @$_REQUEST['memberdata']['eMail'];?>"/><br/>
+<form action="<?php echo Router::url('register')?>" method="post" id="registration_form">
+	<label>Juridiskt kön*: </label><input type="radio" value="K" name="memberdata[gender]"<?php echo @$_REQUEST['memberdata']['gender'] == 'K' ? 'checked="checked"' : '';?>/>Kvinna<input type="radio" value="M" name="memberdata[gender]" <?php echo @$_REQUEST['memberdata']['gender'] == 'M' ? 'checked="checked"' : '';?>/>Man<br/>
+	<label>Förnamn*: </label><input type="text" name="memberdata[firstName]" value="<?php echo @$_REQUEST['memberdata']['firstName'];?>"/><br/>
+	<label>Efternamn*: </label><input type="text" name="memberdata[lastName]" value="<?php echo @$_REQUEST['memberdata']['lastName'];?>"/><br/>
+	<label>CO-adress: </label><input type="text" name="memberdata[coAddress]" value="<?php echo @$_REQUEST['memberdata']['coAddress'];?>"/><br/>
+	<label>Adress*: </label><input type="text" name="memberdata[streetAddress]" value="<?php echo @$_REQUEST['memberdata']['streetAddress'];?>"/><br/>
+	<label>Postnummer*: </label><input type="text" name="memberdata[zipCode]" value="<?php echo @$_REQUEST['memberdata']['zipCode'];?>"/><br/>
+	<label>Postort*: </label><input type="text" name="memberdata[city]" value="<?php echo @$_REQUEST['memberdata']['city'];?>"/><br/>
+	<label>Land*: </label><input type="text" name="memberdata[country]" value="<?php echo @$_REQUEST['memberdata']['country'];?>"/><br/>
+	<label>Telefonnummer*: </label><input type="text" name="memberdata[phoneNr]" value="<?php echo @$_REQUEST['memberdata']['phoneNr'];?>"/><br/>
+	<label>Mobilnummer: </label><input type="text" name="memberdata[altPhoneNr]" value="<?php echo @$_REQUEST['memberdata']['altPhoneNr'];?>"/><br/>
+	<label>Email*: </label><input type="text" name="memberdata[eMail]" value="<?php echo @$_REQUEST['memberdata']['eMail'];?>"/><br/>
 	<input type="hidden" name="pnr[0]" value="<?php echo @$_REQUEST['pnr'][0];?>"/>
 	<input type="hidden" name="pnr[1]" value="<?php echo @$_REQUEST['pnr'][1];?>"/>
 	Stadgar:<br/>

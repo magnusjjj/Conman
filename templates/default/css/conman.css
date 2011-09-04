@@ -29,3 +29,62 @@
 		background-repeat: no-repeat;
 		background-position: bottom left;
 	}
+	
+	
+	#registration_form {
+	margin-top: 10px;
+}
+
+#registration_form label {
+	display: inline-block;
+	width: 150px;
+}
+
+#registration_form input {
+	margin-bottom: 10px;
+}
+
+#registration_form input[type="text"] {
+	width: 200px;
+	border: 2px solid #bbccff;
+}
+
+#registration_form textarea {
+	width: 500px;
+	height: 300px;
+	margin-bottom: 10px;
+	border: 2px solid #bbccff;
+}
+
+body{
+    font-family:Arial, Helvetica, sans-serif; 
+    font-size:13px;
+}
+/* http://css.dzone.com/news/css-message-boxes-different-me */
+.info, .success, .warning, .error, .validation {
+    border: 1px solid;
+    margin: 10px 0px;
+    padding:15px 10px 15px 50px;
+    background-repeat: no-repeat;
+    background-position: 10px center;
+}
+.info {
+    color: #00529B;
+    background-color: #BDE5F8;
+    background-image: url('images/notice.png');
+}
+.success {
+    color: #4F8A10;
+    background-color: #DFF2BF;
+    background-image:url('images/success.png');
+}
+.warning {
+    color: #9F6000;
+    background-color: #FEEFB3;
+    background-image: url('images/warning.png');
+}
+.error {
+    color: #D8000C;
+    background-color: #FFBABA;
+    background-image: url('images/error.png');
+}

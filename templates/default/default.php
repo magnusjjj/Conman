@@ -4,6 +4,7 @@
 <head>
 	<title></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<script type="text/javascript" src="<?php echo Settings::$path;?>js/jquery.js"></script>
 	<link rel="stylesheet" type="text/css" href="<?php echo Settings::$path;?>templates/default/css/conman.css"/>
 </head>
 <body>
@@ -11,7 +12,11 @@
 		<div id="content_top">
 		</div>
 		<div id="content_content">
-			<?php $con->render();?>
+			<?php
+				ErrorHelper::print_errors();
+				if(isset($con))
+					$con->render();
+			?>
 		</div>
 	</div>
 </body>

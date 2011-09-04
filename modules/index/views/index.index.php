@@ -24,4 +24,12 @@ label{
 		<input type="submit" value="Nästa"/>
 	</fieldset>
 </form>
+<form action="<?php echo Router::url("forgotPass");?>" method="post" style="float: left; width: 300px;">
+	<fieldset>
+		<legend>Glömt lösen?</legend>
+		Skriv in ditt personnummer nedan och tryck på 'nästa'.<br/>
+		<label for="pnr[0]">Personnummer:</label> <input type="text" size="3" maxlength="6" name="pnr[0]"/>-<input type="text" size="1" maxlength="4" name="pnr[1]"/><br/>
+		<input type="submit" value="Nästa"/>
+	</fieldset>
+</form>
 </div>

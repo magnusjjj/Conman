@@ -22,6 +22,11 @@
 			return mysql_real_escape_string($var);
 		}
 		
+		function insertid()
+		{
+			return mysql_insert_id();
+		}
+		
 		// Takes infinite parameters
 		function query()
 		{
