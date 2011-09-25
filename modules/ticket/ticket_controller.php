@@ -271,9 +271,10 @@
 				$this->buildalternativetree();
 				$ordersvalues = Model::getModel('ordersvalues');
 				$the_ordersvalues = $ordersvalues->getOrderValuesFromOrder($myorder[0]['id']);
+				echo mysql_error();
 				// Dirty Hikari-Con-loop, not proud monkey
 				$ticket->addBarCode(150, 230, $themember['socialSecurityNumber'], 0.5, 8);
-				$sovsal = false;
+				/*$sovsal = false;
 				foreach($the_ordersvalues as $key => $value)
 				{
 					switch($value['order_alternative_id'])
@@ -292,7 +293,7 @@
 				} else {
 					$ticket->pdf->SetXY(75, 220);
 					$ticket->pdf->Cell(0,0, 'X');
-				}
+				}*/
 				
 				$ticket->pdf->SetXY(55, 63);
 				$ticket->pdf->Cell(0,0, utf8_decode($themember['firstName']));
@@ -304,6 +305,13 @@
 				$ticket->pdf->Cell(0,0,utf8_decode($themember['streetAddress']));
 				$ticket->pdf->SetXY(105, 72);
 				$ticket->pdf->Cell(0,0, $themember['zipCode'] . ' ' . utf8_decode($themember['city']));
+				$ticket->pdf->SetXY(30, 80);
+				$orderstring = "";
+				foreach($the_ordersvalues as $value)
+				{
+					$orderstring .= $value['name'] . '   ' . $value['cost'] . 'kr' . "\r\n";
+				}
+				$ticket->pdf->MultiCell(0, 20, utf8_decode($orderstring));
 				$ticket->generate();
 				die();
 			} else {

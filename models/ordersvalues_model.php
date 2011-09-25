@@ -6,7 +6,10 @@
 		}
 		function getOrderValuesFromOrder($orderid)
 		{
-			return $this->db->query("SELECT * FROM orders_values WHERE order_id = '%s'", $orderid);
+			return $this->db->query("SELECT orders_alternatives.id, orders_alternatives.name, orders_alternatives.cost
+			FROM orders_values
+			INNER JOIN orders_alternatives ON orders_values.order_alternative_id = orders_alternatives.id
+			WHERE order_id = '%s'", $orderid);
 		}
 	}
 ?>

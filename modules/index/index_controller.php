@@ -49,7 +49,7 @@
 			$mailer = CFactory::getMailer();
 			$this->set('email', $the_member[0]['eMail']);
 			$mailer->AddAddress($the_member[0]['eMail']);
-			$mailer->Subject = 'Registering till Chibi-Con';;
+			$mailer->Subject = 'Registering till ' . Settings::$EventName;
 			$mailer->MsgHTML("Hej! <a href=\"".Router::url("validatecode/$pnr/$thecode", true)."\">Klicka här för att verifiera din emailadress</a>");
 			if(!$mailer->Send())
 			{
@@ -64,7 +64,7 @@
 			$mailer = CFactory::getMailer();
 			$this->set('email', $the_member[0]['eMail']);
 			$mailer->AddAddress($the_member[0]['eMail']);
-			$mailer->Subject = 'Lösenordsåterställning till Chibi-Con';
+			$mailer->Subject = 'Lösenordsåterställning till ' . Settings::$EventName;
 			$mailer->MsgHTML("Hej! <a href=\"".Router::url("passwordreset/$pnr/$thecode", true)."\">Klicka här för att återställa ditt lösenord</a>");
 			if(!$mailer->Send())
 			{
@@ -177,7 +177,7 @@
 			}
 			if(!preg_match( "/^[a-z0-9_-]{3,15}$/", $_REQUEST['username']))
 			{
-				$validate['user'] = 'Ditt användarnamn får bara ha a-z, 0-9, - eller _, och måste vara tre till 15 tecken långt.';
+				$validate['user'] = 'Ditt användarnamn får barha sm� bokst�ver(a-z), 0-9, - eller _, och måste vara tre till 15 tecken långt.';
 			}
 			if(!$verificationcode->checkCode($_REQUEST['SSN'], $_REQUEST['code']))
 			{

@@ -3,6 +3,13 @@ Tyvärr så stämde inte din aktiveringskod överrens med vad vi har lagrat. Kon
 <?php else:?>
 Bara ett steg kvar!
 Nu ska du bara knyta en användare till ditt medlemskap, sedan är du klar :D
+<?php if(!empty($validate)):?>
+<ul>
+	<?php foreach($validate as $valid):?>
+	<li><?php echo $valid;?></li>
+<?php endforeach;?>
+</ul>
+<?php endif;?>
 <form action="<?php echo Router::url('createuser')?>" method="post">
 	Användarnamn: <input type="text" name="username"/><br/>
 	Lösenord: <input type="password" name="password"/><br/>

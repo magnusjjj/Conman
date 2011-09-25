@@ -24,5 +24,7 @@ Hej <?php $user = Auth::user(true); echo $user['username'];?> (<a href="<?php ec
 	print_alternative($alternative, $alternatives_children);
 ?>
 <?php endforeach;?>
+	<?php if(count($alternatives_parents)):?>
 	<input type="submit" value="Köp!"/>
+	<?php endif;?>
 </form>

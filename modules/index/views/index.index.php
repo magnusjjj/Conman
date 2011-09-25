@@ -1,7 +1,3 @@
-<?php
-
-?>
-
 <style type="text/css">
 label{
 	display: block;
@@ -19,11 +15,12 @@ label{
 <form action="<?php echo Router::url("register");?>" method="post" style="float: right; width: 400px;">
 	<fieldset>
 		<legend>Skapa användare</legend>
-		Först behöver vi kolla om du redan är medlem i Hikari-Kai. För att göra det, skriv in ditt personnummer nedan och tryck på 'nästa'.<br/>
+		Först behöver vi kolla om du redan är medlem i <?php echo Settings::$Society;?>. För att göra det, skriv in ditt personnummer nedan och tryck på 'nästa'.<br/>
 		<label for="pnr[0]">Personnummer:</label> <input type="text" size="3" maxlength="6" name="pnr[0]"/>-<input type="text" size="1" maxlength="4" name="pnr[1]"/><br/>
 		<input type="submit" value="Nästa"/>
 	</fieldset>
 </form>
+<div style="clear: both;"></div>
 <form action="<?php echo Router::url("forgotPass");?>" method="post" style="float: left; width: 300px;">
 	<fieldset>
 		<legend>Glömt lösen?</legend>
