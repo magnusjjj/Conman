@@ -29,4 +29,11 @@ label{
 		<input type="submit" value="Nästa"/>
 	</fieldset>
 </form>
+<form>
+	<fieldset>
+			<legend>Problem?</legend>
+			Vi har upptäckt att folk får mailen från registreringen i sina spamkorgar.<br/>
+			Kolla eran spamkoll innan ni får panik &lt;3
+	</fieldset>
+</form>
 </div>

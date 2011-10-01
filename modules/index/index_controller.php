@@ -177,7 +177,7 @@
 			}
 			if(!preg_match( "/^[a-z0-9_-]{3,15}$/", $_REQUEST['username']))
 			{
-				$validate['user'] = 'Ditt användarnamn får barha sm� bokst�ver(a-z), 0-9, - eller _, och måste vara tre till 15 tecken långt.';
+				$validate['user'] = 'Ditt användarnamn får barha små bokstäver(a-z), 0-9, - eller _, och måste vara tre till 15 tecken långt.';
 			}
 			if(!$verificationcode->checkCode($_REQUEST['SSN'], $_REQUEST['code']))
 			{
@@ -210,7 +210,7 @@
 			}
 			if($_REQUEST['password'] != $_REQUEST['password_again'])
 			{
-				$validate['password'] = 'Du mste skriva samma i båda lösenordsrutorna.';
+				$validate['password'] = 'Du måste skriva samma i båda lösenordsrutorna.';
 			}
 			if(!$verificationcode->checkCode($_REQUEST['SSN'], $_REQUEST['code']))
 			{
