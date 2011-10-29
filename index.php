@@ -1,7 +1,6 @@
 <?php
-	header('content-type: text/html; charset: utf-8'); // Sätt rätt encoding, så att åäö blir rätt.
+	header('Content-type: text/html; charset=utf-8'); // Sätt rätt encoding, så att åäö blir rätt.
 	include("includes/auth.php"); // Innehåller alla säkerhets och sessionshanteringar
-	
 	Auth::initSession(); // Fixar sessionerna.
 	
 	include("config.php"); // Inställningarna för Conman
@@ -54,5 +53,5 @@
 	}
 	
 
-	include("templates/default/default.php"); // Visa templaten
+	include("templates/" . Settings::$Template . "/default.php"); // Visa templaten
 ?>

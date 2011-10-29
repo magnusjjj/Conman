@@ -2,6 +2,7 @@
 	class Auth {
 		static function initSession()
 		{
+			session_set_cookie_params(60*60*24);
 			session_start();
 		}
 		
@@ -24,8 +25,8 @@
 				return @$_SESSION['id'];
 			} else {
 				$user = Model::getModel('user');
-				$user = $user->get($_SESSION['id']);
-				return $user[0];
+				$user = $user->get(@$_SESSION['id']);
+				return @$user[0];
 			}
 		}
 	}

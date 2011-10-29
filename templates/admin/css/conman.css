@@ -1,0 +1,64 @@
+html, body {
+	padding: 0;
+	margin: 0;
+	font-family: Arial;
+}
+.head {
+	background-color: lightblue;
+	height: 50px;
+	padding: 5px;
+	position: relative;
+	border-bottom: 1px solid black;
+}
+.head h1 {
+	margin: 0;
+	padding: 0;
+	font-size: 20px;
+	font-family: Arial;
+	float: left;
+}
+.head .login {
+	float: right;
+}
+a.button {
+	display: inline;
+	background-color: blue;
+	border-radius: 5px;
+	padding: 2px;
+	color: white;
+	font-size: 15px;
+	font-weight: bold;
+	text-decoration: none;
+	font-family: Arial;
+}
+
+.head ul,li {
+	padding: 0;
+	margin: 0;
+	list-style-type: none;
+	display: inline;
+}
+
+.menu {
+	position: absolute;
+	bottom: -1px;
+}
+
+.menu a {
+	text-decoration: none;
+	font-family: Arial;
+}
+.head li {
+	background-color: #DDDDFF;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	border: 1px solid black;
+	padding-left: 5px;
+	padding-right: 5px;
+	padding-top: 5px;
+}
+
+.head li.active {
+	background-color: white;
+	border-bottom: 1px solid white;
+}

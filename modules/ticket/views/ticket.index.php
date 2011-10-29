@@ -1,4 +1,6 @@
 Hej <?php $user = Auth::user(true); echo $user['username'];?> (<a href="<?php echo Router::url('/index/logout');?>">Logga ut</a>)<br/>
+<?php if(@$user['entrance']):?><a href="<?php echo Router::url('/entrance');?>"><h1>Gå till entrén!</h1></a><?php endif;?>
+
 
 <?php
 	if(!$is_member)

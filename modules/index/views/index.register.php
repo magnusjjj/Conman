@@ -1,8 +1,10 @@
 <?php if(@$status == 'emailsent'):?>
 Ett mail har skickats till din registrerade mail, <?php echo $email;?>.
-Klicka på länken i mailet för att fortsätta :).
+Klicka på länken i mailet för att fortsätt.
 
 Är det inte din mail? Kontakta <a href="mailto:magnusjjj@gmail.com">magnusjjj@gmail.com - Magnus Johnsson</a>
+<?php elseif(@$status == 'noemailrequired'):?>
+<a href="<?php echo Router::url("validatecode/$ssid/$code");?>">Klicka h&auml;r f&ouml;r att fort&auml;tta</a>
 <?php elseif(@$status == 'wrong_ssid'):?>
 Tyvärr är personnummret du skrev in inte giltligt. <a href="<?php echo Router::url('index');?>">Försök igen</a>
 <?php elseif(@$status == 'not_member'):?>
@@ -29,12 +31,13 @@ Du måste fylla i alla uppgifter markerade med *<br/>
 	<label>Adress*: </label><input type="text" name="memberdata[streetAddress]" value="<?php echo @$_REQUEST['memberdata']['streetAddress'];?>"/><br/>
 	<label>Postnummer*: </label><input type="text" name="memberdata[zipCode]" value="<?php echo @$_REQUEST['memberdata']['zipCode'];?>"/><br/>
 	<label>Postort*: </label><input type="text" name="memberdata[city]" value="<?php echo @$_REQUEST['memberdata']['city'];?>"/><br/>
-	<label>Land*: </label><input type="text" name="memberdata[country]" value="<?php echo @$_REQUEST['memberdata']['country'];?>"/><br/>
 	<label>Telefonnummer*: </label><input type="text" name="memberdata[phoneNr]" value="<?php echo @$_REQUEST['memberdata']['phoneNr'];?>"/><br/>
 	<label>Mobilnummer: </label><input type="text" name="memberdata[altPhoneNr]" value="<?php echo @$_REQUEST['memberdata']['altPhoneNr'];?>"/><br/>
 	<label>Email*: </label><input type="text" name="memberdata[eMail]" value="<?php echo @$_REQUEST['memberdata']['eMail'];?>"/><br/>
 	<input type="hidden" name="pnr[0]" value="<?php echo @$_REQUEST['pnr'][0];?>"/>
 	<input type="hidden" name="pnr[1]" value="<?php echo @$_REQUEST['pnr'][1];?>"/>
+	<input type="hidden" name="memberdata[country]" value="<?php echo empty($_REQUEST['memberdata']['country']) ? @$_REQUEST['country'] : @$_REQUEST['memberdata']['country'];?>"/>
+	<input type="hidden" name="country" value="<?php echo empty($_REQUEST['memberdata']['country']) ? @$_REQUEST['country'] : @$_REQUEST['memberdata']['country'];?>"/>
 	Stadgar:<br/>
 	<textarea rows="20" cols="50"><?php echo file_get_contents(Settings::getRoot() . '/stadgar');?></textarea>
 	<br/>

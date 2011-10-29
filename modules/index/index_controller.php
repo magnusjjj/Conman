@@ -1,18 +1,22 @@
 <?php
 	class IndexController extends Controller{
-		private function checkPnr($pnr) {
-			if ( !preg_match( "/^[0-9]{2}[01][0-9][01236789][0-9][+-][0-9]{4}$/", $pnr)){ // Från aaro, was "/^\d{6}\-\d{4}$/"
-				return false;
+		private function checkPnr($pnr, $country) {
+			if(empty($country) || strtolower(trim($country)) == 'sverige')
+			{
+				if ( !preg_match( "/^[0-9]{2}[01][0-9][01236789][0-9][+-][0-9]{4}$/", $pnr)){ // Från aaro, was "/^\d{6}\-\d{4}$/"
+					return false;
+				}
+				$pnr = str_replace("-", "", $pnr);
+				$n = 2;
+				$sum = 0;
+				for ($i=0; $i<9; $i++) {
+					$tmp = $pnr[$i] * $n;
+					($tmp > 9) ? $sum += 1 + ($tmp % 10) : $sum += $tmp; ($n == 2) ? $n = 1 : $n = 2;
+				}
+			 
+				return !( ($sum + $pnr[9]) % 10);
 			}
-			$pnr = str_replace("-", "", $pnr);
-			$n = 2;
-			$sum = 0;
-			for ($i=0; $i<9; $i++) {
-				$tmp = $pnr[$i] * $n;
-				($tmp > 9) ? $sum += 1 + ($tmp % 10) : $sum += $tmp; ($n == 2) ? $n = 1 : $n = 2;
-			}
-		 
-			return !( ($sum + $pnr[9]) % 10);
+			return true;
 		}
 		
 		function index()
@@ -55,6 +59,7 @@
 			{
 				die("Kunde inte skicka");
 			}
+			return $thecode;
 		}
 		
 		function sendPassEmail($the_member, $pnr)
@@ -75,7 +80,8 @@
 		function register()
 		{
 			$pnr = implode('-', $_REQUEST['pnr']);
-			if(!$this->checkPnr($pnr))
+			$country = $_REQUEST['country'];
+			if(!$this->checkPnr($pnr, $country))
 			{
 				$this->set('status', 'wrong_ssid');
 			} else {
@@ -114,8 +120,18 @@
 						ErrorHelper::error('Det finns redan en användare på den här medlemmen. Kontakta admin om du behöver hjälp.');
 						return;
 					}
-					$this->sendEmail($the_member, $pnr);
-					$this->set('status', 'emailsent');
+					if(isset(Settings::$RequireEmail) && Settings::$RequireEmail === false)
+					{
+                        			$verificationcode = Model::getModel('verificationcode');
+                        			$thecode = $verificationcode->putCode($pnr);
+						$this->redirect("validatecode/$pnr/$thecode");
+						$this->set('status', 'noemailrequired');
+						$this->set('ssid', $pnr); // Denna biten för personer med follow redirect avslaget
+						$this->set('code', $thecode);
+					} else {
+						$this->sendEmail($the_member, $pnr);
+						$this->set('status', 'emailsent');
+					}
 				} else {
 					$this->set('status', 'not_member');
 				}
@@ -125,24 +141,18 @@
 		function forgotPass()
 		{
 			$pnr = implode('-', $_REQUEST['pnr']);
-			if(!$this->checkPnr($pnr))
+			$member = Model::getModel('member');
+			$the_member = $member->getMemberBySSN($pnr);
+			if(count($the_member))
 			{
-				echo $pnr;
-				$this->set('status', 'wrong_ssid');
+				$this->sendPassEmail($the_member, $pnr);
+				$this->set('status', 'emailsent');
 			} else {
-				$member = Model::getModel('member');
-				$the_member = $member->getMemberBySSN($pnr);
-				if(count($the_member))
-				{
-					$this->sendPassEmail($the_member, $pnr);
-					$this->set('status', 'emailsent');
-				} else {
-					$this->set('status', 'not_member');
-				}
+				$this->set('status', 'not_member');
 			}
 		}
 		
-		function validatecode($pnr, $thecode)
+		function validatecode($pnr = "", $thecode = "")
 		{
 			$verificationcode = Model::getModel('verificationcode');
 			$this->set('valid', $verificationcode->checkCode($pnr, $thecode));

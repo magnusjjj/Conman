@@ -94,18 +94,20 @@
 			$themember = $member->getMemberByUserID(Auth::user()); // Get the member from the database corresponding to the user.
 			
 			
-			$thingstobuy = $_REQUEST['val'];
-			if(empty($thingstobuy))
+			$thingstobuy = $_REQUEST['val']; // This will be the array with the things the user has selected to buy
+			
+			if(empty($thingstobuy)) // You will, of course, have to buy something
 			{
-				$this->set('error', 'Du måste köpa något!');
+				$this->set('error', 'Du måste köpa något!'); 
 				$this->view = 'ticket.index.php';
 				$this->index();
 				return;
 			}
 
-			$tree_all = array();
-			$tree_parents = array();
-			$tree_children = array();
+			// Building some parent/children trees for easy keeping
+			$tree_all = array(); // Indexed by the alternative id's
+			$tree_parents = array(); // All the root parents get stuck into this
+			$tree_children = array(); // Indexed by the parent id is the children. Two layer.
 			foreach($the_alternatives as $alternative)
 			{
 				$tree_all[$alternative['id']] = $alternative;
@@ -117,42 +119,42 @@
 				}
 			}
 			
-			$cost = 0;
-			$stuff = array();
+			$cost = 0; // This will contain the total cost
+			$stuff = array(); // This will contain the payson OrderItem's.
 			try
 			{
 				foreach($thingstobuy as $key => $thing)
 				{
 					if(is_numeric($thing)) // If its a select-box, we get the price of the option
 					{
-						$cost += $tree_all[$thing]['cost'];
-						$stuff[] = new OrderItem($tree_all[$thing]['name'], $tree_all[$thing]['cost'], 1, 0, str_pad($key, 6, '0', STR_PAD_LEFT));
+						$cost += $tree_all[$thing]['cost']; // Add the cost
+						$stuff[] = new OrderItem($tree_all[$thing]['name'], $tree_all[$thing]['cost'], 1, 0, str_pad($key, 6, '0', STR_PAD_LEFT)); // Create the payson order object
 					} else if(is_array($thing)){  // Its not a default action, like a checkbox or a select, but an override
-						include_once(dirname(__FILE__) . '/itemtypes/overrides/'.$tree_all[$key]['template_override'].'.php');
-						$classname = ucfirst($tree_all[$key]['template_override']) . 'OrderItem';
-						$itemclass = new $classname($key, $thing, $tree_all);
-						while(($i = $itemclass->getItem()) !== null)
+						include_once(dirname(__FILE__) . '/itemtypes/overrides/'.$tree_all[$key]['template_override'].'.php'); // Include the override
+						$classname = ucfirst($tree_all[$key]['template_override']) . 'OrderItem'; // Create the override classname
+						$itemclass = new $classname($key, $thing, $tree_all); // Init the classname with the id, the object parameters, and the tree
+						while(($i = $itemclass->getItem()) !== null) // Parse the results
 						{
-							$cost += $i['cost'] * $i['number'];
-							$stuff[] = new OrderItem($i['name'], $i['cost'], $i['number'], 0, str_pad($key, 6, '0', STR_PAD_LEFT));
+							$cost += $i['cost'] * $i['number']; // Add the cost
+							$stuff[] = new OrderItem($i['name'], $i['cost'], $i['number'], 0, str_pad($key, 6, '0', STR_PAD_LEFT)); // Create the payson order object
 						}
 					} else if($thing != 'NULL'){ // Otherwise its a checkbox, get its stuff here
-						$cost += $tree_all[$key]['cost'];
-						$stuff[] = new OrderItem($tree_all[$key]['name'], $tree_all[$key]['cost'], 1, 0, str_pad($key, 6, '0', STR_PAD_LEFT));
+						$cost += $tree_all[$key]['cost']; // Add the cost
+						$stuff[] = new OrderItem($tree_all[$key]['name'], $tree_all[$key]['cost'], 1, 0, str_pad($key, 6, '0', STR_PAD_LEFT)); // Create the payson order object
 					}
 				}
 			} catch(Exception $e){
-				$this->set('error', $e->getMessage());
+				$this->set('error', $e->getMessage()); // Catch errors from the overrides
 				$this->view = 'ticket.index.php';
 				$this->index();
 				return;
 			}
 			
 			
-			if(!$this->checkmembership($themember))
+			if(!$this->checkmembership($themember)) // Check if the person is a payed-up member or not.
 			{
-				$cost += Settings::$MembershipCost;
-				$stuff[] = new OrderItem('Medlemskap i föreningen', Settings::$MembershipCost, 1, 0, str_pad('80085', 6, '0', STR_PAD_LEFT));
+				$cost += Settings::$MembershipCost; // Else, add the membership cost
+				$stuff[] = new OrderItem('Medlemskap i föreningen', Settings::$MembershipCost, 1, 0, str_pad('80085', 6, '0', STR_PAD_LEFT)); // Create the payson Order-item
 			}
 			
 			/* Every interaction with Payson goes through the PaysonApi object which you set up as follows */
@@ -179,9 +181,9 @@
 			$payData->setOrderItems($stuff);
 			$payResponse = $api->pay($payData);
 
-			if ($payResponse->getResponseEnvelope()->wasSuccessful())
+			if ((isset(Settings::$AllowPayson) && !Settings::$AllowPayson) || $payResponse->getResponseEnvelope()->wasSuccessful()) // If payson is dissallowed, or the payson order call was successfull, we create the actuall order in the database
 			{
-				$order_id = $order->addOrder(array('user_id' => Auth::user(), 'payson_token' => $payResponse->getToken()));
+				$order_id = $order->addOrder(array('user_id' => Auth::user(), 'payson_token' => (isset(Settings::$AllowPayson) && !Settings::$AllowPayson) ? '' : $payResponse->getToken()));
 				foreach($thingstobuy as $key => $thing)
 				{
 					$id = null;
@@ -200,8 +202,14 @@
 					}
 					$ordervalues->addOrderValue(array('order_id' => $order_id, 'order_alternative_id' => $id, 'value' => $value));
 				}
-				header("Location: " . $api->getForwardPayUrl($payResponse));
-				$this->set('link',  $api->getForwardPayUrl($payResponse));
+				if(!(isset(Settings::$AllowPayson) && !Settings::$AllowPayson)) // If we allow payson, redirect the user there
+				{
+					header("Location: " . $api->getForwardPayUrl($payResponse)); // If we allow payson, redirect the user there
+					$this->set('link',  $api->getForwardPayUrl($payResponse)); // Link for people without auto redirect. Grumble grumble.
+				} else {
+					$order->setStatusById($order_id, 'MANUALNCOMPLETED');
+					$this->set('order_id', $order_id);
+				}
 			} else {
 				ErrorHelper::error("Något gick fel med vår kontakt till Payson");
 			}
