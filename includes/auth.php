@@ -25,7 +25,7 @@
 			} else {
 				$user = Model::getModel('user');
 				$user = $user->get($_SESSION['id']);
-				return $user[0];
+				return @$user[0];
 			}
 		}
 	}
