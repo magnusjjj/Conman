@@ -5,6 +5,11 @@
 		
 		var $vars = array();
 		
+		function __construct() // Måste existera
+		{
+		
+		}
+		
 		function set($name, $variables)
 		{
 			$this->vars[$name] = $variables;
