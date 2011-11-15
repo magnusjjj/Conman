@@ -309,9 +309,9 @@
 				$ticket->pdf->Cell(0,0,utf8_decode($themember['lastName']));
 				$ticket->pdf->SetXY(55, 76);
 				$ticket->pdf->Cell(0,0,$themember['socialSecurityNumber']);
-				$ticket->pdf->SetXY(105, 67);
+				$ticket->pdf->SetXY(105, 69);
 				$ticket->pdf->Cell(0,0,utf8_decode($themember['streetAddress']));
-				$ticket->pdf->SetXY(105, 72);
+				$ticket->pdf->SetXY(105, 76);
 				$ticket->pdf->Cell(0,0, $themember['zipCode'] . ' ' . utf8_decode($themember['city']));
 				$ticket->pdf->SetXY(30, 80);
 				$orderstring = "";

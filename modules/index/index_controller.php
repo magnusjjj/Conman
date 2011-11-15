@@ -25,12 +25,6 @@
 				$this->redirect('/ticket/index');
 		}
 		
-		function login()
-		{
-			Auth::login($_REQUEST['username'], $_REQUEST['password']);
-			$this->view = 'index.index.php';
-			$this->index();
-		}
 		
 		function logout()
 		{

@@ -1,4 +1,5 @@
 <?php
+	ob_start();
 	header('Content-type: text/html; charset=utf-8'); // Sätt rätt encoding, så att åäö blir rätt.
 	include("includes/auth.php"); // Innehåller alla säkerhets och sessionshanteringar
 	Auth::initSession(); // Fixar sessionerna.
@@ -31,6 +32,17 @@
 	
 	$controller = !empty($qe[0]) && preg_match("/^[A-Za-z0-9_]+\z/", $qe[0]) ? $qe[0] : 'index'; // Sätter controllern till att vara index om inget annat är sagt
 	$action = !empty($qe[1]) && preg_match("/^[A-Za-z0-9_]+\z/", $qe[1]) ? $qe[1] : 'index'; // Sätter actionen till index om inget annat är satt
+	
+	if($action == 'login'){ // På grund av en bugg i hanteringen avsessioner måte inloggen ske här. Man får inte redirecta och sätta sessioner samtidigt.
+		if(Auth::login($_REQUEST['username'], $_REQUEST['password'])){
+			$controller = 'ticket';
+			$action = 'index';
+		} else {
+			ErrorHelper::error('Fel användarnamn eller ösenord. Försök igen');
+			$controller = 'index';
+			$action = 'index';
+		}
+	}
 	
 	if(file_exists('modules/'.$controller.'/'.$controller.'_controller.php'))
 	{
