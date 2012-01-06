@@ -1,0 +1,36 @@
+<?php
+        class Settings
+        {
+                static $path = "/conmantest/"; // The url path of the root, with a / on the end. Example: "/conmantest/"
+                static function getRoot(){
+                        return dirname(__FILE__);
+                }
+                static $DbHost = "localhost"; // Database host
+                static $DbUser = ""; // Database user
+                static $DbPassword = ""; // Database password
+                static $DbName = ""; // Database name
+                static $Url = "http://www.conman.nu"; // Url to the website, without a dash to end
+
+                static $PaysonAgentID = 0; // Payson membership data.
+                static $PaysonMD5 = ""; // Payson membership data
+                static $PaysonMail = ""; // Payson membership data
+
+                static $MembershipCost = 0; // The membership cost
+
+                static $ConEnds = "2012-01-08"; // The date the event ends. Used to calculate when a member needs to renew their membership.
+
+                static $MailFrom = 'someone@gmail.com'; // Email the notifications are sent from
+                static $SMTPServer = 'smtp.gmail.com'; // SMTP-server
+                static $SMTPPort = 25; // Smtp port
+                static $SMTPUser = 'someone@gmail.com'; // SMTP-user
+                static $SMTPPassword = ''; // SMTP-password
+                
+		static $ErrorReporting = E_ALL; // Debugging, error_reporting
+
+                static $EventName = "Constigt"; // Name of the event
+                static $Society = "Conman"; // Name of those that hold the event
+                static $Template = "default"; // Template used :)
+                static $AllowPayson = false; // Is payson used for the final payment?
+                static $RequireEmail = false; // Do you require email activation?
+        }
+?>
