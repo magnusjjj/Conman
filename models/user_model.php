@@ -1,18 +1,21 @@
 <?php
 class UserModel extends Model {
-	function user_exists($name)
+	public function user_exists($name)
 	{
 		return @count($this->_db->query("SELECT * FROM users WHERE username = '%s';", $name)) ? true : false;
 	}
-	function get($id)
+	
+	public function get($id)
 	{
 		return $this->_db->query("SELECT * FROM users WHERE id = '%s'", $id);
 	}
-	function getByMemberID($id)
+	
+	public function getByMemberID($id)
 	{
 		return $this->_db->query("SELECT * FROM users WHERE member_id = '%s'", $id);
 	}
-	function create($data)
+	
+	public function create($data)
 	{
 		$allowed_chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVXYZ";
 		$thestring = "";
@@ -23,7 +26,7 @@ class UserModel extends Model {
 		$this->_db->query("INSERT INTO users(username,password,salt,member_id) VALUES('%s','%s','%s','%s');", $data['username'], hash('SHA512', $data['password'] . $thestring), $thestring, $data['member_id']);
 	}
 	
-	function editPass($id, $pass)
+	public function editPass($id, $pass)
 	{
 		$allowed_chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVXYZ";
 		$thestring = "";
@@ -34,7 +37,7 @@ class UserModel extends Model {
 		$this->_db->query("UPDATE users SET password='%s', salt='%s' WHERE member_id = '%s';", hash('SHA512', $pass . $thestring), $thestring, $id);
 	}
 	
-	function auth($username, $password)
+	public function auth($username, $password)
 	{
 		$user = $this->_db->query("SELECT * FROM users WHERE username = '%s';", $username);
 		if(!count($user))
