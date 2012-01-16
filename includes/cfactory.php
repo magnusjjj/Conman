@@ -1,32 +1,31 @@
 <?php
-	class CFactory {
-	
-		static function getMailer()
-		{
-			if(!class_exists("PHPMailer"))
-			{
-				include(Settings::getRoot() . '/includes/phpmailer/class.phpmailer.php');
-			}
-			$mail = new PHPMailer();
-			$mail->IsSMTP();                                      // set mailer to use SMTP
-			$mail->Host = Settings::$SMTPServer;  // specify main and backup server
-			$mail->Port = Settings::$SMTPPort; 
-			$mail->SMTPSecure = 'tls';
-			$mail->SMTPAuth = true;     // turn on SMTP authentication
-			$mail->Username = Settings::$SMTPUser;  // SMTP username
-			$mail->Password = Settings::$SMTPPassword; // SMTP password
-			$mail->SetFrom(Settings::$MailFrom, 'noreply');
-			$mail->AddReplyTo(Settings::$MailFrom, 'noreply');
-			
-			return $mail;
+class CFactory {
+
+	public static function getMailer()
+	{
+		if (!class_exists("PHPMailer")) {
+			include(Settings::getRoot() . '/includes/phpmailer/class.phpmailer.php');
 		}
-		static function getTicketGen()
-		{
-			if(!class_exists("TicketGen"))
-			{
-				include(Settings::getRoot() . '/includes/ticketgen.php');
-			}
-			return new TicketGen();
-		}
+		$mail = new PHPMailer();
+		$mail->IsSMTP();                                      // set mailer to use SMTP
+		$mail->Host = Settings::$SMTPServer;  // specify main and backup server
+		$mail->Port = Settings::$SMTPPort; 
+		$mail->SMTPSecure = 'tls';
+		$mail->SMTPAuth = true;     // turn on SMTP authentication
+		$mail->Username = Settings::$SMTPUser;  // SMTP username
+		$mail->Password = Settings::$SMTPPassword; // SMTP password
+		$mail->SetFrom(Settings::$MailFrom, 'noreply');
+		$mail->AddReplyTo(Settings::$MailFrom, 'noreply');
+		
+		return $mail;
 	}
-?>
+	
+	public static function getTicketGen()
+	{
+		if (!class_exists("TicketGen")) {
+			include(Settings::getRoot() . '/includes/ticketgen.php');
+		}
+		
+		return new TicketGen();
+	}
+}
