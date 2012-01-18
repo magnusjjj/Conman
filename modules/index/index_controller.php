@@ -143,6 +143,7 @@ class IndexController extends Controller
 	public function validatecode($pnr = "", $thecode = "")
 	{
 		$verificationcode = Model::getModel('verificationcode');
+                
 		$this->_set('valid', $verificationcode->checkCode($pnr, $thecode));
 		$this->_set('SSN', $pnr);
 		$this->_set('code', $thecode);
@@ -158,9 +159,25 @@ class IndexController extends Controller
 	
 	public function createuser()
 	{
+		
 		$user = Model::getModel('user');
 		$verificationcode = Model::getModel('verificationcode');
 		$validate = array();
+		
+		
+		// Hämta ut medlemmen som användaren vill skapa en användare på.
+		$member = Model::getModel('member');
+		$member->getMemberBySSN($_REQUEST['SSN']);
+		$the_member = $member->getMemberBySSN($_REQUEST['SSN']);
+		if (empty($the_member[0])) {
+			ErrorHelper::error("Oväntat fel! Din medlem finns inte!", true);
+		}
+		
+		// Sanity check, kolla om det redan finns en användare på medlemmen.
+		$the_user = $user->getByMemberID($the_member[0]['PersonID']);
+		if(!empty($the_user)){
+		    ErrorHelper::error("Det finns redan en användare på den här medlemmen.",true);
+		}
 		
 		if (empty($_REQUEST['username']) 
 			|| empty($_REQUEST['password']) 
@@ -190,11 +207,6 @@ class IndexController extends Controller
 			$this->view = 'index.validatecode.php';
 			$this->validatecode($_REQUEST['SSN'], $_REQUEST['code']);
 		} else {
-			$member = Model::getModel('member');
-			$the_member = $member->getMemberBySSN($_REQUEST['SSN']);
-			if (empty($the_member[0])) {
-				die("Oväntat fel! Din medlem finns inte!");
-			}
 			$user->create(array('username' => $_REQUEST['username'], 'password' => $_REQUEST['password'], 'member_id' => $the_member[0]['PersonID']));
 		}
 	}
