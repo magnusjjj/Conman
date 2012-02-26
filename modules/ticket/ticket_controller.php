@@ -198,6 +198,7 @@ class TicketController extends Controller
 			} else {
 				$order->setStatusById($order_id, 'MANUALNCOMPLETED');
 				$this->_set('order_id', $order_id);
+				$this->_set('member', $themember);
 			}
 		} else {
 			ErrorHelper::error("Något gick fel med vår kontakt till Payson");
@@ -225,8 +226,7 @@ class TicketController extends Controller
 	
 	public function pay_cancel()
 	{
-		if (!$this->_checkLogin()) 
-			return;
+		ErrorHelper::error("Ditt köp blev avbrutet. Försök igen.", true);
 	}
 	
 	public function pay_status() // This does nothing, because of payson uncertainty
@@ -276,7 +276,7 @@ class TicketController extends Controller
 		$the_ordersvalues = $ordersvalues->getOrderValuesFromOrder($myorder[0]['id']);
 		echo mysql_error();
 		// Dirty Hikari-Con-loop, not proud monkey
-		$ticket->addBarCode(150, 230, $themember['socialSecurityNumber'], 0.5, 8);
+		$ticket->addBarCode(150, 230, $themember['PersonID'], 0.5, 8);
 		/*$sovsal = false;
 		foreach ($the_ordersvalues as $key => $value) {
 			switch ($value['order_alternative_id']) {
@@ -296,22 +296,22 @@ class TicketController extends Controller
 			$ticket->pdf->Cell(0,0, 'X');
 		}*/
 		
-		$ticket->pdf->SetXY(55, 63);
+		$ticket->pdf->SetXY(55, 40); // 63
 		$ticket->pdf->Cell(0,0, utf8_decode($themember['firstName']));
-		$ticket->pdf->SetXY(55, 69.5);
+		$ticket->pdf->SetXY(55, 46.5);
 		$ticket->pdf->Cell(0,0,utf8_decode($themember['lastName']));
-		$ticket->pdf->SetXY(55, 76);
+		$ticket->pdf->SetXY(55, 53);
 		$ticket->pdf->Cell(0,0,$themember['socialSecurityNumber']);
-		$ticket->pdf->SetXY(105, 69);
+		$ticket->pdf->SetXY(105, 46);
 		$ticket->pdf->Cell(0,0,utf8_decode($themember['streetAddress']));
-		$ticket->pdf->SetXY(105, 76);
+		$ticket->pdf->SetXY(105, 53);
 		$ticket->pdf->Cell(0,0, $themember['zipCode'] . ' ' . utf8_decode($themember['city']));
-		$ticket->pdf->SetXY(30, 80);
+		$ticket->pdf->SetXY(30, 57);
 		$orderstring = "";
 		foreach ($the_ordersvalues as $value) {
 			$orderstring .= $value['name'] . '   ' . $value['cost'] . 'kr' . "\r\n";
 		}
-		$ticket->pdf->MultiCell(0, 20, utf8_decode($orderstring));
+		$ticket->pdf->MultiCell(0, 10, utf8_decode($orderstring));
 		$ticket->generate();
 		exit();
 	}

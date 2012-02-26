@@ -21,6 +21,12 @@ class OrderModel extends Model {
 		$ans = $this->_db->query("SELECT * FROM orders WHERE id = '%s' LIMIT 1;", $id);
 		return @$ans[0];
 	}
+
+	public function getLastOrderByUserId($id)
+	{
+		$ans = $this->_db->query("SELECT * FROM orders WHERE user_id = '%s' ORDER BY `timestamp` DESC LIMIT 1", $id);
+		return $ans[0];
+	}
 	
 	public function getOrderFromUserAndStatus($userid, $status)
 	{

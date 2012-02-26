@@ -56,23 +56,20 @@ class EntranceController extends Controller
 					}
 				}
 			}
-		} else { // Its an order number
+		} else { // Its an user number
 			$order = Model::getModel('order');
 			$user = Model::getModel('user');
 			$member = Model::getModel('member');
 			$orders_values = Model::getModel('ordersvalues');
-			
-			
-			// Get the order
-			$order_want = $order->getOrderById($_REQUEST['SSN']);
 			// Get the user
-			$user_want = $user->get($order_want['user_id']);
+			$user_want = array_pop($user->getByMemberID($_REQUEST['SSN']));
+			// Get the order
+			$order_want = $order->getLastOrderByUserId($user_want['id']);
 			// Get the member
-			$member_want = $member->getMemberByID($user_want[0]['member_id']);
+			$member_want = $member->getMemberByID($user_want['member_id']);
 			// Get the order values
 			$orders_values_want = $orders_values->getOrderValuesFromOrder($order_want['id']);
-			
-			$this->_set('user_want', $user_want[0]);
+			$this->_set('user_want', $user_want);
 			$this->_set('member_want', $member_want);
 			$this->_set('order_want', array($order_want));
 			$this->_set('orders_values_want', $orders_values_want);
