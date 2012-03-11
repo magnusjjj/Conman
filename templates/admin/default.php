@@ -27,6 +27,7 @@
 			<li class="active"><a href="<?php echo Router::url('index');?>">Ordrar</a></li>
 			<li><a href="<?php echo Router::url('/entrance');?>">Entré</a></li>
 			<li><a href="<?php echo Router::url('members');?>">Medlemmar</a></li>
+			<li><a href="<?php echo Router::url('typemembers');?>">Medlemmar efter köp</a></li>
 		</ul>
 	</div>
 	<div class="content">
