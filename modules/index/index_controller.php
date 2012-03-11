@@ -82,8 +82,9 @@ class IndexController extends Controller
 		
 		$member = Model::getModel('member');
 		$user = Model::getModel('user');
+		$memberid = 0;
 	
-		if (!empty($_REQUEST['memberdata'])) {
+		if (!empty($_REQUEST['memberdata'])) { // If the user is trying to create a new user
 			$must_have = array('gender','firstName','lastName','streetAddress','zipCode','city','country','phoneNr','eMail');
 			$has_everything = true;
 			foreach ($must_have as $m) {
@@ -93,7 +94,7 @@ class IndexController extends Controller
 			if ($has_everything) {
 				if ($_REQUEST['seen_rules']) {
 					$_REQUEST['memberdata']['socialSecurityNumber'] = $pnr;
-					$member->create($_REQUEST['memberdata']);
+					$memberid = $member->create($_REQUEST['memberdata']);
 				} else {
 					$this->_set('not_accepted', true);
 				}
@@ -101,8 +102,15 @@ class IndexController extends Controller
 				$this->_set('not_filled', true);
 			}
 		}
-		
-		$the_member = $member->getMemberBySSN($pnr);
+
+		// Check if the user already has a member
+		$the_member = array();
+		if($memberid): // The user has made a new member
+			$the_member[0] = $member->getMemberByID($id);
+		else: // Conman is trying to check if there already is a member..
+			$the_member = $member->getMemberBySSN($pnr);
+		endif;
+
 		if (!count($the_member)) {
 			$this->_set('status', 'not_member');
 			return;
@@ -116,13 +124,13 @@ class IndexController extends Controller
 		
 		if (isset(Settings::$RequireEmail) && Settings::$RequireEmail === false) {
 			$verificationcode = Model::getModel('verificationcode');
-			$thecode = $verificationcode->putCode($pnr);
-			$this->_redirect("validatecode/$pnr/$thecode");
+			$thecode = $verificationcode->putCode($the_member[0]['PersonID']);
+			$this->_redirect("validatecode/'.$the_member[0]['PersonID'].'/$thecode");
 			$this->_set('status', 'noemailrequired');
 			$this->_set('ssid', $pnr); // Denna biten för personer med follow redirect avslaget
 			$this->_set('code', $thecode);
 		} else {
-			$this->sendEmail($the_member, $pnr);
+			$this->sendEmail($the_member, $the_member[0]['PersonID']);
 			$this->_set('status', 'emailsent');
 		}
 	}
@@ -140,12 +148,12 @@ class IndexController extends Controller
 		}
 	}
 	
-	public function validatecode($pnr = "", $thecode = "")
+	public function validatecode($id = "", $thecode = "")
 	{
 		$verificationcode = Model::getModel('verificationcode');
                 
-		$this->_set('valid', $verificationcode->checkCode($pnr, $thecode));
-		$this->_set('SSN', $pnr);
+		$this->_set('valid', $verificationcode->checkCode($id, $thecode));
+		$this->_set('SSN', $id);
 		$this->_set('code', $thecode);
 	}
 	
@@ -166,9 +174,8 @@ class IndexController extends Controller
 		
 		
 		// Hämta ut medlemmen som användaren vill skapa en användare på.
-		$member = Model::getModel('member');
-		$member->getMemberBySSN($_REQUEST['SSN']);
-		$the_member = $member->getMemberBySSN($_REQUEST['SSN']);
+		$member = Model::getModel('member');;
+		$the_member[0] = $member->getMemberById($_REQUEST['SSN']);
 		if (empty($the_member[0])) {
 			ErrorHelper::error("Oväntat fel! Din medlem finns inte!", true);
 		}
