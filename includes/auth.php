@@ -2,7 +2,7 @@
 class Auth {
 	public static function initSession()
 	{
-		session_set_cookie_params(60 * 60 * 24);
+		session_set_cookie_params(0); // PHP-sidan	
 		session_start();
 	}
 	
@@ -16,6 +16,7 @@ class Auth {
 	public static function logout()
 	{
 		$_SESSION['id'] = false;
+		session_destroy();
 	}
 	
 	public static function user($getmodel = false)
