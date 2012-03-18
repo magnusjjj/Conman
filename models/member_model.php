@@ -37,4 +37,10 @@ class MemberModel extends Model
 		$member = $this->_db->query("SELECT * FROM members WHERE PersonID = '%s';", $id);
 		return !empty($member[0]) ? $member[0] : false;
 	}
+
+	public function getMemberByEmail($email)
+	{
+		$memeber = $this->_db->query("SELECT * FROM members WHERE eMail = '%s';", $email);
+		return !empty($member[0]) ? $member[0] : false;
+	}
 }

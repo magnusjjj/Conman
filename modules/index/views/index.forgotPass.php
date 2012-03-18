@@ -18,4 +18,9 @@ Vi hittade dig inte i databasen. Är detta fel? Kontakta <a href="mailto:magnusjj
 <br/>
 Du är tydligen inte medlem än, så du får gå tillbaka och bli det.
 
+<?php elseif($status == 'wrong_email'):?>
+Tyvärr är email-adressen du skrev in inte i våran databas, antingen är du inte registrerad eller så skrev du in fel adress. 
+
+Vänligen <a href="<?php echo Router::url('forgetPass');?>">Försök igen</a> eller <a href="<?php echo Router::url('index');?>">Registrera Dig!</a>
+
 <?php endif;?>

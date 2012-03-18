@@ -56,15 +56,15 @@ class IndexController extends Controller
 		return $thecode;
 	}
 	
-	public function sendPassEmail($the_member, $pnr)
+	public function sendPassEmail($the_member, $pnr = 0)
 	{
 		$verificationcode = Model::getModel('verificationcode');
-		$thecode = $verificationcode->putCode($pnr);
+		$thecode = $verificationcode->putCode($the_member[0]['socialSecurityNumber']);
 		$mailer = CFactory::getMailer();
 		$this->_set('email', $the_member[0]['eMail']);
 		$mailer->AddAddress($the_member[0]['eMail']);
 		$mailer->Subject = 'Lösenordsåterställning till ' . Settings::$EventName;
-		$mailer->MsgHTML("Hej! <a href=\"".Router::url("passwordreset/$pnr/$thecode", true)."\">Klicka här för att återställa ditt lösenord</a>");
+		$mailer->MsgHTML("Hej! <a href=\"".Router::url("passwordreset/$the_member[0]['socialSecurityNumber']/$thecode", true)."\">Klicka här för att återställa ditt lösenord</a>");
 		if (!$mailer->Send()) {
 			die("Kunde inte skicka");
 		}
@@ -126,17 +126,20 @@ class IndexController extends Controller
 			$this->_set('status', 'emailsent');
 		}
 	}
-	
+	public function forgetPass()
+	{
+		// Working as intended, doing nothing like a sir.
+	}
 	public function forgotPass()
 	{
-		$pnr = implode('-', $_REQUEST['pnr']);
+		$email = $_REQUEST['email']);
 		$member = Model::getModel('member');
-		$the_member = $member->getMemberBySSN($pnr);
+		$the_member = $member->getMemberByEmail($email);
 		if (count($the_member)) {
-			$this->sendPassEmail($the_member, $pnr);
+			$this->sendPassEmail(array(0 => $the_member));
 			$this->_set('status', 'emailsent');
 		} else {
-			$this->_set('status', 'not_member');
+			$this->_set('status', 'wrong_email');
 		}
 	}
 	
