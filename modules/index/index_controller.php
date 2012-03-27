@@ -69,6 +69,11 @@ class IndexController extends Controller
 			die("Kunde inte skicka");
 		}
 	}
+
+	public function register_start() // Stub
+	{
+
+	}
 	
 	public function register()
 	{
@@ -125,7 +130,7 @@ class IndexController extends Controller
 		if (isset(Settings::$RequireEmail) && Settings::$RequireEmail === false) {
 			$verificationcode = Model::getModel('verificationcode');
 			$thecode = $verificationcode->putCode($the_member[0]['PersonID']);
-			$this->_redirect("validatecode/'.$the_member[0]['PersonID'].'/$thecode");
+			$this->_redirect("validatecode/".$the_member[0]['PersonID']."/$thecode");
 			$this->_set('status', 'noemailrequired');
 			$this->_set('ssid', $pnr); // Denna biten för personer med follow redirect avslaget
 			$this->_set('code', $thecode);

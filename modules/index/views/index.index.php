@@ -1,17 +1,29 @@
-<style type="text/css">
-label{
-	display: block;
-}
-</style>
-<div style="width: 800px;">
-<form action="<?php echo Router::url("login");?>" method="post" style="float: left; width: 200px;">
-	<fieldset>
-		<legend>Logga in</legend>
-		<label for="username">Användarnamn:</label><input type="text" name="username"/><br/>
-		<label for="password">Lösenord:</label><input type="password" name="password"/><br/>
-		<input type="submit" value="Logga in"/>
-	</fieldset>
-</form>
+<h1>Välkommen till ConMan</h1>
+          <h1>NärCon Edition</h1>
+
+          <div>
+                <p>Här, och ingen annanstans, kan du köpa biljetter till NärCon 2012!</p>
+                <p>Förutom detta kan du också köpa alla andra awesome prylar du behöver för att göra din upplevelse bättre.</p>
+                <p>Men, det slutar inte där, för du kan också logga in och kolla på din beställning, tilldela andra konventare biljetter och beställa saker du glömde.</p>
+                <p>Har du redan ett konto så kan du logga in här nedanför, annars registrerar du dig här ovan!</p>
+          </div>
+
+          <form action="<?php echo Router::url("login");?>">
+                <label for="form_username">Användarnamn:</label><input type="text" name="username" id="form_username" />
+                <label for="form_password">Lösenord:</label><input type="password" name="password" id="form_password" />
+                <br style="clear: both" />
+                <label for="form_remember">Kom ihåg mig!</label><input type="checkbox" id="form_remember" />
+                <input type="submit" value="Logga in" />
+          </form>
+
+          <p>
+                Problem med att logga in? :(
+          </p>
+          <p>
+                <a href="#">Återställ ditt lösenord</a> eller <a href="#">Skapa ett konto</a>
+          </p>
+
+<!--
 <form action="<?php echo Router::url("register");?>" method="post" style="float: right; width: 400px;">
 	<fieldset>
 		<legend>Skapa användare</legend>
@@ -41,4 +53,4 @@ label{
 			Kolla eran spamkoll innan ni får panik &lt;3
 	</fieldset>
 </form>
-</div>
+</div>-->

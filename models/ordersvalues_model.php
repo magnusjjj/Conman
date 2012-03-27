@@ -7,7 +7,7 @@ class OrdersvaluesModel extends Model {
 	
 	public function getOrderValuesFromOrder($orderid)
 	{
-		return $this->_db->query("SELECT orders_alternatives.id, orders_values.id as value_id, orders_alternatives.name, orders_alternatives.cost, orders_values.given 
+		return $this->_db->query("SELECT orders_alternatives.id, orders_values.id as value_id, orders_alternatives.name, orders_alternatives.cost, orders_values.given, orders_values.value
 		FROM orders_values
 		INNER JOIN orders_alternatives ON orders_values.order_alternative_id = orders_alternatives.id
 		WHERE order_id = '%s'", $orderid);

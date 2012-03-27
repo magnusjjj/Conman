@@ -1,7 +1,7 @@
 <?php
 class TicketController extends Controller 
 {
-	private function _checkLogin()
+	private function _checkLogin() // Function for kicking out the user if its not logged in.
 	{
 		if (!Auth::user()) {
 			$this->_redirect('/index/kicked');
@@ -12,7 +12,7 @@ class TicketController extends Controller
 		}
 	}
 	
-	private function _buildAlternativeTree()
+	private function _buildAlternativeTree() // Function used for building a tree of different ticket types
 	{
 		$alternatives = Model::getModel('ordersalternatives');
 		$the_alternatives = $alternatives->getAlternatives();
@@ -43,7 +43,7 @@ class TicketController extends Controller
 		$this->tree_simple = $tree_simple;
 	}
 
-	private function _checkMembership($member)
+	private function _checkMembership($member) // Used for checking if the users membership is outdated.
 	{
 		$memdate = strtotime($member['membershipEnds']);
 		$sysdate = strtotime(Settings::$ConEnds);
@@ -53,28 +53,40 @@ class TicketController extends Controller
 			return true;
 	}
 
-	public function index()
+	public function index() // The index page. Displayed at the time that the user logged in.
 	{
-		if (!$this->_checkLogin()) 
+		if (!$this->_checkLogin()) // Kick the user if its not logged in. 
 			return;
+
 		$order = Model::getModel('order');
-		$myorder = $order->getOrderFromUserAndStatus(Auth::user(), 'COMPLETED');
+		$myorders = $order->getOrdersByUserId(Auth::user());
 		
-		if (count($myorder)) {
+		if (count($myorders)) {
 			$this->view = 'ticket.hasticket.php';
 			$this->_buildAlternativeTree();
+			$this->_set('orders', $myorders);
 			$ordersvalues = Model::getModel('ordersvalues');
-			$this->_set('ordersvalues', $ordersvalues->getOrderValuesFromOrder($myorder[0]['id']));
+			$ordersvalues_complete = array();
+			foreach($myorders as $key => $the_order)
+			{
+				$ordersvalues_complete[$key] = $ordersvalues->getOrderValuesFromOrder($the_order['id']);
+			}
+			$this->_set('ordersvalues', $ordersvalues_complete);
 			$this->_set('alternatives_simple', $this->tree_simple);
 		} else {
-			$this->_buildAlternativeTree();
-			$member = Model::getModel('member');
-			$themember = $member->getMemberByUserID(Auth::user());
-
-			$this->_set('is_member', $this->_checkMembership($themember));
-			$this->_set('alternatives_parents', $this->tree_parents);
-			$this->_set('alternatives_children', $this->tree_children);
+			$this->_redirect('buystuff');
 		}
+	}
+
+	function buystuff()
+	{
+		$this->_buildAlternativeTree();
+		$member = Model::getModel('member');
+                $themember = $member->getMemberByUserID(Auth::user());
+
+                $this->_set('is_member', $this->_checkMembership($themember));
+                $this->_set('alternatives_parents', $this->tree_parents);
+                $this->_set('alternatives_children', $this->tree_children);
 	}
 	
 	public function gotopay()
@@ -85,19 +97,46 @@ class TicketController extends Controller
 		require_once(Settings::getRoot() . '/includes/paysonapi/lib/paysonapi.php');
 		// Get the models
 		$alternatives = Model::getModel('ordersalternatives');
-		$the_alternatives = $alternatives->getAlternatives();
 		$order = Model::getModel('order');
 		$member = Model::getModel('member');
 		$ordervalues = Model::getModel('ordersvalues');
+		$orderscodes= Model::getModel('orderscodes');
+		
+		$code_id = 0;
+		$code_reduction = 0;
+		
+		// Get the different values, used later
 		$themember = $member->getMemberByUserID(Auth::user()); // Get the member from the database corresponding to the user.
+		$the_alternatives = $alternatives->getAlternatives();
+		
+		if(!empty($_REQUEST['code']))
+		{
+		    $the_code = $orderscodes->getCode($_REQUEST['code']);
+		    if(empty($the_code)){
+			$this->_set('error', 'Den koden finns inte!'); 
+			$this->view = 'ticket.buystuff.php';
+			$this->buystuff();
+			return;
+		    } else {
+			if($the_code['used_by']){
+			    $this->_set('error', 'Den koden är redan använd!'); 
+			    $this->view = 'ticket.buystuff.php';
+			    $this->buystuff();
+			    return;
+			}
+			$code_id = $the_code['id'];
+			$code_reduction = $the_code['reduction'];
+		    }
+		}
+		
 		
 		
 		$thingstobuy = $_REQUEST['val']; // This will be the array with the things the user has selected to buy
 		
 		if (empty($thingstobuy)) { // You will, of course, have to buy something
 			$this->_set('error', 'Du måste köpa något!'); 
-			$this->view = 'ticket.index.php';
-			$this->index();
+			$this->view = 'ticket.buystuff.php';
+			$this->buystuff();
 			return;
 		}
 
@@ -136,8 +175,8 @@ class TicketController extends Controller
 			}
 		} catch (Exception $e) {
 			$this->_set('error', $e->getMessage()); // Catch errors from the overrides
-			$this->view = 'ticket.index.php';
-			$this->index();
+			$this->view = 'ticket.buystuff.php';
+			$this->buystuff();
 			return;
 		}
 		
@@ -145,6 +184,12 @@ class TicketController extends Controller
 		if (!$this->_checkMembership($themember)) { // Check if the person is a payed-up member or not.
 			$cost += Settings::$MembershipCost; // Else, add the membership cost
 			$stuff[] = new OrderItem('Medlemskap i föreningen', Settings::$MembershipCost, 1, 0, str_pad('80085', 6, '0', STR_PAD_LEFT)); // Create the payson Order-item
+		}
+		
+		if($code_reduction)
+		{
+		    $cost -= $code_reduction;
+		    $stuff[] = new OrderItem('Kodrabatt', 0 - $code_reduction, 1, 0, str_pad('80086', 6, '0', STR_PAD_LEFT));
 		}
 		
 		/* Every interaction with Payson goes through the PaysonApi object which you set up as follows */
@@ -170,11 +215,15 @@ class TicketController extends Controller
 		$payData->setguaranteeOffered("NO");
 		$payData->setOrderItems($stuff);
 		$payResponse = $api->pay($payData);
+		
 
-		if ((isset(Settings::$AllowPayson) && !Settings::$AllowPayson) 
+		if ($cost <= 0 || (isset(Settings::$AllowPayson) && !Settings::$AllowPayson) 
 			|| $payResponse->getResponseEnvelope()->wasSuccessful()
 		) { // If payson is dissallowed, or the payson order call was successfull, we create the actuall order in the database
-			$order_id = $order->addOrder(array('user_id' => Auth::user(), 'payson_token' => (isset(Settings::$AllowPayson) && !Settings::$AllowPayson) ? '' : $payResponse->getToken()));
+			$order_id = $order->addOrder(array('user_id' => Auth::user(),
+							   'payson_token' => (isset(Settings::$AllowPayson) && !Settings::$AllowPayson) ? '' : $payResponse->getToken(),
+							   'code_id' => $code_id
+				));
 			foreach ($thingstobuy as $key => $thing) {
 				$id = null;
 				$value = null;
@@ -192,6 +241,20 @@ class TicketController extends Controller
 				$ordervalues->addOrderValue(array('order_id' => $order_id, 'order_alternative_id' => $id, 'value' => $value));
 			}
 			
+			
+			if (!$this->_checkMembership($themember)) {
+			    $ordervalues->addOrderValue(array('order_id' => $order_id, 'order_alternative_id' => 0, 'value' => 'MEMBERSHIP'));
+			}
+			
+			if($cost <= 0)
+			{
+				
+				$this->view = 'ticket.index.php';
+				$this->doCompleteOrder($order_id);
+				$this->index();
+				return;
+			}
+			
 			if (!( isset(Settings::$AllowPayson) && !Settings::$AllowPayson )) { // If we allow payson, redirect the user there
 				header("Location: " . $api->getForwardPayUrl($payResponse)); // If we allow payson, redirect the user there
 				$this->_set('link',  $api->getForwardPayUrl($payResponse)); // Link for people without auto redirect. Grumble grumble.
@@ -205,19 +268,48 @@ class TicketController extends Controller
 		}
 	}
 	
-	public function pay_return()
+	private function doCompleteOrder($orderid)
+	{	
+		$order = Model::getModel('order');
+		$member = Model::getModel('member');
+		$ordervalues = Model::getModel('ordersvalues');
+		$orderscodes = Model::getModel('orderscodes');
+		
+		$order->setStatusById($orderid, 'COMPLETED');
+		$the_order = $order->getOrderById($orderid);
+		$the_ordersvalues = $ordervalues->getOrderValuesFromOrder($orderid);
+		
+		if($the_order['code_id'])
+		{
+		    $orderscodes->markCode($the_order['code_id'], Auth::user());
+		}
+		foreach($the_ordersvalues as $order_value){
+		    if($order_value['id'] == 0 && $orders_value['value'] == 'MEMBERSHIP'){
+			$themember = $member->getMemberByUserID(Auth::user());
+			$member->updateMemberShip($themember['PersonID']);;
+		    }
+		}
+	}
+	
+	public function pay_return($override = false)
 	{
 		if(!$this->_checkLogin()) 
 			return;
 		require_once(Settings::getRoot() . '/includes/paysonapi/lib/paysonapi.php');
 		$credentials = new PaysonCredentials(Settings::$PaysonAgentID, Settings::$PaysonMD5);
 		$api = new PaysonApi($credentials);
+		
 		$order = Model::getModel('order');
+		$member = Model::getModel('member');
+		$ordervalues = Model::getModel('ordersvalues');
+		$orderscodes = Model::getModel('orderscodes');
+		
 		$paymentDetailsData = new PaymentDetailsData($_REQUEST['TOKEN']);
 		$paymentDetailsResponse = $api->paymentDetails($paymentDetailsData);
 		$paydetails = $paymentDetailsResponse->getPaymentDetails();
 		if ($paydetails->getStatus() == 'COMPLETED') {
-			$order->setStatus($paydetails->getToken(), $paydetails->getStatus());
+			$the_order = $order->getOrderByToken($paydetails->getToken());
+			$this->doCompleteOrder($the_order['id']);
 		}
 		$this->_set('status', $paydetails->getStatus());
 		$this->view = 'ticket.index.php';
@@ -276,7 +368,7 @@ class TicketController extends Controller
 		$the_ordersvalues = $ordersvalues->getOrderValuesFromOrder($myorder[0]['id']);
 		echo mysql_error();
 		// Dirty Hikari-Con-loop, not proud monkey
-		$ticket->addBarCode(150, 230, $themember['PersonID'], 0.5, 8);
+		$ticket->addBarCode(150, 230, $themember['PersonID'] . '-' . strtoupper( substr(hash('SHA512', $themember['PersonID'] . Settings::$BarKey), 0, 4 )), 0.5, 8);
 		/*$sovsal = false;
 		foreach ($the_ordersvalues as $key => $value) {
 			switch ($value['order_alternative_id']) {
@@ -296,22 +388,22 @@ class TicketController extends Controller
 			$ticket->pdf->Cell(0,0, 'X');
 		}*/
 		
-		$ticket->pdf->SetXY(55, 40); // 63
-		$ticket->pdf->Cell(0,0, utf8_decode($themember['firstName']));
-		$ticket->pdf->SetXY(55, 46.5);
-		$ticket->pdf->Cell(0,0,utf8_decode($themember['lastName']));
-		$ticket->pdf->SetXY(55, 53);
-		$ticket->pdf->Cell(0,0,$themember['socialSecurityNumber']);
-		$ticket->pdf->SetXY(105, 46);
-		$ticket->pdf->Cell(0,0,utf8_decode($themember['streetAddress']));
-		$ticket->pdf->SetXY(105, 53);
-		$ticket->pdf->Cell(0,0, $themember['zipCode'] . ' ' . utf8_decode($themember['city']));
-		$ticket->pdf->SetXY(30, 57);
+		$ticket->_pdf->SetXY(55, 40); // 63
+		$ticket->_pdf->Cell(0,0, utf8_decode($themember['firstName']));
+		$ticket->_pdf->SetXY(55, 46.5);
+		$ticket->_pdf->Cell(0,0,utf8_decode($themember['lastName']));
+		$ticket->_pdf->SetXY(55, 53);
+		$ticket->_pdf->Cell(0,0,$themember['socialSecurityNumber']);
+		$ticket->_pdf->SetXY(105, 46);
+		$ticket->_pdf->Cell(0,0,utf8_decode($themember['streetAddress']));
+		$ticket->_pdf->SetXY(105, 53);
+		$ticket->_pdf->Cell(0,0, $themember['zipCode'] . ' ' . utf8_decode($themember['city']));
+		$ticket->_pdf->SetXY(30, 57);
 		$orderstring = "";
 		foreach ($the_ordersvalues as $value) {
 			$orderstring .= $value['name'] . '   ' . $value['cost'] . 'kr' . "\r\n";
 		}
-		$ticket->pdf->MultiCell(0, 10, utf8_decode($orderstring));
+		$ticket->_pdf->MultiCell(0, 10, utf8_decode($orderstring));
 		$ticket->generate();
 		exit();
 	}

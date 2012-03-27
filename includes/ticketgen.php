@@ -86,7 +86,7 @@ class ConmanPDFOverloaded extends FPDI
 
 class TicketGen 
 {
-	private $_pdf = null;
+	public $_pdf = null;
 	
 	public function __construct()
 	{

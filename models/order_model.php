@@ -12,7 +12,7 @@ class OrderModel extends Model {
 	
 	public function addOrder($values)
 	{
-		$this->_db->query("INSERT INTO orders (user_id, payson_token) VALUES ('%s','%s')", $values['user_id'], $values['payson_token']);
+		$this->_db->query("INSERT INTO orders (user_id, payson_token, code_id) VALUES ('%s','%s','%s')", $values['user_id'], $values['payson_token'], $values['code_id']);
 		return $this->_db->insertid();
 	}
 	
@@ -28,9 +28,19 @@ class OrderModel extends Model {
 		return $ans[0];
 	}
 	
+	public function getOrdersByUserId($userid)
+	{
+		return $this->_db->query("SELECT * FROM orders WHERE user_id = '%s' ORDER BY `timestamp` DESC", $userid);
+	}	
+
 	public function getOrderFromUserAndStatus($userid, $status)
 	{
 		return $this->_db->query("SELECT * FROM orders WHERE user_id = '%s' AND status = '%s' LIMIT 1;", $userid, $status);
+	}
+	
+	function getOrderByToken($payson_token)
+	{
+		return array_pop($this->_db->query("SELECT * FROM orders WHERE `payson_token` = '%s'", $payson_token));
 	}
 	
 	public function setStatus($payson_token, $status)

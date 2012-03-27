@@ -18,7 +18,7 @@ class MemberModel extends Model
 		VALUES
 		('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s',0, NOW())
 		", $v['socialSecurityNumber'], $v['gender'], $v['firstName'], $v['lastName'], @$v['coAddress'], $v['streetAddress'], $v['zipCode'], $v['city'], $v['country'], $v['phoneNr'], @$v['altPhoneNr'], $v['eMail']); 
-		return $this->insertid();
+		return $this->_db->insertid();
 	}
 	
 	public function update($v)
@@ -37,5 +37,10 @@ class MemberModel extends Model
 	{
 		$member = $this->_db->query("SELECT * FROM members WHERE PersonID = '%s';", $id);
 		return !empty($member[0]) ? $member[0] : false;
+	}
+	
+	public function updateMemberShip($id)
+	{
+		$this->_db->query("UPDATE members SET membershipBegan = '', membershipEnds = '' WHERE PersonID = '%s' LIMIT 1");
 	}
 }
