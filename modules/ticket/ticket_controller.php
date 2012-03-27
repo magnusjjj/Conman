@@ -131,7 +131,7 @@ class TicketController extends Controller
 		
 		
 		
-		$thingstobuy = $_REQUEST['val']; // This will be the array with the things the user has selected to buy
+		$thingstobuy = @$_REQUEST['val']; // This will be the array with the things the user has selected to buy
 		
 		if (empty($thingstobuy)) { // You will, of course, have to buy something
 			$this->_set('error', 'Du måste köpa något!'); 
@@ -250,7 +250,7 @@ class TicketController extends Controller
 			{
 				
 				$this->view = 'ticket.index.php';
-				$this->doCompleteOrder($order_id);
+				$this->_doCompleteOrder($order_id);
 				$this->index();
 				return;
 			}
@@ -268,7 +268,7 @@ class TicketController extends Controller
 		}
 	}
 	
-	private function doCompleteOrder($orderid)
+	private function _doCompleteOrder($orderid)
 	{	
 		$order = Model::getModel('order');
 		$member = Model::getModel('member');
@@ -284,7 +284,7 @@ class TicketController extends Controller
 		    $orderscodes->markCode($the_order['code_id'], Auth::user());
 		}
 		foreach($the_ordersvalues as $order_value){
-		    if($order_value['id'] == 0 && $orders_value['value'] == 'MEMBERSHIP'){
+		    if($order_value['id'] == 0 && $order_value['value'] == 'MEMBERSHIP'){
 			$themember = $member->getMemberByUserID(Auth::user());
 			$member->updateMemberShip($themember['PersonID']);;
 		    }
@@ -309,7 +309,7 @@ class TicketController extends Controller
 		$paydetails = $paymentDetailsResponse->getPaymentDetails();
 		if ($paydetails->getStatus() == 'COMPLETED') {
 			$the_order = $order->getOrderByToken($paydetails->getToken());
-			$this->doCompleteOrder($the_order['id']);
+			$this->_doCompleteOrder($the_order['id']);
 		}
 		$this->_set('status', $paydetails->getStatus());
 		$this->view = 'ticket.index.php';

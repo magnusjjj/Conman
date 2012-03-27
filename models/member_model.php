@@ -41,6 +41,6 @@ class MemberModel extends Model
 	
 	public function updateMemberShip($id)
 	{
-		$this->_db->query("UPDATE members SET membershipBegan = '', membershipEnds = '' WHERE PersonID = '%s' LIMIT 1");
+		$this->_db->query("UPDATE members SET membershipBegan = NOW(), membershipEnds = NOW() WHERE PersonID = '%s' LIMIT 1", $id);
 	}
 }
