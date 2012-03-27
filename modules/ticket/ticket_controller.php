@@ -15,13 +15,14 @@ class TicketController extends Controller
 	private function _buildAlternativeTree() // Function used for building a tree of different ticket types
 	{
 		$alternatives = Model::getModel('ordersalternatives');
-		$the_alternatives = $alternatives->getAlternatives();
+		$the_alternatives = $alternatives->getAlternativesWithUserCount(Auth::user());
 		$tree_parents = array();
 		$tree_children = array();
 		$tree_simple = array();
 		foreach ($the_alternatives as $alternative) {
-			if ($alternative['ammount_compare'] >= $alternative['ammount'] 
-				&& $alternative['ammount'] != 0
+			if (($alternative['ammount'] != 0 && $alternative['ammount_compare'] >= $alternative['ammount'])
+				|| 
+				($alternative['max_per_user'] != 0 && $alternative['users_count'] >= $alternative['max_per_user'])
 			) {
 				if ($alternative['template_override'] == 'ticket') {
 					$this->_set('ticket_disabled', true);
@@ -80,6 +81,8 @@ class TicketController extends Controller
 
 	function buystuff()
 	{
+		if (!$this->_checkLogin()) // Kick the user if its not logged in. 
+		    return;
 		$this->_buildAlternativeTree();
 		$member = Model::getModel('member');
                 $themember = $member->getMemberByUserID(Auth::user());
