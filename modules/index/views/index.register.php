@@ -1,47 +1,98 @@
 <?php if(@$status == 'emailsent'):?>
-Ett mail har skickats till din registrerade mail, <?php echo $email;?>.
-Klicka på länken i mailet för att fortsätt.
-
-Är det inte din mail? Kontakta <a href="mailto:magnusjjj@gmail.com">magnusjjj@gmail.com - Magnus Johnsson</a>
+<p class="nomargin">Ett mail har skickats till din registrerade mail, <?php echo $email;?>, så du bör ha det inom kort men det kan ta upp till 30 minuter. Hittar du inte mailet i din inbox så ta en titt i din spam-/skräppost då mail från ConMan dessvärre hamnar där ibland. Klicka sedan på länken i mailet för att fortsätta registreringen med val av användarnamn, lösenord etc.</p>
 <?php elseif(@$status == 'noemailrequired'):?>
-<a href="<?php echo Router::url("validatecode/$ssid/$code");?>">Klicka h&auml;r f&ouml;r att fort&auml;tta</a>
+<a href="<?php echo Router::url("validatecode/$ssid/$code");?>">Klicka h&auml;r f&ouml;r att 
+forts&auml;tta</a>
 <?php elseif(@$status == 'wrong_ssid'):?>
 Tyvärr är personnummret du skrev in inte giltligt. <a href="<?php echo Router::url('index');?>">Försök igen</a>
 <?php elseif(@$status == 'not_member'):?>
-Vi hittade dig inte i databasen. Är detta fel? Kontakta <a href="mailto:magnusjjj@gmail.com">magnusjjj@gmail.com - Magnus Johnsson</a><br/>
-<br/>
-Om detta, inte är fel, så får du (måste) du göra något så peppigt som att bli medlem i <?php echo Settings::$Society;?> :).<br/>
-Fyll i uppgifterna nedan, klicka på nästa. När du betalar din medlemsavgift blir du medlem :).<br/>
 Du måste fylla i alla uppgifter markerade med *<br/>
 <?php
-	if(@$not_accepted || @$not_filled)
-		echo "<ul>";
-	if(@$not_accepted)
-		echo "<li>Du fyllde i allt rätt, men du glömde godkänna stadgarna</li>";
-	if(@$not_filled)
-		echo "<li>Du har tyvärr inte fyllt i alla fält du behövde (de är markerade med *). Försök igen.</li>";
-	if(@$not_accepted || @$not_filled)
+
+	if(!empty($validation_errors))
+	{
+		echo "<ul class=\"error_list\">";
+		foreach($validation_errors as $e) {
+			echo "<li class=\"error_item\"> $e </li>";
+		}
 		echo "</ul>";
-?>
-<form action="<?php echo Router::url('register')?>" method="post" id="registration_form">
-	<label>Juridiskt kön*: </label><input type="radio" value="K" name="memberdata[gender]"<?php echo @$_REQUEST['memberdata']['gender'] == 'K' ? 'checked="checked"' : '';?>/>Kvinna<input type="radio" value="M" name="memberdata[gender]" <?php echo @$_REQUEST['memberdata']['gender'] == 'M' ? 'checked="checked"' : '';?>/>Man<br/>
-	<label>Förnamn*: </label><input type="text" name="memberdata[firstName]" value="<?php echo @$_REQUEST['memberdata']['firstName'];?>"/><br/>
-	<label>Efternamn*: </label><input type="text" name="memberdata[lastName]" value="<?php echo @$_REQUEST['memberdata']['lastName'];?>"/><br/>
-	<label>CO-adress: </label><input type="text" name="memberdata[coAddress]" value="<?php echo @$_REQUEST['memberdata']['coAddress'];?>"/><br/>
-	<label>Adress*: </label><input type="text" name="memberdata[streetAddress]" value="<?php echo @$_REQUEST['memberdata']['streetAddress'];?>"/><br/>
-	<label>Postnummer*: </label><input type="text" name="memberdata[zipCode]" value="<?php echo @$_REQUEST['memberdata']['zipCode'];?>"/><br/>
-	<label>Postort*: </label><input type="text" name="memberdata[city]" value="<?php echo @$_REQUEST['memberdata']['city'];?>"/><br/>
-	<label>Telefonnummer*: </label><input type="text" name="memberdata[phoneNr]" value="<?php echo @$_REQUEST['memberdata']['phoneNr'];?>"/><br/>
-	<label>Mobilnummer: </label><input type="text" name="memberdata[altPhoneNr]" value="<?php echo @$_REQUEST['memberdata']['altPhoneNr'];?>"/><br/>
-	<label>Email*: </label><input type="text" name="memberdata[eMail]" value="<?php echo @$_REQUEST['memberdata']['eMail'];?>"/><br/>
+	}
+	
+?><br />
+<script src="/js/register_validation.js"></script>
+
+<form onsubmit="return validate_register_form(this);" action="<?php echo Router::url('register')?>" method="post" id="registration_form">
 	<input type="hidden" name="pnr[0]" value="<?php echo @$_REQUEST['pnr'][0];?>"/>
 	<input type="hidden" name="pnr[1]" value="<?php echo @$_REQUEST['pnr'][1];?>"/>
 	<input type="hidden" name="memberdata[country]" value="<?php echo empty($_REQUEST['memberdata']['country']) ? @$_REQUEST['country'] : @$_REQUEST['memberdata']['country'];?>"/>
 	<input type="hidden" name="country" value="<?php echo empty($_REQUEST['memberdata']['country']) ? @$_REQUEST['country'] : @$_REQUEST['memberdata']['country'];?>"/>
-	Stadgar:<br/>
-	<textarea rows="20" cols="50"><?php echo file_get_contents(Settings::getRoot() . '/stadgar');?></textarea>
-	<br/>
-<input type="checkbox" name="seen_rules" value="1"/> * Jag godkänner dessa stadgar, och tillåter <?php echo Settings::$Society;?> att spara mina uppgifter
-<input type="submit" value="Nästa!"/>
+			
+		<!-- Samuels kolla-juridiskt-kön-fix -->
+		<?php 
+		$sista = strval(@$_REQUEST['pnr'][1]);		
+		if ($sista[2] % 2) {
+			echo '<input type="hidden" name="memberdata[gender]" value="M"/>';
+		} else {
+			echo '<input type="hidden" name="memberdata[gender]" value="K"/>';
+		}
+		?>
+
+
+<!--	Gamla implementationen
+		
+		<label class="input_label">Juridiskt kön*: </label>
+		<div class="gender_button_group">
+		<input class="input_radio" type="radio" value="K" name="memberdata[gender]" <?php echo @$_REQUEST['memberdata']['gender'] == 'K' ? 'checked="checked"' : '';?>/>
+		Kvinna
+		<input class="input_radio" type="radio" value="M" name="memberdata[gender]" <?php echo @$_REQUEST['memberdata']['gender'] == 'M' ? 'checked="checked"' : '';?>/>
+		Man
+		</div>
+		<br/>
+-->
+			<div id="input_div">
+		<label class="input_label" for="firstName">Förnamn*: </label>
+		<input class="input_text" onblur="input_validation(this)" type="text" id="firstName" name="memberdata[firstName]" value="<?php echo @$_REQUEST['memberdata']['firstName'];?>"/>
+
+		
+		<label class="input_label">Efternamn*: </label>
+		<input class="input_text" onblur="input_validation(this)" type="text" name="memberdata[lastName]" value="<?php echo @$_REQUEST['memberdata']['lastName'];?>"/>
+		
+		<label class="input_label">CO-adress: </label>
+		<input class="input_text" onblur="input_validation(this)" type="text" name="memberdata[coAddress]" value="<?php echo @$_REQUEST['memberdata']['coAddress'];?>"/>
+
+		
+		<label class="input_label">Adress*: </label>
+		<input class="input_text" onblur="input_validation(this)" type="text" name="memberdata[streetAddress]" value="<?php echo @$_REQUEST['memberdata']['streetAddress'];?>"/>
+
+	
+		<label class="input_label">Postnummer*: </label>
+		<input class="input_text" onblur="input_validation(this)" type="text" name="memberdata[zipCode]" value="<?php echo @$_REQUEST['memberdata']['zipCode'];?>"/>
+
+		
+		<label class="input_label">Postort*: </label>
+		<input class="input_text" onblur="input_validation(this)" type="text" name="memberdata[city]" value="<?php echo @$_REQUEST['memberdata']['city'];?>"/>
+
+		
+		<label class="input_label">Telefonnummer*: </label>
+		<input class="input_text" onblur="input_validation(this)" type="text" name="memberdata[phoneNr]" value="<?php echo @$_REQUEST['memberdata']['phoneNr'];?>"/>
+
+		
+		<label class="input_label">Mobilnummer: </label>
+		<input class="input_text" onblur="input_validation(this)" type="text" name="memberdata[altPhoneNr]" value="<?php echo @$_REQUEST['memberdata']['altPhoneNr'];?>"/>
+
+		
+		<label class="input_label">Email*: </label>
+		<input class="input_text" onblur="input_validation(this)" type="text" name="memberdata[eMail]" value="<?php echo @$_REQUEST['memberdata']['eMail'];?>"/>
+
+		
+		<label class="input_label">Upprepa email*: </label>
+		<input class="input_text" onblur="input_validation(this)" type="text" name="memberdata[eMail_again]" value="<?php echo @$_REQUEST['memberdata']['eMail_again'];?>"/>
+
+
+		<p><input type="checkbox" name="seen_rules"<?php echo (@$_REQUEST['seen_rules'] ? ' checked="checked" ' : '');?>/> Jag godkänner <a href="http://stadgar.narcon.se/" target="_blank"> NärCons stadgar</a> och vill bli medlem i föreningen NärCon*</p><input type="submit" value="Nästa!"/>
+
+	</div>
+	
 </form>
+
 <?php endif;?>

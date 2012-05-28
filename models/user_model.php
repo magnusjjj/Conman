@@ -9,6 +9,11 @@ class UserModel extends Model {
 	{
 		return $this->_db->query("SELECT * FROM users WHERE id = '%s'", $id);
 	}
+
+	public function getByUsername($name)
+	{
+		return array_pop($this->_db->query("SELECT * FROM users WHERE username = '%s'", $name));
+	}
 	
 	public function getByMemberID($id)
 	{

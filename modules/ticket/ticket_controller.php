@@ -44,6 +44,28 @@ class TicketController extends Controller
 		$this->tree_simple = $tree_simple;
 	}
 
+        private function _buildAlternativeTreeNoFilter() // Function used for building a tree of different ticket types
+        {
+                $alternatives = Model::getModel('ordersalternatives');
+                $the_alternatives = $alternatives->getAlternativesWithUserCount(Auth::user());
+                $tree_parents = array();
+                $tree_children = array();
+                $tree_simple = array();
+                foreach ($the_alternatives as $alternative) {
+                                if (!empty($alternative['parent'])) {
+                                        $tree_children[$alternative['parent']][] = $alternative;
+                                } else {
+                                        $tree_parents[] = $alternative;
+                                }
+
+                                $tree_simple[$alternative['id']] = $alternative;
+                }
+                $this->tree_parents = $tree_parents;
+                $this->tree_children = $tree_children;
+                $this->tree_simple = $tree_simple;
+        }
+
+
 	private function _checkMembership($member) // Used for checking if the users membership is outdated.
 	{
 		$memdate = strtotime($member['membershipEnds']);
@@ -61,8 +83,27 @@ class TicketController extends Controller
 
 		$order = Model::getModel('order');
 		$myorders = $order->getOrdersByUserId(Auth::user());
+		$ordersvalues = Model::getModel('ordersvalues');
+		foreach($myorders as $i => $order){
+			if($order['status'] != 'COMPLETED')
+				unset($myorders[$i]);
+		}
 		
 		if (count($myorders)) {
+              		$boughtticket = false;
+       		        $mashup = array();
+        	        foreach($myorders as $myorder)
+	                {
+	                        $the_ordersvalues = $ordersvalues->getOrderValuesFromOrder($myorder['id']);
+	                        foreach ($the_ordersvalues as $value) {
+	                                if($value['id'] == 2 || $value['id'] == 33) {
+	                                        $boughtticket = true;
+	                                }
+	                        }
+	                }
+			$this->_set('boughtticket', $boughtticket);
+
+
 			$this->view = 'ticket.hasticket.php';
 			$this->_buildAlternativeTree();
 			$this->_set('orders', $myorders);
@@ -112,6 +153,21 @@ class TicketController extends Controller
 		$themember = $member->getMemberByUserID(Auth::user()); // Get the member from the database corresponding to the user.
 		$the_alternatives = $alternatives->getAlternatives();
 		
+		if (empty($_REQUEST['iaccept'])) { // User must accept the agreement
+                        $this->_set('error', 'Du måste acceptera köpvillkoren!');
+                        $this->view = 'ticket.buystuff.php';
+                        $this->buystuff();
+                        return;
+                }
+
+		/*if(empty($_REQUEST['code']))
+		{
+                        $this->_set('error', 'Du måste ha en kod under förköpet!');
+                        $this->view = 'ticket.buystuff.php';
+                        $this->buystuff();
+                        return;
+		}*/
+
 		if(!empty($_REQUEST['code']))
 		{
 		    $the_code = $orderscodes->getCode($_REQUEST['code']);
@@ -135,13 +191,31 @@ class TicketController extends Controller
 		
 		
 		$thingstobuy = @$_REQUEST['val']; // This will be the array with the things the user has selected to buy
+		$numbuy = @$_REQUEST['ammount'];
 		
 		if (empty($thingstobuy)) { // You will, of course, have to buy something
-			$this->_set('error', 'Du måste köpa något!'); 
+			$this->_set('error', 'Du har inte markerat något du vill köpa!'); 
 			$this->view = 'ticket.buystuff.php';
 			$this->buystuff();
 			return;
 		}
+		
+		$num_outer = 0;
+		foreach($numbuy as $num){
+			if(is_numeric($num) && $num > 0)
+			{
+				$num_outer = $num;
+			}
+		}
+		
+		if($num_outer == 0)
+		{
+			$this->_set('error', 'Du har inte markerat något du vill köpa!'); 
+			$this->view = 'ticket.buystuff.php';
+			$this->buystuff();
+			return;
+		}
+		
 
 		// Building some parent/children trees for easy keeping
 		$tree_all = array(); // Indexed by the alternative id's
@@ -160,20 +234,32 @@ class TicketController extends Controller
 		$stuff = array(); // This will contain the payson OrderItem's.
 		try {
 			foreach ($thingstobuy as $key => $thing) {
-				if (is_numeric($thing)) { // If its a select-box, we get the price of the option
-					$cost += $tree_all[$thing]['cost']; // Add the cost
-					$stuff[] = new OrderItem($tree_all[$thing]['name'], $tree_all[$thing]['cost'], 1, 0, str_pad($key, 6, '0', STR_PAD_LEFT)); // Create the payson order object
-				} else if (is_array($thing)) {  // Its not a default action, like a checkbox or a select, but an override
-					include_once(dirname(__FILE__) . '/itemtypes/overrides/'.$tree_all[$key]['template_override'].'.php'); // Include the override
-					$classname = ucfirst($tree_all[$key]['template_override']) . 'OrderItem'; // Create the override classname
-					$itemclass = new $classname($key, $thing, $tree_all); // Init the classname with the id, the object parameters, and the tree
-					while (($i = $itemclass->getItem()) !== null) { // Parse the results
-						$cost += $i['cost'] * $i['number']; // Add the cost
-						$stuff[] = new OrderItem($i['name'], $i['cost'], $i['number'], 0, str_pad($key, 6, '0', STR_PAD_LEFT)); // Create the payson order object
+				if(@$numbuy[$key] > 0)
+				{
+					if (is_numeric($thing)) { // If its a select-box, we get the price of the option
+						$cost += $numbuy[$key] * $tree_all[$thing]['cost']; // Add the cost
+						$stuff[] = new OrderItem($tree_all[$thing]['name'], $tree_all[$thing]['cost'], $numbuy[$key], 0, str_pad($key, 6, '0', STR_PAD_LEFT)); // Create the payson order object
+					} else if (is_array($thing)) {  // Its not a default action, like a checkbox or a select, but an override
+						include_once(dirname(__FILE__) . '/itemtypes/overrides/'.$tree_all[$key]['template_override'].'.php'); // Include the override
+						$classname = ucfirst($tree_all[$key]['template_override']) . 'OrderItem'; // Create the override classname
+						$itemclass = new $classname($key, $thing, $tree_all); // Init the classname with the id, the object parameters, and the tree
+						while (($i = $itemclass->getItem()) !== null) { // Parse the results
+							$cost += $i['cost'] * $i['number']; // Add the cost
+							$stuff[] = new OrderItem($i['name'], $i['cost'], $i['number'], 0, str_pad($key, 6, '0', STR_PAD_LEFT)); // Create the payson order object
+						}
+					} else if ($thing != 'NULL') { // Otherwise its a checkbox, get its stuff here
+						$cost += $numbuy[$key] * $tree_all[$key]['cost']; // Add the cost
+						$stuff[] = new OrderItem($tree_all[$key]['name'], $tree_all[$key]['cost'], $numbuy[$key], 0, str_pad($key, 6, '0', STR_PAD_LEFT)); // Create the payson order object
+					} else {
+						unset($thingstobuy[$key]);
+						unset($numbuy[$key]);
+					        if (empty($thingstobuy)) { // You will, of course, have to buy something
+                				        $this->_set('error', 'Du måste köpa något! 3');
+                        				$this->view = 'ticket.buystuff.php';
+                       					$this->buystuff();
+                        				return;
+                				}
 					}
-				} else if ($thing != 'NULL') { // Otherwise its a checkbox, get its stuff here
-					$cost += $tree_all[$key]['cost']; // Add the cost
-					$stuff[] = new OrderItem($tree_all[$key]['name'], $tree_all[$key]['cost'], 1, 0, str_pad($key, 6, '0', STR_PAD_LEFT)); // Create the payson order object
 				}
 			}
 		} catch (Exception $e) {
@@ -185,8 +271,8 @@ class TicketController extends Controller
 		
 		
 		if (!$this->_checkMembership($themember)) { // Check if the person is a payed-up member or not.
-			$cost += Settings::$MembershipCost; // Else, add the membership cost
-			$stuff[] = new OrderItem('Medlemskap i föreningen', Settings::$MembershipCost, 1, 0, str_pad('80085', 6, '0', STR_PAD_LEFT)); // Create the payson Order-item
+			//$cost += Settings::$MembershipCost; // Else, add the membership cost
+			//$stuff[] = new OrderItem('Medlemskap i föreningen', Settings::$MembershipCost, 1, 0, str_pad('80085', 6, '0', STR_PAD_LEFT)); // Create the payson Order-item
 		}
 		
 		if($code_reduction)
@@ -217,6 +303,7 @@ class TicketController extends Controller
 		$payData = new PayData($returnUrl, $cancelUrl, $ipnUrl, "Biljett", $sender, $receivers);
 		$payData->setguaranteeOffered("NO");
 		$payData->setOrderItems($stuff);
+		$payData->setFeesPayer("SENDER");
 		$payResponse = $api->pay($payData);
 		
 
@@ -228,25 +315,28 @@ class TicketController extends Controller
 							   'code_id' => $code_id
 				));
 			foreach ($thingstobuy as $key => $thing) {
-				$id = null;
-				$value = null;
+				if(@$numbuy[$key] != 0)
+				{
+					$id = null;
+					$value = null;
 				
-				if (is_numeric($thing)) { // If its a select-box, we use the value as the id
-					$id = $thing;
-					$value = '';
-				} else if (is_array($thing)) {  // Its not a default action, like a checkbox or a select, but an override
-					$id = $key;
-					$value = serialize($thing);
-				} else { // Otherwise its a checkbox, get its stuff here
-					$id = $key;
-					$value = '';
+					if (is_numeric($thing)) { // If its a select-box, we use the value as the id
+						$id = $thing;
+						$value = '';
+					} else if (is_array($thing)) {  // Its not a default action, like a checkbox or a select, but an override
+						$id = $key;
+						$value = serialize($thing);
+					} else { // Otherwise its a checkbox, get its stuff here
+						$id = $key;
+						$value = '';
+					}
+					$ordervalues->addOrderValue(array('order_id' => $order_id, 'order_alternative_id' => $id, 'value' => $value, 'ammount' => $numbuy[$key]));
 				}
-				$ordervalues->addOrderValue(array('order_id' => $order_id, 'order_alternative_id' => $id, 'value' => $value));
 			}
 			
 			
 			if (!$this->_checkMembership($themember)) {
-			    $ordervalues->addOrderValue(array('order_id' => $order_id, 'order_alternative_id' => 0, 'value' => 'MEMBERSHIP'));
+			    //$ordervalues->addOrderValue(array('order_id' => $order_id, 'order_alternative_id' => 0, 'value' => 'MEMBERSHIP'));
 			}
 			
 			if($cost <= 0)
@@ -266,8 +356,12 @@ class TicketController extends Controller
 				$this->_set('order_id', $order_id);
 				$this->_set('member', $themember);
 			}
+		//	var_dump($cost);
+		//	var_dump($stuff);
+		//	var_dump($numbuy);
 		} else {
 			ErrorHelper::error("Något gick fel med vår kontakt till Payson");
+//			var_dump($payResponse);
 		}
 	}
 	
@@ -321,7 +415,9 @@ class TicketController extends Controller
 	
 	public function pay_cancel()
 	{
-		ErrorHelper::error("Ditt köp blev avbrutet. Försök igen.", true);
+                $this->_set('error', 'Ditt köp blev avbrutet. Försök igen.');
+                $this->view = 'ticket.buystuff.php';
+                $this->buystuff();
 	}
 	
 	public function pay_status() // This does nothing, because of payson uncertainty
@@ -351,6 +447,153 @@ class TicketController extends Controller
 		}
 
 	}
+
+	public function move()
+	{
+		if(!$this->_checkLogin()) // Am i logged in?
+			return;
+
+		// Import models
+		$order = Model::getModel('order');
+		$ordersvalues = Model::getModel('ordersvalues');
+		$user = Model::getModel('user');
+
+		// Get a list of the orders that are completed.
+		$myorders = $order->getOrderFromUserAndStatus(Auth::user(), 'COMPLETED');
+
+		// If we can't find any orders, display an error:
+		if(!count($myorders))
+		{
+			ErrorHelper::error("Du har ingen order, eller är inte inloggad. Vid frågor, kontakta kundtjanst@narcon.se");
+			return;
+		}
+		
+		// Get a list of all the different order alternatives
+		$this->_buildAlternativeTreeNoFilter();
+
+		// We are going to store a list with all the ordersvalues combined in this, with all the values combined.
+		$mashup = array();
+		
+		foreach($myorders as $myorder)
+                {
+                        $the_ordersvalues = $ordersvalues->getOrderValuesFromOrder($myorder['id']);
+                        foreach ($the_ordersvalues as $value) {
+                                if(empty($mashup[$value['id']])) // Create an ordersvaluesarray with all the values combined.
+                                {
+                                        $mashup[$value['id']] = $value;
+                                } else {
+                                        $mashup[$value['id']]['ammount'] += $value['ammount']; 
+                                }
+                        }
+                }
+
+		// Send it to the view
+		$this->_set('ordersvalues', $mashup);
+		$this->_set('tree_simple', $this->tree_simple);
+
+		// If the user has posted a request for moving of a ticket..
+		if(!empty($_REQUEST['ammount']))
+		{
+			// Check if the user exists, and sanitycheck.
+			$moveto = $user->getByUsername(@$_REQUEST['usertomoveto']);
+			if($moveto['id'] == Auth::user())
+				die("Du får inte flytta biljetter till dig själv!");
+			if(empty($moveto) || empty($_REQUEST['usertomoveto']))
+			{
+				ErrorHelper::error("Kan inte hitta användaren du vill flytta till!");
+				return;
+			}
+
+			// For extra security, the user must reauthenticate.
+			$mycurrentuser = Auth::user(true);
+			if($user->auth($mycurrentuser['username'], @$_REQUEST['mypassword']) != $mycurrentuser['id']){
+                                ErrorHelper::error("Du har skrivit in fel lösenord!");
+                                return;
+
+			}
+
+			// Sanity check so that the user moves something:
+			$movesomething = 0;
+			foreach($_REQUEST['ammount'] as $ammount)
+			{
+				if($ammount > 0)
+					$movesomething = $ammount;
+			}
+			if($movesomething == 0)
+			{
+				ErrorHelper::error("Du måste flytta något!");
+				return;
+			}
+
+			// Skapa en order på användaren du tänker flytta på. Markera den som 'moved'.
+
+                        $order_id = $order->addOrder(array('user_id' => $moveto['id'],
+        	                                           'payson_token' => 'moved',
+        	                      			   'code_id' => 0
+                        ));
+
+			// Sanity check så man inte försöker flytta mer än man har.
+
+			foreach($_REQUEST['ammount'] as $key => $ammount)
+			{
+				if($ammount > @$mashup[$key]['ammount'] || $ammount < 0)
+				{
+					die("Fuskfångst. Du försökte ge bort mer av en typ än du har.");
+				}
+			}
+
+			// Markera ordern som betald.
+
+			$order->setStatusById($order_id, 'COMPLETED');
+
+			// Gå igenom allt vi vill flytta:
+
+			foreach($_REQUEST['ammount'] as $key => $ammount) // ammount = Hur mycket man vill flytta. key = alternatividt
+			{
+
+				if($ammount > 0) // Om vi försöker flytta något
+				{
+					// Hämta ut alla saker av den typen från vår användare
+					$deleteloop = $ordersvalues->getByUserIDAndAlternativeID(Auth::user(), $key);
+					foreach($deleteloop as $del) // Loopa igenom dem.
+					{
+						if(($del['ammount'] - $ammount) <= 0) // Om resterna blir under 0
+						{
+							$ordersvalues->delete($del['id']); // Ta bort ordersvaluen
+							$ammount - $del['ammount']; // Och kom ihåg hur mycket som finns kvar.
+						} else {
+							$ordersvalues->updateammount($del['id'], $del['ammount'] - $ammount); // Annars, uppdatera statusen.
+							if($del['ammount'] - $ammount == 0)
+							{
+								$ordersvalues->delete($del['id']);
+							}
+							break;
+						}
+					}
+
+					// Lägg till den hos mottagaren.
+					$ordersvalues->addOrderValue(array('order_id' => $order_id, 'order_alternative_id' => $key, 'value' => @$mashup[$key]['value'], 'ammount' => $ammount));
+				}
+			}
+
+	                foreach($myorders as $myorder) // Kolla om mina ordrar är tomma. Ta bort de som är tomma.
+	                {
+	                        $the_ordersvalues = $ordersvalues->getOrderValuesFromOrder($myorder['id']);
+	                        if(empty($the_ordersvalues)){
+					$order->setStatusById($myorder['id'], 'NOTPAYED');
+				}
+        	        }
+
+			$this->_redirect('move_jump');
+		}
+	}
+
+	public function move_jump()
+	{
+		ErrorHelper::success("Överföringen av produkt(erna) lyckades!");
+		$this->view = 'ticket.index.php';
+                        $this->index();
+	}
 	
 	public function getticket()
 	{
@@ -358,55 +601,57 @@ class TicketController extends Controller
 			return;
 		$order = Model::getModel('order');
 		$member = Model::getModel('member');
-		$themember = $member->getMemberByUserID(Auth::user()); // Get the member from the database corresponding to the user.
-		$myorder = $order->getOrderFromUserAndStatus(Auth::user(), 'COMPLETED');
-		
-		if (!count($myorder)) {
-			die("Du har ingen order, eller är inte inloggad.");
-		}
-		
-		$ticket = CFactory::getTicketGen();
-		$this->_buildAlternativeTree();
 		$ordersvalues = Model::getModel('ordersvalues');
-		$the_ordersvalues = $ordersvalues->getOrderValuesFromOrder($myorder[0]['id']);
-		echo mysql_error();
-		// Dirty Hikari-Con-loop, not proud monkey
-		$ticket->addBarCode(150, 230, $themember['PersonID'] . '-' . strtoupper( substr(hash('SHA512', $themember['PersonID'] . Settings::$BarKey), 0, 4 )), 0.5, 8);
-		/*$sovsal = false;
-		foreach ($the_ordersvalues as $key => $value) {
-			switch ($value['order_alternative_id']) {
-				case 6:
-					$sovsal = true;
-					break;
-				default:
-					break;
-			}
-		}
-		* 
-		if ($sovsal) {
-			$ticket->pdf->SetXY(55, 220);
-			$ticket->pdf->Cell(0,0, 'X');
-		} else {
-			$ticket->pdf->SetXY(75, 220);
-			$ticket->pdf->Cell(0,0, 'X');
-		}*/
+
+		$themember = $member->getMemberByUserID(Auth::user()); // Get the member from the database corresponding to the user.
+		$myorders = $order->getOrderFromUserAndStatus(Auth::user(), 'COMPLETED');
 		
-		$ticket->_pdf->SetXY(55, 40); // 63
-		$ticket->_pdf->Cell(0,0, utf8_decode($themember['firstName']));
-		$ticket->_pdf->SetXY(55, 46.5);
-		$ticket->_pdf->Cell(0,0,utf8_decode($themember['lastName']));
-		$ticket->_pdf->SetXY(55, 53);
-		$ticket->_pdf->Cell(0,0,$themember['socialSecurityNumber']);
-		$ticket->_pdf->SetXY(105, 46);
-		$ticket->_pdf->Cell(0,0,utf8_decode($themember['streetAddress']));
-		$ticket->_pdf->SetXY(105, 53);
-		$ticket->_pdf->Cell(0,0, $themember['zipCode'] . ' ' . utf8_decode($themember['city']));
-		$ticket->_pdf->SetXY(30, 57);
-		$orderstring = "";
-		foreach ($the_ordersvalues as $value) {
-			$orderstring .= $value['name'] . '   ' . $value['cost'] . 'kr' . "\r\n";
+		if (!count($myorders)) {
+			die("Du har ingen order, eller är inte inloggad. Vid frågor, kontakta kundtjanst@narcon.se");
 		}
-		$ticket->_pdf->MultiCell(0, 10, utf8_decode($orderstring));
+
+		$this->_buildAlternativeTreeNoFilter();
+
+		$orderstring = "";
+		$boughtticket = false;
+
+		$mashup = array();
+		foreach($myorders as $myorder)
+		{
+			$the_ordersvalues = $ordersvalues->getOrderValuesFromOrder($myorder['id']);
+	                foreach ($the_ordersvalues as $value) {
+				if(empty($mashup[$value['id']])) // Create an ordersvaluesarray with all the values combined.
+				{
+					$mashup[$value['id']] = $value;
+				} else {
+					$mashup[$value['id']]['ammount'] += $value['ammount']; 
+				}
+
+	                        if($value['id'] == 2 || $value['id'] == 33) {
+	                                $boughtticket = true;
+	                        }
+	                }
+		}
+
+		foreach($mashup as $key => $ordervalue)
+		{
+	                        if($ordervalue['name'] != '') {
+	                                $orderstring .= $ordervalue['ammount'] . ' x ' . ( @$this->tree_simple[$this->tree_simple[$key]['parent']]['template_override'] == 'select' ? $this->tree_simple[$this->tree_simple[$key]['parent']]['name'] . ' - ' . $ordervalue['name'] : $ordervalue['name']) . '   ' . $ordervalue['cost'] . 'kr' . "\r\n";
+	                        } else {
+	                                $orderstring .= "";
+	                        }
+		}
+		
+		$ticket = CFactory::getTicketGen($boughtticket ? '/tickettemplate.pdf' : '/kvittotemplate.pdf');
+
+		$ticket->addBarCode(90, 275, $themember['PersonID'] . '-' . strtoupper( substr(hash('SHA512', $themember['PersonID'] . 
+Settings::$BarKey), 0, 4 )), 0.5, 8);
+		
+		
+		$ticket->_pdf->SetXY(90, 228);
+		$ticket->_pdf->Cell(0,0, utf8_decode($themember['firstName'] . ' ' . $themember['lastName'] . ' ('. $themember['socialSecurityNumber'] . ')'));
+		$ticket->_pdf->SetXY(30, 180);
+		$ticket->_pdf->MultiCell(0, 5, utf8_decode($orderstring));
 		$ticket->generate();
 		exit();
 	}

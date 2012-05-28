@@ -5,17 +5,20 @@ label{
 </style>
 
 <?php if($status == 'emailsent'):?>
-Ett mail har skickats till din registrerade mail, <?php echo $email;?>.
-Klicka på länken i mailet för att fortsätta :).
 
-Är det inte din mail? Kontakta <a href="mailto:magnusjjj@gmail.com">magnusjjj@gmail.com - Magnus Johnsson</a>
+Ett mail har skickats till din mail, <?php echo $email;?>. Klicka pÃ¥ lÃ¤nken i mailet fÃ¶r att fortsÃ¤tta. Har du inte fÃ¥tt nÃ¥got mail (kolla Ã¤ven i din spam-/skrÃ¤ppost) eller Ã¤r det inte din adress? Kontakta: <a href="mailto:conman@narcon.se">conman@narcon.se</a>	
 
 <?php elseif($status == 'wrong_ssid'):?>
-Tyvärr är personnummret du skrev in inte giltligt. <a href="<?php echo Router::url('index');?>">Försök igen</a>
+TyvÃ¤rr Ã¤r personnummret du skrev in inte giltligt. <a href="<?php echo Router::url('index');?>">FÃ¶rsÃ¶k igen</a>
 
 <?php elseif($status == 'not_member'):?>
-Vi hittade dig inte i databasen. Är detta fel? Kontakta <a href="mailto:magnusjjj@gmail.com">magnusjjj@gmail.com - Magnus Johnsson</a><br/>
+Vi hittade dig inte i databasen. Ã„r detta fel? Kontakta <a href="mailto:conman@narcon.se">conman@narcon.se</a><br/>
 <br/>
-Du är tydligen inte medlem än, så du får gå tillbaka och bli det.
+Du Ã¤r tydligen inte medlem Ã¤n, sÃ¥ du fÃ¥r gÃ¥ tillbaka och bli det.
+
+<?php elseif($status == 'wrong_email'):?>
+TyvÃ¤rr Ã¤r email-adressen du skrev in inte i vÃ¥ran databas, antingen Ã¤r du inte registrerad eller sÃ¥ skrev du in fel adress. 
+
+VÃ¤nligen <a href="<?php echo Router::url('forgetPass');?>">FÃ¶rsÃ¶k igen</a> eller <a href="<?php echo Router::url('index');?>">Registrera Dig!</a>
 
 <?php endif;?>

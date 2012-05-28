@@ -88,10 +88,10 @@ class TicketGen
 {
 	public $_pdf = null;
 	
-	public function __construct()
+	public function __construct($source)
 	{
-		$this->_pdf =& new ConmanPDFOverloaded();
-		$pagecount = $this->_pdf->setSourceFile(Settings::getRoot() . '/templates/default/ticket.pdf'); 
+		$this->_pdf = new ConmanPDFOverloaded();
+		$pagecount = $this->_pdf->setSourceFile(Settings::getRoot() . $source); 
 		$tplidx = $this->_pdf->importPage(1); 
 		$this->_pdf->addPage(); 
 		$this->_pdf->useTemplate($tplidx); 		
@@ -104,6 +104,6 @@ class TicketGen
 	
 	public function generate()
 	{
-		$this->_pdf->Output('biljett.pdf', 'D');
+		$this->_pdf->Output('kvitto.pdf', 'D');
 	}
 }

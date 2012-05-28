@@ -35,7 +35,7 @@ class OrderModel extends Model {
 
 	public function getOrderFromUserAndStatus($userid, $status)
 	{
-		return $this->_db->query("SELECT * FROM orders WHERE user_id = '%s' AND status = '%s' LIMIT 1;", $userid, $status);
+		return $this->_db->query("SELECT * FROM orders WHERE user_id = '%s' AND status = '%s';", $userid, $status);
 	}
 	
 	function getOrderByToken($payson_token)

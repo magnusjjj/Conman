@@ -41,7 +41,7 @@ class PaymentDetails {
 
         $this->currencyCode = $responseData["currencyCode"];
         $this->custom = $responseData["custom"];
-        $this->correlationId = $responseData["correlationId"];
+        $this->correlationId = @$responseData["correlationId"];
         $this->purchaseId = $responseData["purchaseId"];
 
         $this->senderEmail = $responseData["senderEmail"];

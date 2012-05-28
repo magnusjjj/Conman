@@ -1,6 +1,6 @@
 <?php
 
-class ConmanFatal {
+class ConmanFatal extends Exception{
     var $message = "";
     
     function __construct($message){
@@ -15,7 +15,7 @@ class ErrorHelper {
 	public static function error($error, $break = false)
 	{
             if($break)
-                throw new ConmanFatal($message);
+                throw new ConmanFatal($error);
             else
 		self::$errors[] = array('error', $error);
 	}
@@ -23,7 +23,7 @@ class ErrorHelper {
 	public static function warning($warning, $break = false)
 	{
             if($break)
-                throw new ConmanFatal($message);
+                throw new ConmanFatal($warning);
             else
 		self::$errors[] = array('warning', $warning);
 	}
@@ -31,7 +31,7 @@ class ErrorHelper {
 	public static function notice($notice, $break = false)
 	{
             if($break)
-                throw new ConmanFatal($message);
+                throw new ConmanFatal($notice);
             else
 		self::$errors[] = array('notice', $notice);
 	}
@@ -39,7 +39,7 @@ class ErrorHelper {
 	public static function success($success, $break = false)
 	{
             if($break)
-                throw new ConmanFatal($message);
+                throw new ConmanFatal($success);
             else
 		self::$errors[] = array('notice', $success);
 	}

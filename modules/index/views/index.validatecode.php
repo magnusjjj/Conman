@@ -6,7 +6,9 @@ Nu ska du bara knyta en användare till ditt medlemskap, sedan är du klar :D
 <?php if(!empty($validate)):?>
 <ul>
 	<?php foreach($validate as $valid):?>
-	<li><?php echo $valid;?></li>
+	<?php if(!is_array($valid)):?>
+	<li style="border: 1px solid red;"><?php echo $valid;?></li>
+	<?php endif;?>
 <?php endforeach;?>
 </ul>
 <?php endif;?>

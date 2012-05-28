@@ -1,4 +1,6 @@
-<fieldset>
+<?php
+	/*
+	<fieldset>
 	<script type="text/javascript">
 		$(function(){
 			$(".ticketweekend<?php echo $alternative['id'];?>").click(function(){
@@ -40,4 +42,8 @@
 			<?php endforeach;?>
 		</fieldset>
 		<?php endif;?>
-</fieldset>
+	</fieldset>
+*/
+?>
+<input type="checkbox" name="val[<?php echo $alternative['id'];?>]" value="y" checked="checked" disabled="disabled"/><?php echo $alternative['name'];?> (<?php echo $alternative['cost'];?> kr) - Din biljett till årets stora händelse!<br/>
+<input type="hidden" name="val[<?php echo $alternative['id'];?>]" value="y"/>

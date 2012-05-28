@@ -1,5 +1,4 @@
-<?php if(file_exists(__DIR__ . '/../../../products/'.$alternative['id'].'.png')):?><a class="fancybox" href="<?php echo Settings::$path;?>products/<?php echo $alternative['id'];?>.png"><?php endif;?><?php echo $alternative['name'];?><?php if(file_exists(__DIR__ . '/../../../products/'.$alternative['id'].'.png')):?></a><?php endif;?>
-</td>
+<?php echo $alternative['name'];?></td>
 <td>
 	<select name="ammount[<?php echo $alternative['id'];?>]">
         	<?php for($i = 0; $i <= $alternative['max_in_view']; $i++):?>

@@ -45,28 +45,36 @@ if ($action == 'login') {
 		$controller = 'ticket';
 		$action = 'index';
 	} else {
-		ErrorHelper::error('Fel användarnamn eller ösenord. Försök igen');
+		ErrorHelper::error('Fel användarnamn eller lösenord. Vänligen försök igen');
 		$controller = 'index';
 		$action = 'index';
 	}
 }
 
-if (file_exists('modules/'.$controller.'/'.$controller.'_controller.php')) {
-	include('modules/'.$controller.'/'.$controller.'_controller.php'); // Hämta rätt controller
-	Router::$controller = $controller; // Routern använder namnet på controllern för att generera URL'er senare
-	// Instansiera controllern, och kalla på actionen:
-	$controllername = ucfirst(strtolower($controller)) . "Controller"; 
-	$con = new $controllername();
-	$con->name = strtolower($controller);
-	$con->view = $controller.'.'.$action.'.php';
-	if (method_exists($con, $action)) {
-		call_user_func_array(array($con, $action), array_slice($qe, 2)); // Pang, iväg!
+try {
+	if (file_exists('modules/'.$controller.'/'.$controller.'_controller.php')) {
+		include('modules/'.$controller.'/'.$controller.'_controller.php'); // Hämta rätt controller
+		Router::$controller = $controller; // Routern använder namnet på controllern för att generera URL'er senare
+		// Instansiera controllern, och kalla på actionen:
+		$controllername = ucfirst(strtolower($controller)) . "Controller"; 
+		$con = new $controllername();
+		$con->name = strtolower($controller);
+		$con->view = $controller.'.'.$action.'.php';
+		if (method_exists($con, $action)) {
+			call_user_func_array(array($con, $action), array_slice($qe, 2)); // Pang, iväg!
+		} else {
+			// Felmeddelande här
+			ErrorHelper::error('Någon har fumlat, den här sidan finns inte. Kontakta admin :)');
+		}
 	} else {
-		// Felmeddelande här
 		ErrorHelper::error('Någon har fumlat, den här sidan finns inte. Kontakta admin :)');
 	}
-} else {
-	ErrorHelper::error('Någon har fumlat, den här sidan finns inte. Kontakta admin :)');
+} catch(ConmanFatal $e)
+{
+	unset($con);
+	ErrorHelper::error($e->message);
+	include("templates/" . Settings::$Template . "/default.php"); // Visa templaten;
+	die();
 }
 
 

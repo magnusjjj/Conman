@@ -43,4 +43,10 @@ class MemberModel extends Model
 	{
 		$this->_db->query("UPDATE members SET membershipBegan = NOW(), membershipEnds = NOW() WHERE PersonID = '%s' LIMIT 1", $id);
 	}
+
+	public function getMemberByEmail($email)
+	{
+		$member = $this->_db->query("SELECT * FROM members WHERE `eMail` = '%s';", $email);
+		return !empty($member[0]) ? $member[0] : false;
+	}
 }

@@ -1,11 +1,18 @@
-Hej <?php $user = Auth::user(true); echo $user['username'];?> (<a href="<?php echo Router::url('/index/logout');?>">Logga ut</a>)<br/>
+<style type="text/css">
+	fieldset {
+		border: 2px groove threedface;
+		border-image: initial;
+		margin: 5px;
+		padding: 5px;
+	}
+</style>
 <?php if(@$user['entrance']):?><a href="<?php echo Router::url('/entrance');?>"><h1>Gå till entrén!</h1></a><?php endif;?>
 
 
 <?php
 	if(!$is_member)
 	{
-		echo "Du är antingen inte medlem i föreningen, eller så kommer ditt medlemskap gå ut innan slutet av konventet. Du är därför tvungen att betala medlemsavgiften i föreningen på " . Settings::$MembershipCost . 'kr<br/>';
+		//echo "<div class='italic'>Du är ännu inte medlem i föreningen NärCon. Det beror antagligen på att du inte har betalat en order än. Första gången du lägger en order kommer medlemsavgiften (" . Settings::$MembershipCost . " kr) att läggas på och sedan är du medlem i föreningen!</div>";
 	} 
 ?>
 
@@ -20,14 +27,15 @@ Hej <?php $user = Auth::user(true); echo $user['username'];?> (<a href="<?php ec
 		echo "<div class=\"error\">$error</div>";
 	}
 ?>
-<form action="<?php echo Router::url('gotopay')?>" method="POST">
+<form action="<?php echo Router::url('gotopay')?>" method="POST" style="overflow: visible">
 <?php foreach($alternatives_parents as $alternative):?>
 <?php 
 	print_alternative($alternative, $alternatives_children);
 ?>
 <?php endforeach;?>
 	<?php if(count($alternatives_parents)):?>
-	Eventuell kod:<input type="text" name="code"/>
+	Eventuell rabatt/förköpskod: <input name="code" type="text" class="leftmargin" value="<?php echo @$_REQUEST['code'];?>"/><br/>
+	<input type="checkbox" name="iaccept" value="yes"/>Jag accepterar <a href="http://2012.narcon.se/?page_id=623" target="blank">köpvillkoren.</a>
 	<input type="submit" value="Köp!"/>
 	<?php endif;?>
 </form>

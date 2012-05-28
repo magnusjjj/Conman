@@ -138,7 +138,6 @@ p {
 	background: #fafafa;
 	border-radius: 2px;
 	margin-top: 20px;
-	line-height:120%;
 }
 
 /**
@@ -158,7 +157,7 @@ p {
 	text-align: right;
 	padding-right: 10px;
 	clear: left;
-
+	line-height: 2.5em;
 	margin-bottom: 5px;
 }
 
@@ -166,7 +165,7 @@ p {
 	margin: 0 0 5px 0;
 }
 
-input[type="text"], input[type="password"] {
+#content > form input[type="text"], #content > form input[type="password"] {
 	/* float: left; */
 	width: 50%;
 	margin-right: 10px; /* Original value 20% */
@@ -182,36 +181,6 @@ input[type="text"], input[type="password"] {
 * Samuels added stuff
 */
 
-#content > div.nobox {
-	border: 0px;
-	padding: 0px 0px 10px 0px;
-	background: none;
-	border-radius: 0px;
-	margin-top: 0px;
-
-}
-
-#content > p.nomargin {
-	margin-left: 0%;
-	line-height:120%;
-	padding: 0px 0px 5px 0px;
-}
-
-p.nomargin {
-	margin-left: 0%;
-	line-height:120%;
-	padding: 0px 0px 5px 0px;
-}
-
-#content > p.nomargincenter {
-	text-align:center;
-	margin-left: 0%;
-	line-height:120%;
-	padding: 0px 0px 5px 0px;
-}
-
-
-
 input#leftmargin {
 	margin-left: 5px;
 }
@@ -220,10 +189,9 @@ div.italic {
 	font-style:italic;
 }
 
-th.headeralign {
-	font-weight:bold;
+.headeralign {
 	text-align:left;
-	padding-bottom:10px;
+	font-weight:bold;
 }
 
 .strong {
@@ -231,23 +199,14 @@ th.headeralign {
 }
 
 table.receipt {
-	width:90%;
+	width:100%;
 }
 
 td.name {
-	width:50%;
-}
-
-td.amount {
-	width:20%;
+	width:70%;
 }
 
 td.price {
-	text-align:right;
-}
-
-td.sum {
-	padding-top:10px;
 	text-align:right;
 }
 
@@ -278,78 +237,3 @@ td.sum {
 	margin-left: 5px ! important;
 }
 
-#input_div {
-	width:100%;
-	border-style:solid;
-	border-size:30px;
-	border-color:#00ff00;
-}
-
-#input_div > input.input_text {
-	clear:left;
-	
-	height: 50px;
-	
-	margin: 5px 0px 5px 0px;
-	padding: 0px 0px 0px 0px;
-	
-	border-width: 3px;
-	border-style: solid;
-	border-color: #cdcdcd;
-	border-radius: 5px;
-	
-	font-size: 25px;
-	font-color: #000000;
-	font-weight: 1000;
-	color: #333333;
-	
-	background: #FFFFFF;
-	background: -webkit-gradient(linear, left top, left bottom, from(#FFFFFF), to(#efefef));
-	background: -moz-linear-gradient(top,  #FFFFFF,  #efefef);
-	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#efefef');
-}
-
-#input_div > label.input_label {
-	clear:left;
-	color:#51b2e9;
-	margin: 5px 20px 5px 0px;
-	padding: 0px 0px 0px 0px;
-	font-size:20px;
-	
-	height: 50px;
-	width: 30%;
-	text-align: right;
-	
-	line-height:200%;
-}
-
-#input_div > input.input_radio {
-	margin: 0px;
-	padding: 0px;
-}
-
-#input_div > div.gender_button_group {
-	float:left;
-	
-	height: 50px;
-	
-	margin: 5px 0px 5px 0px;
-	padding: 0px 0px 0px 0px;
-	
-	font-size: 20px;
-	font-color: #000000;
-	font-weight: 1000;
-	color: #333333;
-	
-	border-width: 0px;
-	border-style: solid;
-	border-color: #fff;
-	border-radius: 0px;
-	
-	line-height:200%;
-}
-
-ol.move
-{
-list-style-type:decimal;
-}

@@ -1,0 +1,185 @@
+#centerpage {
+	width: 850px;
+	margin: 1em auto 1em auto;
+	border: 1px solid #d9dce1;
+	
+	font-family: 'Open Sans', sans-serif;
+	font-size: 1em;
+}
+
+h1 {
+	font-size: 1.7em;
+}
+
+a {
+	color: #1271c1;
+}
+
+p {
+	margin-bottom: 0.5em;
+}
+
+/**
+ * Bar
+ */
+
+#topbar {
+	background: #212127;
+	height: 91px;
+}
+
+#topbar a {
+	float: left;
+	display: block;
+	height: 100%;
+}
+
+#topbar a.blue {
+	width: 271px;
+	padding: 20px 0 0 80px;
+	
+	background-image: url('gradient-lock.png');
+	
+	text-decoration: none;
+	color: #14567d;
+}
+
+#topbar .black {
+	width: 577px;
+	
+	padding: 20px 0 0 80px;
+	
+	background-image: url('plus.png');
+	background-repeat: no-repeat;
+	background-position: 23px center;
+	
+	text-decoration: none;
+	color: #8c8e95;
+}
+
+#topbar div.black{
+	background-image: none;
+}
+
+#topbar div.black a{
+	float: none;
+	display: inline;
+}
+
+#topbar h1 {
+	color: white;
+}
+
+#topbar > a > h1 {
+	color: white;
+}
+
+/**
+ * Content
+ */
+
+#content {
+	width: 550px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#content > h1 {
+	text-align: center;
+}
+
+#content > div {
+	border: 1px solid #d9d5de;
+	padding: 15px;
+	background: #fafafa;
+	border-radius: 2px;
+	margin-top: 20px;
+}
+
+/**
+ * Form
+ */
+
+#content > form {
+	overflow: auto;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+#content > form label {
+	width: 30%;
+	display: block;
+	float: left;
+	text-align: right;
+	padding-right: 10px;
+	clear: left;
+	line-height: 2.5em;
+	margin-bottom: 5px;
+}
+
+#content > form input {
+	margin: 0 0 5px 0;
+}
+
+#content > form input[type="text"], #content > form input[type="password"] {
+	/* float: left; */
+	width: 50%;
+	margin-right: 10px; /* Original value 20% */
+	background: #f2f2f2;
+	border: 1px solid #dcd9e0;
+	border-radius: 2px;
+	padding: .50em;
+	color: #92949b;
+	font-weight: bold;
+}
+
+/*
+* Samuels added stuff
+*/
+
+input#leftmargin {
+	margin-left: 5px;
+}
+
+div.italic {
+	font-style:italic;
+}
+
+.strong {
+	font-weight:bold;
+}
+
+table.receipt {
+	width:100%;
+}
+
+td.name {
+	width:70%;
+}
+
+td.price {
+	text-align:right;
+}
+
+#content > form input[type="checkbox"] {
+	margin-top: 4px;
+	margin-right: 10px; /* Original value: 60% */
+	height: 2.5em;
+}
+
+#content > form input[type="submit"] {
+	border: 1px solid #39adf0;
+	border-radius: 3px;
+	color: white;
+	padding: 5px 10px 5px 10px;
+	background: #62c3fa;
+}
+
+/**
+ * Bottom links
+ */
+
+#content > p {
+	margin-left: 30%;
+}
+
