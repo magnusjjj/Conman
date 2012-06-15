@@ -450,6 +450,7 @@ class TicketController extends Controller
 
 	public function move()
 	{
+	
 		if(!$this->_checkLogin()) // Am i logged in?
 			return;
 
@@ -457,6 +458,7 @@ class TicketController extends Controller
 		$order = Model::getModel('order');
 		$ordersvalues = Model::getModel('ordersvalues');
 		$user = Model::getModel('user');
+		$logger = Model::getModel('log');
 
 		// Get a list of the orders that are completed.
 		$myorders = $order->getOrderFromUserAndStatus(Auth::user(), 'COMPLETED');
@@ -475,17 +477,19 @@ class TicketController extends Controller
 		$mashup = array();
 		
 		foreach($myorders as $myorder)
-                {
-                        $the_ordersvalues = $ordersvalues->getOrderValuesFromOrder($myorder['id']);
-                        foreach ($the_ordersvalues as $value) {
-                                if(empty($mashup[$value['id']])) // Create an ordersvaluesarray with all the values combined.
-                                {
-                                        $mashup[$value['id']] = $value;
-                                } else {
-                                        $mashup[$value['id']]['ammount'] += $value['ammount']; 
-                                }
-                        }
-                }
+		{
+			$the_ordersvalues = $ordersvalues->getOrderValuesFromOrder($myorder['id']);
+			foreach ($the_ordersvalues as $value)
+			{
+				if(empty($mashup[$value['id']])) // Create an ordersvaluesarray with all the values combined.
+				{
+					$mashup[$value['id']] = $value;
+				} else {
+					$mashup[$value['id']]['ammount'] += $value['ammount']; 
+				}
+			}
+		}
+		
 
 		// Send it to the view
 		$this->_set('ordersvalues', $mashup);
@@ -519,72 +523,94 @@ class TicketController extends Controller
 				if($ammount > 0)
 					$movesomething = $ammount;
 			}
+			
 			if($movesomething == 0)
 			{
 				ErrorHelper::error("Du måste flytta något!");
 				return;
 			}
-
-			// Skapa en order på användaren du tänker flytta på. Markera den som 'moved'.
-
-                        $order_id = $order->addOrder(array('user_id' => $moveto['id'],
-        	                                           'payson_token' => 'moved',
-        	                      			   'code_id' => 0
-                        ));
-
-			// Sanity check så man inte försöker flytta mer än man har.
-
-			foreach($_REQUEST['ammount'] as $key => $ammount)
+			
+			try
 			{
-				if($ammount > @$mashup[$key]['ammount'] || $ammount < 0)
+				// log current amount of completed orders for future reference
+				$logger->log("MoveInit", "Ticket transfer successfully initiated.", array("amount" => $ammount, "recipient_id" => $moveto['id'], "recipient_name" => $moveto['username']));
+				$logger->log("MoveCurrentOrderAmount", "Current orders before transfer.", $myorders);
+				$logger->log("MoveCurrentOrderAmount2", "Computed order amounts.", $mashup);
+
+
+				// Skapa en order på användaren du tänker flytta på. Markera den som 'moved'.
+
+				$order_id = $order->addOrder(array('user_id' => $moveto['id'],
+				   'payson_token' => 'moved',
+					'code_id' => 0
+					));
+				$logger->log("MoveAddOrderToUser", "New order created for recipient user", array("order_id" => $order_id));
+
+				// Sanity check så man inte försöker flytta mer än man har.
+
+				foreach($_REQUEST['ammount'] as $key => $ammount)
 				{
-					die("Fuskfångst. Du försökte ge bort mer av en typ än du har.");
-				}
-			}
-
-			// Markera ordern som betald.
-
-			$order->setStatusById($order_id, 'COMPLETED');
-
-			// Gå igenom allt vi vill flytta:
-
-			foreach($_REQUEST['ammount'] as $key => $ammount) // ammount = Hur mycket man vill flytta. key = alternatividt
-			{
-
-				if($ammount > 0) // Om vi försöker flytta något
-				{
-					// Hämta ut alla saker av den typen från vår användare
-					$deleteloop = $ordersvalues->getByUserIDAndAlternativeID(Auth::user(), $key);
-					foreach($deleteloop as $del) // Loopa igenom dem.
+					if($ammount > @$mashup[$key]['ammount'] || $ammount < 0)
 					{
-						if(($del['ammount'] - $ammount) <= 0) // Om resterna blir under 0
-						{
-							$ordersvalues->delete($del['id']); // Ta bort ordersvaluen
-							$ammount - $del['ammount']; // Och kom ihåg hur mycket som finns kvar.
-						} else {
-							$ordersvalues->updateammount($del['id'], $del['ammount'] - $ammount); // Annars, uppdatera statusen.
-							if($del['ammount'] - $ammount == 0)
-							{
-								$ordersvalues->delete($del['id']);
-							}
-							break;
-						}
+						$logger->log("MoveError", "Requested amount to transfer > amount available");
+						die("Fuskfångst. Du försökte ge bort mer av en typ än du har.");
 					}
-
-					// Lägg till den hos mottagaren.
-					$ordersvalues->addOrderValue(array('order_id' => $order_id, 'order_alternative_id' => $key, 'value' => @$mashup[$key]['value'], 'ammount' => $ammount));
 				}
-			}
 
-	                foreach($myorders as $myorder) // Kolla om mina ordrar är tomma. Ta bort de som är tomma.
-	                {
-	                        $the_ordersvalues = $ordersvalues->getOrderValuesFromOrder($myorder['id']);
-	                        if(empty($the_ordersvalues)){
-					$order->setStatusById($myorder['id'], 'NOTPAYED');
+				// Markera ordern som betald.
+
+				$order->setStatusById($order_id, 'COMPLETED');
+
+				// Gå igenom allt vi vill flytta:
+
+				foreach($_REQUEST['ammount'] as $key => $ammount) // ammount = Hur mycket man vill flytta. key = alternatividt
+				{
+
+					if($ammount > 0) // Om vi försöker flytta något
+					{
+						$ammount_to_delete = $ammount;
+						// Hämta ut alla saker av den typen från vår användare
+						$deleteloop = $ordersvalues->getByUserIDAndAlternativeID(Auth::user(), $key);
+						foreach($deleteloop as $del) // Loopa igenom dem.
+						{
+							$logger->log("MoveDeleteFromSourceUser", "Removing items from source user.", array("order_id" => $order_id, "\$del" => $del));
+							if(($del['ammount'] - $ammount_to_delete) <= 0) // Om resterna blir under 0
+							{
+								$ordersvalues->delete($del['id']); // Ta bort ordersvaluen
+								$ammount_to_delete = $ammount_to_delete - $del['ammount']; // Och kom ihåg hur mycket som finns kvar.
+							} else {
+								$ordersvalues->updateammount($del['id'], $del['ammount'] - $ammount_to_delete); // Annars, uppdatera statusen.
+							/*	if($del['ammount'] - $ammount_to_delete == 0)
+								{
+									$ordersvalues->delete($del['id']);
+								}*/
+								$ammount_to_delete = 0;
+								break;
+							}
+						}
+
+						// Lägg till den hos mottagaren.
+						$ordersvalues->addOrderValue(array('order_id' => $order_id, 'order_alternative_id' => $key, 'value' => @$mashup[$key]['value'], 'ammount' => $ammount));
+						$logger->log("MoveAddOrderToRecipient", "New order successfully added to recipient user.", array("order_id" => $order_id, "order_alternative_id" => $key, "value" => $mashup[$key]['value'], "amount" => $ammount));
+					}
 				}
-        	        }
 
-			$this->_redirect('move_jump');
+				foreach($myorders as $myorder) // Kolla om mina ordrar är tomma. Ta bort de som är tomma.
+				{
+					$the_ordersvalues = $ordersvalues->getOrderValuesFromOrder($myorder['id']);
+					if(empty($the_ordersvalues))
+					{
+						$order->setStatusById($myorder['id'], 'MOVEEMPTY'); // MOVEEMPTY since 2012-06-12, before that NOTPAYED
+						$logger->log("MoveRemoveEmptyOrder", "Successfully removed a completely empty order with id=" . $myorder['id']);
+					}
+				}
+				$logger->log("MoveTransferComplete", "Order transfer successfully completed.");
+				$this->_redirect('move_jump');
+			} // end try
+			catch(Exception $e)
+			{
+				$logger->log("MoveError", "Uncaught exception in ticket controller.", array("description" => $e->getMessage()));
+			} // end catch
 		}
 	}
 

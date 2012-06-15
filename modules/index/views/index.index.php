@@ -7,8 +7,7 @@
     <p>Men, det slutar inte där, för du kan också logga in och kolla på din beställning, tilldela andra konventare biljetter och göra nya beställningar</p>
     <p>Har du redan ett konto kan du logga in här nedanför, annars registrerar du ett konto ovan!</p>
 </div>
-
-<form action="<?php echo Router::url("login");?>">
+<form method="post" action="<?php echo Router::url("login");?>">
     <label for="form_username">Användarnamn:</label><input type="text" name="username" id="form_username" />
     <label for="form_password">Lösenord:</label><input type="password" name="password" id="form_password" />
 	<br style="clear: both" />
