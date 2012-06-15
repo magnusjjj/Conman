@@ -20,7 +20,41 @@ CREATE TABLE IF NOT EXISTS `log` (
   `event` varchar(255) NOT NULL,
   `content` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=50 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=279 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `log_transfer`
+--
+
+CREATE TABLE IF NOT EXISTS `log_transfer` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `when` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `from_user_id` int(11) NOT NULL COMMENT 'owner user id',
+  `to_user_id` int(11) NOT NULL COMMENT 'recipient user id',
+  PRIMARY KEY (`id`),
+  KEY `when` (`when`,`from_user_id`,`to_user_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COMMENT='Ticket transfer log' AUTO_INCREMENT=6 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `log_transfer_values`
+--
+
+CREATE TABLE IF NOT EXISTS `log_transfer_values` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `log_transfer_id` int(11) NOT NULL,
+  `from_order_id` int(11) NOT NULL COMMENT 'owner''s affected order id',
+  `to_order_id` int(11) NOT NULL COMMENT 'recipient''s new order id',
+  `alternative_id` int(11) NOT NULL,
+  `ammount` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `log_transfer_id` (`log_transfer_id`),
+  KEY `from_order_id` (`from_order_id`),
+  KEY `to_order_id` (`to_order_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COMMENT='binding products (alternative_id) and amount to a ticket transfer.' AUTO_INCREMENT=14 ;
 
 -- --------------------------------------------------------
 
@@ -67,7 +101,7 @@ CREATE TABLE IF NOT EXISTS `orders` (
   `status` varchar(10) NOT NULL DEFAULT 'NOTPAYED',
   `code_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2807 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2829 ;
 
 -- --------------------------------------------------------
 
@@ -132,7 +166,7 @@ CREATE TABLE IF NOT EXISTS `orders_values` (
   `given` tinyint(4) NOT NULL,
   `ammount` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=6857 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=6908 ;
 
 -- --------------------------------------------------------
 
@@ -175,7 +209,6 @@ CREATE TABLE IF NOT EXISTS `verificationcodes` (
   `code` char(20) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2837 ;
-
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

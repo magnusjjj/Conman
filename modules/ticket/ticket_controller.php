@@ -75,7 +75,7 @@ class TicketController extends Controller
 		else
 			return true;
 	}
-
+	
 	public function index() // The index page. Displayed at the time that the user logged in.
 	{
 		if (!$this->_checkLogin()) // Kick the user if its not logged in. 
@@ -472,7 +472,7 @@ class TicketController extends Controller
 		
 		// Get a list of all the different order alternatives
 		$this->_buildAlternativeTreeNoFilter();
-
+		
 		// We are going to store a list with all the ordersvalues combined in this, with all the values combined.
 		$mashup = array();
 		
@@ -521,10 +521,10 @@ class TicketController extends Controller
 			foreach($_REQUEST['ammount'] as $ammount)
 			{
 				if($ammount > 0)
-					$movesomething = $ammount;
+					$movesomething += $ammount;
 			}
 			
-			if($movesomething == 0)
+			if($movesomething <= 0)
 			{
 				ErrorHelper::error("Du måste flytta något!");
 				return;
@@ -532,30 +532,33 @@ class TicketController extends Controller
 			
 			try
 			{
-				// log current amount of completed orders for future reference
-				$logger->log("MoveInit", "Ticket transfer successfully initiated.", array("amount" => $ammount, "recipient_id" => $moveto['id'], "recipient_name" => $moveto['username']));
-				$logger->log("MoveCurrentOrderAmount", "Current orders before transfer.", $myorders);
-				$logger->log("MoveCurrentOrderAmount2", "Computed order amounts.", $mashup);
+				// log number of items to transfer and user stuff for future reference
+				$logger->log("MoveInit", "Ticket transfer successfully initiated.", array("Totalt antal produkter att flytta" => $movesomething, "Mottagarens användar-ID" => $moveto['id'], "Mottagarens användarnamn" => $moveto['username']));
+				
+				// log source user's initial order status in a readable fashion
+				$formatted_mashup = "";
+				foreach($mashup as $key => $value)
+					$formatted_mashup .= "\n{$value['name']} = {$value['ammount']}";
+				$logger->log("MoveCurrentOrderAmount", "Computed order amounts.", array("Saldo" => $formatted_mashup));
 
-
-				// Skapa en order på användaren du tänker flytta på. Markera den som 'moved'.
-
-				$order_id = $order->addOrder(array('user_id' => $moveto['id'],
-				   'payson_token' => 'moved',
-					'code_id' => 0
-					));
-				$logger->log("MoveAddOrderToUser", "New order created for recipient user", array("order_id" => $order_id));
 
 				// Sanity check så man inte försöker flytta mer än man har.
-
 				foreach($_REQUEST['ammount'] as $key => $ammount)
 				{
 					if($ammount > @$mashup[$key]['ammount'] || $ammount < 0)
 					{
-						$logger->log("MoveError", "Requested amount to transfer > amount available");
+						$logger->log("MoveError", "Requested amount to transfer > amount available", array("Produkt" => $mashup[$key]['name'], "\$ammount" => $ammount, "\$mashup[$key]['ammount']" => print_r(@$mashup[$key]['ammount'], true)));
 						die("Fuskfångst. Du försökte ge bort mer av en typ än du har.");
 					}
 				}
+
+				
+				// Skapa en order på användaren du tänker flytta på. Markera den som 'moved'.
+				$order_id = $order->addOrder(array('user_id' => $moveto['id'],
+				   'payson_token' => 'moved',
+					'code_id' => 0
+					));
+				$logger->log("MoveAddOrderToUser", "New order created for recipient user", array("Ordernummer" => $order_id));
 
 				// Markera ordern som betald.
 
@@ -565,7 +568,7 @@ class TicketController extends Controller
 
 				foreach($_REQUEST['ammount'] as $key => $ammount) // ammount = Hur mycket man vill flytta. key = alternatividt
 				{
-
+					$mashup[$key]['ammount_moved'] = $ammount; // for later logging purposes
 					if($ammount > 0) // Om vi försöker flytta något
 					{
 						$ammount_to_delete = $ammount;
@@ -573,14 +576,21 @@ class TicketController extends Controller
 						$deleteloop = $ordersvalues->getByUserIDAndAlternativeID(Auth::user(), $key);
 						foreach($deleteloop as $del) // Loopa igenom dem.
 						{
-							$logger->log("MoveDeleteFromSourceUser", "Removing items from source user.", array("order_id" => $order_id, "\$del" => $del));
+							if ($ammount_to_delete <= 0)
+								break;
+							$transfer_id = $logger->logTransfer(Auth::user(), $moveto['id'], $del['order_id'], $order_id, $del['order_alternative_id'], min($del['ammount'], $ammount_to_delete));
+							
 							if(($del['ammount'] - $ammount_to_delete) <= 0) // Om resterna blir under 0
 							{
 								$ordersvalues->delete($del['id']); // Ta bort ordersvaluen
 								$ammount_to_delete = $ammount_to_delete - $del['ammount']; // Och kom ihåg hur mycket som finns kvar.
+								$logger->log("MoveDeleteFromSourceUser", "Removing item from source user.", array("Ordernummer" => $del['order_id'], "Produkt" => $mashup[$del['order_alternative_id']]['name'], "Antal" => $del['ammount']));
 							} else {
+								if ($ammount_to_delete <= 0)
+									break; // avoid unnecessary UPDATE
 								$ordersvalues->updateammount($del['id'], $del['ammount'] - $ammount_to_delete); // Annars, uppdatera statusen.
-							/*	if($del['ammount'] - $ammount_to_delete == 0)
+								$logger->log("MoveReduceFromSourceUser", "Reducing ammount of owned item for source user.", array("Ordernummer" => $del['order_id'], "Produkt" => $mashup[$del['order_alternative_id']]['name'], "Antal" => $del['ammount']));
+								/*	if($del['ammount'] - $ammount_to_delete == 0)
 								{
 									$ordersvalues->delete($del['id']);
 								}*/
@@ -591,7 +601,7 @@ class TicketController extends Controller
 
 						// Lägg till den hos mottagaren.
 						$ordersvalues->addOrderValue(array('order_id' => $order_id, 'order_alternative_id' => $key, 'value' => @$mashup[$key]['value'], 'ammount' => $ammount));
-						$logger->log("MoveAddOrderToRecipient", "New order successfully added to recipient user.", array("order_id" => $order_id, "order_alternative_id" => $key, "value" => $mashup[$key]['value'], "amount" => $ammount));
+						$logger->log("MoveAddOrderToRecipient", "New item successfully added to recipient user.", array("Ordernummer" => $order_id, "Produkt" => $mashup[$key]['name'], "Antal" => $ammount, "Transaktions-ID" => $transfer_id));
 					}
 				}
 
@@ -604,7 +614,12 @@ class TicketController extends Controller
 						$logger->log("MoveRemoveEmptyOrder", "Successfully removed a completely empty order with id=" . $myorder['id']);
 					}
 				}
-				$logger->log("MoveTransferComplete", "Order transfer successfully completed.");
+				
+				$formatted_mashup = "";
+				foreach($mashup as $key => $value)
+					$formatted_mashup .= "\n{$value['name']} = " . ($value['ammount'] - @$value['ammount_moved']);
+				$logger->log("MoveTransferComplete", "Order transfer successfully completed.", array("Nytt saldo" => $formatted_mashup));
+
 				$this->_redirect('move_jump');
 			} // end try
 			catch(Exception $e)
