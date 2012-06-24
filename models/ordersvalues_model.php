@@ -39,6 +39,6 @@ class OrdersvaluesModel extends Model {
 
 	public function getByUserIDAndAlternativeID($user_id, $alternative_id)
 	{
-		return $this->_db->query("SELECT orders_values.* FROM orders_values INNER JOIN orders ON orders_values.order_id = orders.id WHERE orders.user_id = '%s' AND orders_values.order_alternative_id = '%s'", $user_id, $alternative_id);
+		return $this->_db->query("SELECT orders_values.* FROM orders_values INNER JOIN orders ON orders_values.order_id = orders.id WHERE orders.user_id = '%s' AND orders_values.order_alternative_id = '%s' AND orders.status = 'COMPLETED'", $user_id, $alternative_id);
 	}
 }

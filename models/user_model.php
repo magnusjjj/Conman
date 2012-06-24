@@ -51,4 +51,18 @@ class UserModel extends Model {
 		}
 		return (hash('SHA512', $password . $user[0]['salt']) == $user[0]['password']) ? $user[0]['id'] : false;
 	}
+
+	public function getgivenstatus()
+	{
+		return $this->_db->query("SELECT COUNT(DISTINCT ug.id) as users FROM users AS ug
+                INNER JOIN orders AS og ON og.user_id = ug.id AND og.status = 'COMPLETED'
+                INNER JOIN orders_values AS ovg ON ovg.order_id = og.id");
+	}
+	
+	public function getgivenstatus2()
+	{
+		return $this->_db->query("SELECT COUNT(DISTINCT ug.id) as users FROM users AS ug
+                INNER JOIN orders AS og ON og.user_id = ug.id AND og.status = 'COMPLETED'
+                INNER JOIN orders_values AS ovg ON ovg.order_id = og.id AND ovg.given > 0");
+	}
 }

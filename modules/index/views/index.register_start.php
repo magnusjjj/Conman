@@ -7,7 +7,7 @@
                 <br/>
                 <label for="country">Land/Country</label>
                 <input type="text" name="country" value="Sverige"/>
-             	 <br /><br />Om du inte har ett svenskt personnummer så kontakta kundtjanst@narcon.se så hjälper vi dig.<br /><br />
+             	 <br /><br />Om du har problem så kontakta kundtjanst@narcon.se så hjälper vi dig.<br /><br />
 				Observera att biljetten är personlig och att du därför ska ange personnumret på den som ska ha biljetten. Om du ska köpa till flera personer, måste alla skapa ett eget konto i ConMan med sitt eget personnummer. Efter att du betalat kan du då föra över de extra biljetterna till de andra personernas konton.<br /><br />
              <label for="pnr[0]">Personnummer (ÅÅMMDD-XXXX):</label>
 		<input type="text" size="6" maxlength="6" name="pnr[0]" style="font-family: monospace; width: 6em; float: none; margin-right: 0;"/>-<input type="text" style="font-family: monospace; width: 4em; float: none;" size="4" maxlength="4" name="pnr[1]"/><br/>

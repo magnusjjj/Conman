@@ -61,11 +61,15 @@ class IndexController extends Controller
 		$verificationcode = Model::getModel('verificationcode');
 		$thecode = $verificationcode->putCode($the_member[0]['socialSecurityNumber']);
 		$id = $the_member[0]['PersonID'];
+		
+		$user = Model::getModel('user'); //Samuel added, to present username	
+		$users_member = $user->getByMemberID($id); //Samuel added stuff, to present username
+		
 		$mailer = CFactory::getMailer();
 		$this->_set('email', $the_member[0]['eMail']);
 		$mailer->AddAddress($the_member[0]['eMail']);
 		$mailer->Subject = 'Lösenordsåterställning till ' . Settings::$EventName;
-		$mailer->MsgHTML("Hej! <a href=\"".Router::url("passwordreset/$id/$thecode", true)."\">Klicka här för att återställa ditt lösenord</a>");
+		$mailer->MsgHTML("Hej " . $users_member[0]['username'] . "!<br /><a href=\"".Router::url("passwordreset/$id/$thecode", true)."\">Klicka här för att återställa ditt lösenord</a>");
 		if (!$mailer->Send()) {
 			die("Kunde inte skicka");
 		}

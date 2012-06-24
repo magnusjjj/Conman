@@ -65,4 +65,13 @@ class AdminController extends Controller
 		$orders_alternatives = Model::getModel('ordersalternatives');
 		$this->_set('thelist', $orders_alternatives->getAlternativesMembers());
 	}
+
+	public function status()
+	{
+		$orders_alternatives = Model::getModel('ordersalternatives');
+		$users = Model::getModel('user');
+		$this->_set('status_orders', $orders_alternatives->getAlternativesStatus());
+		$this->_set('order1', $users->getgivenstatus());
+		$this->_set('order2', $users->getgivenstatus2());
+	}
 }

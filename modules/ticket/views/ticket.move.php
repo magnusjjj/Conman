@@ -7,7 +7,7 @@
 		<li>För att överföringen ska vara giltlig behöver den göras här i ConMan, det räcker alltså inte bara med att ge pappersbiljetten till personen du vill göra överföringen till.</li><br />
 		<li>Mottagaren av överföringen måste vara registrerad i ConMan för att kunna ta emot den.</li>
    </ol><br />
-<p class="nomargin">NärCon rekommenderar vår samarbetspartner <a href="http://www.payson" target="_blank">Payson</a> eller internetbanköverföring för att genomföra betalningen av vidareförsäljningen. Om du och köparen kan komma överens om ett annat sätt att sköta transaktionen på går det naturligtvis också bra. Ni är själva ansvariga för att transaktionen genomförs.</p><br />
+<p class="nomargin">NärCon rekommenderar vår samarbetspartner <a href="http://www.payson.se/" target="_blank">Payson</a> eller internetbanköverföring för att genomföra betalningen av vidareförsäljningen. Om du och köparen kan komma överens om ett annat sätt att sköta transaktionen på går det naturligtvis också bra. Ni är själva ansvariga för att transaktionen genomförs.</p><br />
 <table class="receipt">
 		<th class="headeralign">Antal att skicka</th><th class="headeralign">Typ av produkt</th>
 	<?php foreach($ordersvalues as $value):?>

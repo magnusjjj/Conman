@@ -50,6 +50,5 @@
 
 
 <p class="nomargin"><a href="<?php echo Router::url('buystuff');?>">Gör ytterligare beställningar</a></p>
-<!--<p class="nomargin"><a href="<?php echo Router::url('move');?>">Överför produkt till annan användare</a></p>-->
-<p class="nomargin">Det går just nu inte att flytta biljetter, då vi gör underhåll av funktionen</p>
+<p class="nomargin"><a href="<?php echo Router::url('move');?>">Överför produkt till annan användare</a></p>
 <p class="nomargin">Du behöver ett program som klarar av att läsa pdf-filer för att öppna biljetten, <a href="http://get.adobe.com/se/reader/">ladda hem ett här.</a></p>

@@ -28,6 +28,7 @@
 			<li><a href="<?php echo Router::url('/entrance');?>">Entré</a></li>
 			<li><a href="<?php echo Router::url('members');?>">Medlemmar</a></li>
 			<li><a href="<?php echo Router::url('typemembers');?>">Medlemmar efter köp</a></li>
+			<li><a href="<?php echo Router::url('status');?>">Status</a></li>
 		</ul>
 	</div>
 	<div class="content">
