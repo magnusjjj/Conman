@@ -133,6 +133,12 @@ class TicketController extends Controller
                 $this->_set('alternatives_children', $this->tree_children);
 	}
 	
+	function buystuff_info()
+	{
+		if (!$this->_checkLogin()) // Kick the user if its not logged in. 
+		    return;
+	}
+	
 	public function gotopay()
 	{
 		if (!$this->_checkLogin()) 
