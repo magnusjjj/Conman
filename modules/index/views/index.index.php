@@ -8,7 +8,7 @@
     <p>Har du redan ett konto kan du logga in här nedanför, annars registrerar du ett konto ovan!</p>
 </div>
 <form method="post" action="<?php echo Router::url("login");?>">
-    <label for="form_username">Användarnamn:</label><input type="text" name="username" id="form_username" />
+    <label for="form_username">Användarnamn<br />eller epost-adress:</label><input type="text" name="username" id="form_username" />
     <label for="form_password">Lösenord:</label><input type="password" name="password" id="form_password" />
 	<br style="clear: both" />
     <div style="text-align:center"><input type="submit" value="Logga in" /></div>

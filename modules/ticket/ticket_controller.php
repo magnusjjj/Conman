@@ -499,7 +499,7 @@ class TicketController extends Controller
 		if(!empty($_REQUEST['ammount']))
 		{
 			// Check if the user exists, and sanitycheck.
-			$moveto = $user->getByUsername(@$_REQUEST['usertomoveto']);
+			$moveto = $user->getByUsernameOrEmail(@$_REQUEST['usertomoveto']);
 			if($moveto['id'] == Auth::user())
 				die("Du får inte flytta biljetter till dig själv!");
 			if(empty($moveto) || empty($_REQUEST['usertomoveto']))

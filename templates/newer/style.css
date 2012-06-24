@@ -353,3 +353,14 @@ ol.move
 {
 list-style-type:decimal;
 }
+
+
+/*
+	Samuel nr 2 aka trahojen's additions
+*/
+#content div.notice
+{
+	border: 0.15em solid #0e5bcf;
+	padding: 1.0em;
+	margin-bottom: 2.0em;
+}

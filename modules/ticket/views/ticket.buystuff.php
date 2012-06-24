@@ -28,6 +28,7 @@
 	}
 ?>
 <form action="<?php echo Router::url('gotopay')?>" method="POST" style="overflow: visible">
+<!-- <div class="notice">Är du <b>förälder</b> eller vill <b>köpa biljett åt någon annan</b>? <a href="<?php Router::url('/ticket/buystuff_info'); ?>" alt="Information till den som vill köpa biljett till någon annan.">Vänligen läs här</a>.</div> // -->
 <?php foreach($alternatives_parents as $alternative):?>
 <?php 
 	print_alternative($alternative, $alternatives_children);

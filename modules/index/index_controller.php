@@ -266,7 +266,7 @@ class IndexController extends Controller
 			$validate['password'] = 'Du måste skriva samma i båda lösenordsrutorna.';
 		}
 		
-		if ($user->user_exists($_REQUEST['username'])) {
+		if ($user->username_exists($_REQUEST['username'])) {
 			$validate['user'] = 'Det finns redan en användare med det här användarnamnet';
 		}
 		

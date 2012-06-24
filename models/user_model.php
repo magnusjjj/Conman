@@ -1,6 +1,6 @@
 <?php
 class UserModel extends Model {
-	public function user_exists($name)
+	public function username_exists($name)
 	{
 		return @count($this->_db->query("SELECT * FROM users WHERE username = '%s';", $name)) ? true : false;
 	}
@@ -12,7 +12,17 @@ class UserModel extends Model {
 
 	public function getByUsername($name)
 	{
-		return array_pop($this->_db->query("SELECT * FROM users WHERE username = '%s'", $name));
+		return array_pop($this->_db->query("SELECT users.* FROM users WHERE username = '%s';", $name));
+	}
+	
+	public function getByEmail($name)
+	{
+		return array_pop($this->_db->query("SELECT users.* FROM users INNER JOIN members ON users.member_id = members.PersonID WHERE members.eMail = '%s';", $name));
+	}
+
+	public function getByUsernameOrEmail($name)
+	{
+		return array_pop($this->_db->query("SELECT users.* FROM users INNER JOIN members ON users.member_id = members.PersonID WHERE users.username = '%s' OR members.eMail = '%s';", $name, $name));
 	}
 	
 	public function getByMemberID($id)
@@ -44,7 +54,7 @@ class UserModel extends Model {
 	
 	public function auth($username, $password)
 	{
-		$user = $this->_db->query("SELECT * FROM users WHERE username = '%s';", $username);
+		$user = $this->_db->query("SELECT users.id, users.salt, users.password FROM users INNER JOIN members ON users.member_id = members.PersonID WHERE users.username = '%s' OR members.eMail = '%s';", $username, $username);
 		if(!count($user))
 		{
 			return false;
