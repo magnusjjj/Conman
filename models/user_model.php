@@ -22,7 +22,7 @@ class UserModel extends Model {
 
 	public function getByUsernameOrEmail($name)
 	{
-		return array_pop($this->_db->query("SELECT users.* FROM users INNER JOIN members ON users.member_id = members.PersonID WHERE users.username = '%s' OR members.eMail = '%s';", $name, $name));
+		return array_pop($this->_db->query("SELECT users.* FROM users LEFT OUTER JOIN members ON users.member_id = members.PersonID WHERE users.username = '%s' OR members.eMail = '%s';", $name, $name));
 	}
 	
 	public function getByMemberID($id)
@@ -54,7 +54,7 @@ class UserModel extends Model {
 	
 	public function auth($username, $password)
 	{
-		$user = $this->_db->query("SELECT users.id, users.salt, users.password FROM users INNER JOIN members ON users.member_id = members.PersonID WHERE users.username = '%s' OR members.eMail = '%s';", $username, $username);
+		$user = $this->_db->query("SELECT users.id, users.salt, users.password FROM users LEFT OUTER JOIN members ON users.member_id = members.PersonID WHERE users.username = '%s' OR members.eMail = '%s';", $username, $username);
 		if(!count($user))
 		{
 			return false;
