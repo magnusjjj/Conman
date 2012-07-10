@@ -16,13 +16,13 @@
 	</head>
 	<body>
 		<?php //var_dump($member_want);?>
-		<form action="<?php if(empty($order_want)):?><?php echo Router::url('check');?><?php else:?><?php echo Router::url('checkin');?><?php endif;?>" method="POST">
+		<form action="<?php if(empty($_REQUEST['SSN'])):?><?php echo Router::url('check');?><?php else:?><?php echo Router::url('checkin');?><?php endif;?>" method="POST">
 		<div id="heading">
 			<h1>Entré</h1>
 		</div>
 		<div id="content">
 			<div class="centercontent">
-			<?php if(empty($order_want)):?>
+			<?php if(false):?>
 				<h1>Scanna in en biljett, ordernummer, eller skriv in ett personnummer nedan</h1>
 					<input type="text" value="" name="SSN" class="focusme"/>
 				(Personnummer är i formatet <strong>ÅÅMMDD-XXXX</strong>)
@@ -31,12 +31,14 @@
 				</div>
 			</div>
 			<?php else:?>
-				<h1><?php echo $member_want['firstName'] . ' ' . $member_want['lastName'];?> <?php if($order_want[0]['status'] == 'COMPLETED'):?><p style="color: green;">(BETALT)</p><?php else:?><p style="color: red;">(EJ BETALD)<p><?php endif;?></h1>
+				<h1><?php echo $member_want['firstName'] . ' ' . $member_want['lastName'];?><?php if(!empty($order_want)):?><?php if($order_want[0]['status'] == 'COMPLETED'):?><p style="color: green;">(BETALT)</p><?php else:?><p style="color: red;">(EJ BETALD)<p><?php endif;?></h1><?php else:?></h1><?php endif;?>
 				<hr/>
-				<?php if($order_want[0]['status'] == 'COMPLETED'):?><?php else:?>
-					<p style="color: red;">
-						Viktigt! När du trycker 'Nästa' kommer ordern markeras som betald, om den inte redan är så markerad. <br/>Du måste alltså ta betalt för att få lämna ut saker.
-					</p>
+				<?php if(!empty($order_want)):?>
+					<?php if(@$order_want[0]['status'] == 'COMPLETED'):?><?php else:?>
+						<p style="color: red;">
+							Viktigt! När du trycker 'Nästa' kommer ordern markeras som betald, om den inte redan är så markerad. <br/>Du måste alltså ta betalt för att få lämna ut saker.
+						</p>
+					<?php endif;?>
 				<?php endif;?>
 				<table>
 					<thead style="text-align: left;">
@@ -47,7 +49,7 @@
 					<tbody style="text-align: left;">
 						<?php foreach($orders_values_want as $thing):?>
 							<tr>
-								<td width="10%"><input type="checkbox" name="value[<?php echo $thing['value_id'];?>]" value="y"<?php echo $thing['given'] ? ' checked="checked" ' : '';?>/></td><td><?php echo $thing['name'];?></td><td><?php echo $thing['cost'];?>kr</td>
+								<td width="10%" style="font-family: monospace;"><?php echo $thing['ammount'];?><input type="checkbox" name="value[<?php echo $thing['value_id'];?>]" value="y"<?php echo $thing['given'] ? ' checked="checked" ' : '';?>/></td><td><?php echo $thing['name'];?></td><td><?php echo $thing['cost'];?>kr</td>
 							</tr>
 						<?php endforeach;?>
 					</tbody>
@@ -57,7 +59,7 @@
 		<div id="commands">
 			<table class="actions" border="0">
 			<tr>
-				<?php if(empty($order_want)):?>
+				<?php if(empty($_REQUEST['SSN'])):?>
 				<td>
 					<input type="submit" value="Nästa (Enter)"/>
 				</td>

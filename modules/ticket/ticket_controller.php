@@ -396,8 +396,6 @@ class TicketController extends Controller
 	
 	public function pay_return($override = false)
 	{
-		if(!$this->_checkLogin()) 
-			return;
 		require_once(Settings::getRoot() . '/includes/paysonapi/lib/paysonapi.php');
 		$credentials = new PaysonCredentials(Settings::$PaysonAgentID, Settings::$PaysonMD5);
 		$api = new PaysonApi($credentials);
@@ -426,7 +424,7 @@ class TicketController extends Controller
                 $this->buystuff();
 	}
 	
-	public function pay_status() // This does nothing, because of payson uncertainty
+	public function pay_status() // This updates the order, on an update request by payson
 	{
 		require_once(Settings::getRoot() . '/includes/paysonapi/lib/paysonapi.php');
 		$order = Model::getModel('order');
@@ -441,6 +439,11 @@ class TicketController extends Controller
 		// Validate the request
 		$response =  $api->validate($postData);
 		if ($response->isVerified()) {
+			if ($paydetails->getStatus() == 'COMPLETED') {
+				$the_order = $order->getOrderByToken($paydetails->getToken());
+				$this->_doCompleteOrder($the_order['id']);
+			}
+
 			error_log("inne i verifieringen");
 			// IPN request is verified with Payson
 			// Check details to find out what happened with the payment

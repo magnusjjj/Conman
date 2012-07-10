@@ -30,6 +30,7 @@ Antal betalade ordrar: <strong><?php echo count($orders);?></strong><br/><br/>
 			<table>
 			<?php foreach(@$ordervalues[$order['id']] as $value):?>
 				<tr>
+					<td><?php echo $value['ammount'];?>st</td>
 					<td><?php echo $value['name'];?></td>
 					<td><?php echo $value['cost'];?> kr</td>
 				</tr>

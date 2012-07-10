@@ -18,9 +18,9 @@
 		</div>
 		<div id="content">
 			<div class="centercontent">
-				<h1>Scanna in en biljett, ordernummer, eller skriv in ett personnummer nedan</h1>
+				<h1>Scanna in en biljett, ordernummer, eller skriv in ett personnummer nedan (med ett P framför)</h1>
 					<input type="text" name="SSN" value="" class="focusme"/>
-				(Personnummer är i formatet <strong>ÅÅMMDD-XXXX</strong>)
+				(Personnummer är i formatet <strong>PÅÅMMDD-XXXX</strong>) (notera P't framför)
 			</div>
 		</div>
 		<div id="commands">

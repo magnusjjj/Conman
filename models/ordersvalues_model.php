@@ -15,7 +15,7 @@ class OrdersvaluesModel extends Model {
 	
 	public function listOrderValues()
 	{
-		return $this->_db->query("SELECT order_id, orders_alternatives.name, orders_alternatives.cost, value
+		return $this->_db->query("SELECT order_id, orders_alternatives.name, orders_alternatives.cost, value, orders_values.ammount
 		FROM orders_values
 		INNER JOIN orders_alternatives ON orders_values.order_alternative_id = orders_alternatives.id
 		INNER JOIN orders ON orders.id = orders_values.order_id 

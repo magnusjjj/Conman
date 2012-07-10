@@ -24,7 +24,7 @@ class OrdersalternativesModel extends Model {
 	
 	public function getAlternativesMembers()
 	{
-		return $this->_db->query("SELECT orders_alternatives.name as alternative_name, members.*
+		return $this->_db->query("SELECT orders_alternatives.name as alternative_name, members.*, orders_values.ammount
 		FROM orders_alternatives
 		LEFT OUTER JOIN orders_values ON orders_values.order_alternative_id = orders_alternatives.id
 		LEFT OUTER JOIN orders ON orders.id = orders_values.order_id AND orders.status = 'COMPLETED'
