@@ -96,7 +96,7 @@ class TicketController extends Controller
 	                {
 	                        $the_ordersvalues = $ordersvalues->getOrderValuesFromOrder($myorder['id']);
 	                        foreach ($the_ordersvalues as $value) {
-	                                if($value['id'] == 2 || $value['id'] == 33) {
+	                                if($value['id'] == 2 || $value['id'] == 33 || $value['id'] == 40 || $value['id'] == 41 || $value['id'] == 42) {
 	                                        $boughtticket = true;
 	                                }
 	                        }
@@ -490,11 +490,14 @@ class TicketController extends Controller
 			$the_ordersvalues = $ordersvalues->getOrderValuesFromOrder($myorder['id']);
 			foreach ($the_ordersvalues as $value)
 			{
-				if(empty($mashup[$value['id']])) // Create an ordersvaluesarray with all the values combined.
+				if($value['given'] == 0)
 				{
-					$mashup[$value['id']] = $value;
-				} else {
-					$mashup[$value['id']]['ammount'] += $value['ammount']; 
+					if(empty($mashup[$value['id']])) // Create an ordersvaluesarray with all the values combined.
+					{
+						$mashup[$value['id']] = $value;
+					} else {
+						$mashup[$value['id']]['ammount'] += $value['ammount']; 
+					}
 				}
 			}
 		}
