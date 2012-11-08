@@ -1,13 +1,13 @@
 <?php if($boughtticket) {
-	echo '<p class="nomargin">Tack för att du har köpt en biljett till NärCon 2012! &lt;3
+	echo '<p class="nomargin">Tack för att du har köpt en biljett till ' . Settings::$EventName . '! &lt;3
 	<a href="' . Router::url('getticket') . '">Här hittar du den i pdf-format.</a></p>
-	<p class="nomargin">Skriv ut och ta med dig biljetten till konventet för att få ditt inträdesband och allt annat du har beställt. Biljetten kan skrivas ut hur många gånger som helst, så oroa dig inte för att tappa bort den, om det händer skriver du bara ut en ny! Streckkoden på biljetten är kopplad till dig som användare och ger oss information om alla dina köp, oavsett vad som står på biljetten!</p>
-	<p class="nomargin">Orderlistan nedan gäller inte som biljett. Har du några frågor om biljetter eller annat rörande ditt köp kan du kontakta kundtjanst@narcon.se</p>';
+	<p class="nomargin">Skriv ut och ta med dig biljetten till konventet för att få ditt inträde och allt annat du eventuellt har beställt. Biljetten kan skrivas ut hur många gånger som helst, så oroa dig inte för att tappa bort den, om det händer skriver du bara ut en ny! Streckkoden på biljetten är kopplad till dig som användare och ger oss information om alla dina köp, oavsett vad som står på biljetten!</p>
+	<p class="nomargin">Orderlistan nedan gäller inte som biljett. Har du några frågor om biljetter eller annat rörande ditt köp kan du kontakta ' . Settings::$CustomerserviceEmail . '</p>';
 } else {
-	echo '<div class="nobox">Tack för att du har köpt NärCon 2012-produkter! &lt;3<br></br>
+	echo '<div class="nobox">Tack för att du har köpt ' . Settings::$EventName . '-produkter! &lt;3<br></br>
 	<a href="' . Router::url('getticket') . '">Här hittar du ditt orderkvitto i pdf-format.</a></div>
-	<div class="nobox">Skriv ut kvittot och ta med dig det till konventet för att få dina produkter. Observera att du ännu inte har köpt någon inträdesbiljett till NärCon 2012 utan bara produkter än så länge. Du kan skriva ut kvittot hur många gånger som helst och varje gång du uppdaterar din beställning med fler produkter, kom då tillbaka hit för att hämta hem och skriva ut den senaste versionen.</div>
-	<div class="nobox">Nedan har du din orderlista i textformat. Har du några frågor om biljetter eller annat rörande ditt köp kan du kontakta kundtjanst@narcon.se</div>';
+	<div class="nobox">Skriv ut kvittot och ta med dig det till konventet för att få dina produkter. Observera att du ännu inte har köpt någon inträdesbiljett till ' . Settings::$EventName . ' utan bara produkter än så länge. Du kan skriva ut kvittot hur många gånger som helst och varje gång du uppdaterar din beställning med fler produkter, kom då tillbaka hit för att hämta hem och skriva ut den senaste versionen.</div>
+	<div class="nobox">Nedan har du din orderlista i textformat. Har du några frågor om biljetter eller annat rörande ditt köp kan du kontakta ' . Settings::$CustomerserviceEmail . '</div>';
 }?>
 
 <br />

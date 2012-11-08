@@ -12,7 +12,7 @@
 <?php
 	if(!$is_member)
 	{
-		//echo "<div class='italic'>Du är ännu inte medlem i föreningen NärCon. Det beror antagligen på att du inte har betalat en order än. Första gången du lägger en order kommer medlemsavgiften (" . Settings::$MembershipCost . " kr) att läggas på och sedan är du medlem i föreningen!</div>";
+		//echo "<div class='italic'>Du är ännu inte medlem i föreningen " . Settings::$Society . ". Det beror antagligen på att du inte har betalat en order än. Första gången du lägger en order kommer medlemsavgiften (" . Settings::$MembershipCost . " kr) att läggas på och sedan är du medlem i föreningen!</div>";
 	} 
 ?>
 
@@ -36,7 +36,7 @@
 <?php endforeach;?>
 	<?php if(count($alternatives_parents)):?>
 	Eventuell rabatt/förköpskod: <input name="code" type="text" class="leftmargin" value="<?php echo @$_REQUEST['code'];?>"/><br/>
-	<input type="checkbox" name="iaccept" value="yes"/>Jag accepterar <a href="http://2012.narcon.se/?page_id=623" target="blank">köpvillkoren.</a>
+	<input type="checkbox" name="iaccept" value="yes"/>Jag accepterar <a href="<?php echo Settings::$TermsUrl;?>" target="blank">köpvillkoren.</a>
 	<input type="submit" value="Köp!"/>
 	<?php endif;?>
 </form>

@@ -5,7 +5,7 @@ Hej <?php $user = Auth::user(true); echo $user['username'];?> (<a href="<?php ec
 <?php
 	if(!$is_member)
 	{
-		//echo "<div class='italic'>Du är ännu inte medlem i föreningen NärCon. Det beror antagligen på att du inte har betalat en order än. Första gången du lägger en order kommer medlemsavgiften (" . Settings::$MembershipCost . " kr) att läggas på och sedan är du medlem i föreningen!</div>";
+		//echo "<div class='italic'>Du är ännu inte medlem i föreningen " . Settings::$Society . ". Det beror antagligen på att du inte har betalat en order än. Första gången du lägger en order kommer medlemsavgiften (" . Settings::$MembershipCost . " kr) att läggas på och sedan är du medlem i föreningen!</div>";
 	} 
 ?>
 
