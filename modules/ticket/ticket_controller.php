@@ -96,7 +96,7 @@ class TicketController extends Controller
 	                {
 	                        $the_ordersvalues = $ordersvalues->getOrderValuesFromOrder($myorder['id']);
 	                        foreach ($the_ordersvalues as $value) {
-	                                if($value['id'] == 2 || $value['id'] == 33) {
+	                                if($value['id'] == 2 || $value['id'] == 33 || $value['id'] == 40 || $value['id'] == 41 || $value['id'] == 42) {
 	                                        $boughtticket = true;
 	                                }
 	                        }
@@ -475,7 +475,7 @@ class TicketController extends Controller
 		// If we can't find any orders, display an error:
 		if(!count($myorders))
 		{
-			ErrorHelper::error("Du har ingen order, eller är inte inloggad. Vid frågor, kontakta kundtjanst@narcon.se");
+			ErrorHelper::error("Du har ingen order, eller är inte inloggad. Vid frågor, kontakta " . Settings::$CustomerserviceEmail);
 			return;
 		}
 		
@@ -490,11 +490,14 @@ class TicketController extends Controller
 			$the_ordersvalues = $ordersvalues->getOrderValuesFromOrder($myorder['id']);
 			foreach ($the_ordersvalues as $value)
 			{
-				if(empty($mashup[$value['id']])) // Create an ordersvaluesarray with all the values combined.
+				if($value['given'] == 0)
 				{
-					$mashup[$value['id']] = $value;
-				} else {
-					$mashup[$value['id']]['ammount'] += $value['ammount']; 
+					if(empty($mashup[$value['id']])) // Create an ordersvaluesarray with all the values combined.
+					{
+						$mashup[$value['id']] = $value;
+					} else {
+						$mashup[$value['id']]['ammount'] += $value['ammount']; 
+					}
 				}
 			}
 		}
@@ -657,7 +660,7 @@ class TicketController extends Controller
 		$myorders = $order->getOrderFromUserAndStatus(Auth::user(), 'COMPLETED');
 		
 		if (!count($myorders)) {
-			die("Du har ingen order, eller är inte inloggad. Vid frågor, kontakta kundtjanst@narcon.se");
+			die("Du har ingen order, eller är inte inloggad. Vid frågor, kontakta " . Settings::$CustomerserviceEmail);
 		}
 
 		$this->_buildAlternativeTreeNoFilter();
