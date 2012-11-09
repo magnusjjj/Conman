@@ -6,13 +6,13 @@ label{
 
 <?php if($status == 'emailsent'):?>
 
-Ett mail har skickats till din mail, <?php echo $email;?>. Klicka på länken i mailet för att fortsätta. Har du inte fått något mail (kolla även i din spam-/skräppost) eller är det inte din adress? Kontakta: <a href="mailto:conman@narcon.se">conman@narcon.se</a>	
+Ett mail har skickats till din mail, <?php echo $email;?>. Klicka på länken i mailet för att fortsätta. Har du inte fått något mail (kolla även i din spam-/skräppost) eller är det inte din adress? Kontakta: <a href="mailto:<?php echo Settings::$TechEmail; ?>"><?php echo Settings::$TechEmail; ?></a>	
 
 <?php elseif($status == 'wrong_ssid'):?>
-Tyvärr är personnummret du skrev in inte giltligt. <a href="<?php echo Router::url('index');?>">Försök igen</a>
+Tyvärr är personnummret du skrev in inte giltigt. <a href="<?php echo Router::url('index');?>">Försök igen</a>
 
 <?php elseif($status == 'not_member'):?>
-Vi hittade dig inte i databasen. Är detta fel? Kontakta <a href="mailto:conman@narcon.se">conman@narcon.se</a><br/>
+Vi hittade dig inte i databasen. Är detta fel? Kontakta <a href="<?php echo Settings::$TechEmail; ?>"><?php echo Settings::$TechEmail; ?></a><br/>
 <br/>
 Du är tydligen inte medlem än, så du får gå tillbaka och bli det.
 

@@ -475,7 +475,7 @@ class TicketController extends Controller
 		// If we can't find any orders, display an error:
 		if(!count($myorders))
 		{
-			ErrorHelper::error("Du har ingen order, eller är inte inloggad. Vid frågor, kontakta kundtjanst@narcon.se");
+			ErrorHelper::error("Du har ingen order, eller är inte inloggad. Vid frågor, kontakta " . Settings::$CustomerserviceEmail);
 			return;
 		}
 		
@@ -660,7 +660,7 @@ class TicketController extends Controller
 		$myorders = $order->getOrderFromUserAndStatus(Auth::user(), 'COMPLETED');
 		
 		if (!count($myorders)) {
-			die("Du har ingen order, eller är inte inloggad. Vid frågor, kontakta kundtjanst@narcon.se");
+			die("Du har ingen order, eller är inte inloggad. Vid frågor, kontakta " . Settings::$CustomerserviceEmail);
 		}
 
 		$this->_buildAlternativeTreeNoFilter();
