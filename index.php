@@ -13,12 +13,12 @@ Auth::initSession();
 include("config.php"); 
 
 include("includes/controller.php");
+include("includes/error.php");
 include("includes/database.php");
 include("includes/model.php");
 //include("includes/session.php"); // Stub!
 include("includes/router.php");
 include("includes/cfactory.php");
-include("includes/error.php");
 
 // Vi vill ha error reporting på, så vi vet vad som händer.
 error_reporting(Settings::$ErrorReporting); 
@@ -39,7 +39,7 @@ $controller = !empty($qe[0]) && preg_match("/^[A-Za-z0-9_]+\z/", $qe[0]) ? $qe[0
 // Sätter actionen till index om inget annat är satt
 $action = !empty($qe[1]) && preg_match("/^[A-Za-z0-9_]+\z/", $qe[1]) ? $qe[1] : 'index'; 
 
-// På grund av en bugg i hanteringen avsessioner måte inloggen ske här. Man får inte redirecta och sätta sessioner samtidigt.
+// På grund av en bugg i hanteringen av sessioner måte inloggen ske här. Man får inte redirecta och sätta sessioner samtidigt.
 if ($action == 'login') { 
 	if (Auth::login($_REQUEST['username'], $_REQUEST['password'])) {
 		$controller = 'ticket';
