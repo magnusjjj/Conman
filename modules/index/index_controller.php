@@ -49,7 +49,7 @@ class IndexController extends Controller
 		$this->_set('email', $the_member[0]['eMail']);
 		$mailer->AddAddress($the_member[0]['eMail']);
 		$mailer->Subject = 'Registering till ' . Settings::$EventName;
-		$mailer->MsgHTML("<p>Hej!</p><p>Nu har du snart en användare i ConMan och kan köpa din biljett till " . Settings::$EventName . ". <a href=\"".Router::url("validatecode/$pnr/$thecode", true)."\">Klicka här</a> för att verifiera din emailadress, välja användarnamn och fortsätta i registreringsprocessen.</p><p>Med vänliga hälsningar,<br />NärCon och ConMan</p>");		
+		$mailer->MsgHTML("<p>Hej!</p><p>Nu har du snart en användare i ConMan och kan köpa din biljett till " . Settings::$EventName . ". <a href=\"".Router::url("validatecode/$pnr/$thecode", true)."\">Klicka här</a> för att verifiera din emailadress, välja användarnamn och fortsätta i registreringsprocessen.</p><p>Med vänliga hälsningar,<br />" . Settings::$Society . " och ConMan</p>");		
 		if (!$mailer->Send()) {
 			die("Kunde inte skicka");
 		}

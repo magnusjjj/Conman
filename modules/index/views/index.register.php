@@ -4,7 +4,7 @@
 <a href="<?php echo Router::url("validatecode/$ssid/$code");?>">Klicka h&auml;r f&ouml;r att 
 forts&auml;tta</a>
 <?php elseif(@$status == 'wrong_ssid'):?>
-Tyvärr är personnummret du skrev in inte giltligt. <a href="<?php echo Router::url('index');?>">Försök igen</a>
+Tyvärr är personnummret du skrev in inte giltigt. <a href="<?php echo Router::url('index');?>">Försök igen</a>
 <?php elseif(@$status == 'not_member'):?>
 Du måste fylla i alla uppgifter markerade med *<br/>
 <?php
@@ -89,7 +89,7 @@ Du måste fylla i alla uppgifter markerade med *<br/>
 		<input class="input_text" onblur="input_validation(this)" type="text" name="memberdata[eMail_again]" value="<?php echo @$_REQUEST['memberdata']['eMail_again'];?>"/>
 
 
-		<p><input type="checkbox" name="seen_rules"<?php echo (@$_REQUEST['seen_rules'] ? ' checked="checked" ' : '');?>/> Jag godkänner <a href="http://stadgar.narcon.se/" target="_blank"> NärCons stadgar</a> och vill bli medlem i föreningen NärCon*</p><input type="submit" value="Nästa!"/>
+		<p><input type="checkbox" name="seen_rules"<?php echo (@$_REQUEST['seen_rules'] ? ' checked="checked" ' : '');?>/> Jag godkänner <a href="<?php echo Settings::$StatutesUrl; ?>" target="_blank"> <?php echo Settings::$Society; ?>:s stadgar</a> och vill bli medlem i föreningen <?php echo Settings::$Society; ?>*</p><input type="submit" value="Nästa!"/>
 
 	</div>
 	

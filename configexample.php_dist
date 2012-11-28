@@ -1,38 +1,44 @@
 <?php
-        class Settings
-        {
-                static $path = "/"; // The url path of the root, with a / on the end. Example: "/conmantest/"
-                static function getRoot(){
-                        return dirname(__FILE__);
-                }
-                static $DbHost = "localhost"; // Database host
-                static $DbUser = ""; // Database user
-                static $DbPassword = ""; // Database password
-                static $DbName = ""; // Database name
-                static $Url = "http://test.se"; // Url to the website, without a dash to end
+	class Settings
+	{
+		static $path = "/"; // The url path of the root, with a / on the end. Example: "/conmantest/"
+		static function getRoot(){
+			return dirname(__FILE__);
+		}
+		static $DbHost = "localhost"; // Database host
+		static $DbUser = ""; // Database user
+		static $DbPassword = ""; // Database password
+		static $DbName = ""; // Database name
+		static $Url = "http://test.se"; // Url to the website, without a dash to end
 
-                static $PaysonAgentID = 0; // Payson membership data.
-                static $PaysonMD5 = ""; // Payson membership data
-                static $PaysonMail = ""; // Payson membership data
+		static $PaysonAgentID = 0; // Payson membership data.
+		static $PaysonMD5 = ""; // Payson membership data
+		static $PaysonMail = ""; // Payson membership data
 
-                static $MembershipCost = 50; // The membership cost
+		static $MembershipCost = 50; // The membership cost
 
-                static $ConEnds = "2012-01-08"; // The date the event ends. Used to calculate when a member needs to renew their membership.
+		static $ConEnds = "2012-01-08"; // The date the event ends. Used to calculate when a member needs to renew their membership.
 
-                static $MailFrom = 'noreply@conman.nu'; // Email the notifications are sent from
-                static $SMTPServer = 'smtp.gmail.com'; // SMTP-server
-                static $SMTPPort = 25; // Smtp port
-                static $SMTPUser = 'noreply@conman.nu'; // SMTP-user
-                static $SMTPPassword = ''; // SMTP-password
-                
+		static $MailFrom = 'noreply@conman.nu'; // Email the notifications are sent from
+		static $SMTPServer = 'smtp.gmail.com'; // SMTP-server
+		static $SMTPPort = 25; // Smtp port
+		static $SMTPUser = 'noreply@conman.nu'; // SMTP-user
+		static $SMTPPassword = ''; // SMTP-password
+		
 		static $ErrorReporting = 0; // Debugging, error_reporting
 
-                static $EventName = "Närcon"; // Name of the event
-                static $Society = "Närcon"; // Name of those that hold the event
-                static $Template = "newer"; // Template used :)
-                static $AllowPayson = true; // Is payson used for the final payment?
-                static $RequireEmail = true; // Do you require email activation?
+		static $EventName = "NärCon 2012"; // Name of the event
+		static $Society = "NärCon"; // Name of those that hold the event
+		static $Template = "newer"; // Template used :)
+		static $AllowPayson = true; // Is payson used for the final payment?
+		static $RequireEmail = true; // Do you require email activation?
+				
+		static $CustomerserviceUrl = "http://www.narcon.se"; // URL to external customer service site
+		static $CustomerserviceEmail = "kundtjanst@narcon.se"; // Email to customer service
+		static $TechEmail = "conman@narcon.se"; // Email to technical support
+		static $StatutesUrl = "http://stadgar.narcon.se"; // URL to statutes document
+		static $TermsUrl = "http://2012.narcon.se/?page_id=623"; // URL to terms of purchase
 		
 		static $BarKey = ''; // Key for encoding the barcode.
-        }
+	}
 ?>

@@ -18,7 +18,7 @@
 	</script>
 	
 	<meta charset="UTF-8" />
-	<title>NärCon 2012</title>
+	<title><?php echo Settings::$EventName; ?></title>
 	
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 	<script type="text/javascript" src="<?php echo Settings::$path;?>js/jquery.js"></script>

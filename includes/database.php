@@ -4,8 +4,10 @@ class Database {
 
 	private function __construct()
 	{
-		mysql_connect(Settings::$DbHost, Settings::$DbUser, Settings::$DbPassword);
-		mysql_select_db(Settings::$DbName);
+		if(!mysql_connect(Settings::$DbHost, Settings::$DbUser, Settings::$DbPassword))
+			ErrorHelper::error('Fel! Kunde inte kontakta databasen!');
+		if(!mysql_select_db(Settings::$DbName))
+			ErrorHelper::error('Fel! Kunde inte välja databasen: ' . Settings::$DbName);
 		mysql_query("SET NAMES utf8;");
 	}
 	

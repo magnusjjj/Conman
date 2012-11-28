@@ -1,8 +1,8 @@
 <h1>Välkommen till ConMan</h1>
-<h1>NärCon Edition</h1>
+<h1><?php echo Settings::$EventName; ?> Edition</h1>
 
 <div>
-    <p>Här, och ingen annanstans, köper du biljetterna till NärCon 2012!</p>
+    <p>Här, och ingen annanstans, köper du biljetterna till <?php echo Settings::$EventName; ?>!</p>
     <p>Förutom detta kan du också köpa alla andra awesome prylar du behöver för att göra din konventsupplevelse bättre.</p>
     <p>Men, det slutar inte där, för du kan också logga in och kolla på din beställning, tilldela andra konventare biljetter och göra nya beställningar</p>
     <p>Har du redan ett konto kan du logga in här nedanför, annars registrerar du ett konto ovan!</p>
