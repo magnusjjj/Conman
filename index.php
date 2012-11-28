@@ -1,5 +1,6 @@
 <?php
 
+ignore_user_abort(true);
 ob_start();
 
 // Sätt rätt encoding, så att åäö blir rätt.
