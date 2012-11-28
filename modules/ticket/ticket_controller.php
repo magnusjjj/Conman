@@ -310,8 +310,10 @@ class TicketController extends Controller
 		$payData->setguaranteeOffered("NO");
 		$payData->setOrderItems($stuff);
 		$payData->setFeesPayer("SENDER");
-		$payResponse = $api->pay($payData);
-		
+		if(!(isset(Settings::$AllowPayson) && !Settings::$AllowPayson))
+		{
+			$payResponse = $api->pay($payData);
+		}
 
 		if ($cost <= 0 || (isset(Settings::$AllowPayson) && !Settings::$AllowPayson) 
 			|| $payResponse->getResponseEnvelope()->wasSuccessful()
