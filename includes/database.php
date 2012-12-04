@@ -21,8 +21,10 @@ class Database {
 	
 	private function _safe($var)
 	{
+        if(is_array($var))
+            var_dump(debug_backtrace());
 		return mysql_real_escape_string($var);
-	}
+    }
 	
 	public function insertid()
 	{

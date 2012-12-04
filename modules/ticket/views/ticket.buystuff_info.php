@@ -7,7 +7,7 @@
 	<p>För att flytta en biljett (och andra artiklar), loggar du in i Conman och klickar på länken "Överför produkt till annan användare".</p>
 	<p>Sedan anger du ditt barns eller din kompis användarnamn (eller den epost-adress som användes vid registreringen), väljer vilka artiklar du vill överföra och klickar på "Flytta sakerna".</p>
 	<p>&nbsp;</p>
-	<p>Har du några frågor så tveka inte att kontakta kundtjänst (du hittar oss på <a href=<?php echo Settings::$CustomerserviceUrl; ?>"><?php echo Settings::$CustomerserviceUrl; ?></a>)!</p>
+	<p>Har du några frågor så tveka inte att kontakta kundtjänst (du hittar oss på <a href="<?php echo Settings::$CustomerserviceUrl; ?>"><?php echo Settings::$CustomerserviceUrl; ?></a>)!</p>
 	<p>&nbsp;</p>
 	<p><a href="<?php echo Router::url('/ticket/buystuff'); ?>">Återgå till köpsidan</a></p>
 </div>
