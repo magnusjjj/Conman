@@ -6,7 +6,9 @@
 		padding: 5px;
 	}
 </style>
-<?php if(@$user['entrance']):?><a href="<?php echo Router::url('/entrance');?>"><h1>Gå till entrén!</h1></a><?php endif;?>
+<?php
+	 $user = Auth::user(true);
+	 if(@$user['entrance']):?><a href="<?php echo Router::url('/entrance');?>"><h1>Gå till entrén!</h1></a><?php endif;?>
 
 
 <?php
