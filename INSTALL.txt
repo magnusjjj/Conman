@@ -1,0 +1,9 @@
+Systemkrav:
+Apache, okänd lägstaversion
+PHP 5.3.0 eller högre
+MySQL, okänd lägstaversion
+
+Installationsanvisningar:
+1. Lägg filerna på din webbserver.
+2. Navigera till din webbservers URL i din webbläsare.
+3. Följ instruktionerna på skärmen.
