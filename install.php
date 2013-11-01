@@ -11,7 +11,80 @@ if (!is_writable("."))
 // Om post gjorts så validera config-data.
 $validationerror = false;
 if (!empty($_POST)) {
-	$validationerror = true;
+	if (empty($_POST["path"]))
+		$validationerror = true;
+
+	if (empty($_POST["Url"]))
+		$validationerror = true;
+
+	if (empty($_POST["ErrorReporting"]))
+		$validationerror = true;
+
+	if (empty($_POST["DbHost"]))
+		$validationerror = true;
+
+	if (empty($_POST["DbUser"]))
+		$validationerror = true;
+
+	if (empty($_POST["DbPassword"]))
+		$validationerror = true;
+
+	if (empty($_POST["DbName"]))
+		$validationerror = true;
+
+	if (empty($_POST["EventName"]))
+		$validationerror = true;
+
+	if (empty($_POST["ConEnds"]))
+		$validationerror = true;
+
+	if (empty($_POST["BarKey"]))
+		$validationerror = true;
+
+	if (empty($_POST["Template"]))
+		$validationerror = true;
+
+	if (empty($_POST["Society"]))
+		$validationerror = true;
+
+	if (empty($_POST["MembershipCost"]))
+		$validationerror = true;
+
+	if (empty($_POST["CustomerserviceUrl"]))
+		$validationerror = true;
+
+	if (empty($_POST["CustomerserviceEmail"]))
+		$validationerror = true;
+
+	if (empty($_POST["TechEmail"]))
+		$validationerror = true;
+
+	if (empty($_POST["StatutesUrl"]))
+		$validationerror = true;
+
+	if (empty($_POST["TermsUrl"]))
+		$validationerror = true;
+
+	if (empty($_POST["AllowPayson"]))
+		$validationerror = true;
+
+	if (empty($_POST["RequireEmail"]))
+		$validationerror = true;
+
+	if (empty($_POST["MailFrom"]))
+		$validationerror = true;
+
+	if (empty($_POST["SMTPServer"]))
+		$validationerror = true;
+
+	if (empty($_POST["SMTPPort"]))
+		$validationerror = true;
+
+	if (empty($_POST["SMTPUser"]))
+		$validationerror = true;
+
+	if (empty($_POST["SMTPPassword"]))
+		$validationerror = true;
 }
 
 // Om valideringen misslyckats, eller config-data saknas, så fråga efter config-data.
@@ -20,6 +93,7 @@ if ($validationerror || empty($_POST)) {
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="UTF-8">
 <title>
 Conman - Förstagångsinstallation
 </title>
