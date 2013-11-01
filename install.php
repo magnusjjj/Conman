@@ -4,20 +4,139 @@
 if (file_exists("config.php"))
 	die();
 
-// Kontrollera att systemet har skrivrättigheter
+// Kontrollera att systemet har skrivrättigheter.
 if (!is_writable("."))
 	die();
 
 // Om post gjorts så validera config-data.
 $validationerror = false;
-if (!empty($_POST))	{
-
+if (!empty($_POST)) {
+	$validationerror = true;
 }
 
 // Om valideringen misslyckats, eller config-data saknas, så fråga efter config-data.
 if ($validationerror || empty($_POST)) {
-
-
+?>
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+Conman - Förstagångsinstallation
+</title>
+</head>
+<body>
+<h1>Conman - Förstagångsinstallation</h1>
+<form name="input" action="install.php" method="post">
+<h2>Installationsinformation</h2>
+<p>
+The url path of the root, with a / on the end. Example: "/conmantest/"<br>
+<input type="text" name="path" value="<?php echo $_POST["path"]?>">
+</p>
+<p>
+Url to the website, without a dash to end<br>
+<input type="text" name="Url" value="<?php echo $_POST["Url"]?>">
+</p>
+<p>
+Debugging, error_reporting<br>
+<input type="text" name="ErrorReporting" value="<?php if ($_POST["ErrorReporting"]) echo $_POST["ErrorReporting"]; else echo "E_ALL"; ?>">
+</p>
+<h2>Databasinformation</h2>
+<p>
+Database host<br>
+<input type="text" name="DbHost" value="<?php if ($_POST["DbHost"]) echo $_POST["DbHost"]; else echo "localhost"; ?>">
+</p>
+<p>
+Database user<br>
+<input type="text" name="DbUser" value="<?php echo $_POST["DbUser"]?>">
+</p>
+<p>
+Database password<br>
+<input type="password" name="DbPassword" value="<?php echo $_POST["DbPassword"]?>">
+</p>
+<p>
+Database name<br>
+<input type="text" name="DbName" value="<?php echo $_POST["DbName"]?>">
+</p>
+<h2>Arrangemangsinformation</h2>
+<p>
+Name of the event<br>
+<input type="text" name="EventName" value="<?php echo $_POST["EventName"]?>">
+</p>
+<p>
+The date the event ends. Used to calculate when a member needs to renew their membership<br>
+<input type="date" name="ConEnds" value="<?php echo $_POST["ConEnds"]?>">
+</p>
+<p>
+Key for encoding the barcode<br>
+<input type="text" name="BarKey" value="<?php echo $_POST["BarKey"]?>">
+</p>
+<p>
+Template used :)<br>
+<input type="text" name="Template" value="<?php echo $_POST["Template"]?>">
+</p>
+<h2>Arrangörsinformation</h2>
+<p>
+Name of those that hold the event<br>
+<input type="text" name="Society" value="<?php echo $_POST["Society"]?>">
+</p>
+<p>
+The membership cost<br>
+<input type="text" name="MembershipCost" value="<?php echo $_POST["MembershipCost"]?>">
+</p>
+<p>
+URL to external customer service site<br>
+<input type="text" name="CustomerserviceUrl" value="<?php echo $_POST["CustomerserviceUrl"]?>">
+</p>
+<p>
+Email to customer service<br>
+<input type="text" name="CustomerserviceEmail" value="<?php echo $_POST["CustomerserviceEmail"]?>">
+</p>
+<p>
+Email to technical support<br>
+<input type="text" name="TechEmail" value="<?php echo $_POST["TechEmail"]?>">
+</p>
+<p>
+URL to statutes document<br>
+<input type="text" name="StatutesUrl" value="<?php echo $_POST["StatutesUrl"]?>">
+</p>
+<p>
+URL to terms of purchase<br>
+<input type="text" name="TermsUrl" value="<?php echo $_POST["TermsUrl"]?>">
+</p>
+<p>
+Is payson used for the final payment?<br>
+<input type="text" name="AllowPayson" value="<?php echo $_POST["AllowPayson"]?>">
+</p>
+<p>
+Do you require email activation?<br>
+<input type="text" name="RequireEmail" value="<?php echo $_POST["RequireEmail"]?>">
+</p>
+<h2>E-postserverinformation</h2>
+<p>
+Email the notifications are sent from<br>
+<input type="text" name="MailFrom" value="<?php echo $_POST["MailFrom"]?>">
+</p>
+<p>
+SMTP-server<br>
+<input type="text" name="SMTPServer" value="<?php echo $_POST["SMTPServer"]?>">
+</p>
+<p>
+Smtp port<br>
+<input type="text" name="SMTPPort" value="<?php echo $_POST["SMTPPort"]?>">
+</p>
+<p>
+SMTP-user<br>
+<input type="text" name="SMTPUser" value="<?php echo $_POST["SMTPUser"]?>">
+</p>
+<p>
+SMTP-password<br>
+<input type="password" name="SMTPPassword" value="<?php echo $_POST["SMTPPassword"]?>">
+</p>
+<input type="submit" value="Submit">
+</form>
+</body>
+</html>
+<?php
 // Om valideringen lyckats så skapa config.php med config-datan.
 } else {
 	$filedata = "<?php\n";
