@@ -28,13 +28,12 @@ if (!empty($_POST)) {
 	foreach ($questions as $question) {
 		if ($question[2] == "checkbox")
 			if (isset($_POST[$question[1]]))
-				$_POST[$question[1] = true;
+				$_POST[$question[1]] = "true";
 			else
-				$_POST[$question[1] = false;
-	
+				$_POST[$question[1]] = "false";
+
 		if (!isset($_POST[$question[1]]))
 			$validationerror = true;
-			
 	}
 }
 
@@ -95,7 +94,7 @@ foreach($questions as $question) {
 	}
 
 	if ($question[2] == "checkbox")
-		if($_POST[$question[1]])
+		if($_POST[$question[1] == "true"])
 			echo '<input type="checkbox" name="' . $question[1] . '" checked="yes">' . "\n";
 		else
 			echo '<input type="checkbox" name="' . $question[1] . '">' . "\n";
