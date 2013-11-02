@@ -1,5 +1,5 @@
 Grupp;Namn;Datatyp;Standardvärde;Beskrivning
-Installationsinformation;path;text;/;The url path of the root, with a / on the end. Example: &quot;/conmantest/&quot;
+Installationsinformation;path;text;/;The url path of the root, with a / on the end. Example: '/conmantest/'
 Installationsinformation;Url;text;;Url to the website, without a dash to end
 Installationsinformation;ErrorReporting;select;E_ALL,E_WARNING,E_ERROR,E_NOTICE,0;Debugging, error_reporting
 Databasinformation;DbHost;text;localhost;Database host
