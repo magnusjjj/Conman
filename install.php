@@ -25,8 +25,8 @@ fclose($handle);
 // Om post gjorts så validera config-data.
 $validationerror = false;
 if (!empty($_POST)) {
-	forreach($questions as $question)
-		if(!isset($_POST[$question[2]]))
+	foreach ($questions as $question)
+		if (!isset($_POST[$question[1]]))
 			validationerror = true;
 }
 
@@ -45,47 +45,46 @@ Conman - Förstagångsinstallation
 <h1>Conman - Förstagångsinstallation</h1>
 <form name="input" action="install.php" method="post">
 <?php
-
-forreach($questions as $question) {
+foreach($questions as $question) {
 	if ($curgroup != $question[1]) {
-		$curgroup = $question[1]
+		$curgroup = $question[1];
 		echo "<h2>$curgroup</h2>\n";
 	}
 	
 	echo "<p>\n";
-	echo "$question[5]<br>\n";
+	echo $question[4] . "<br>\n";
 	
-	if ($question[3] == "text" || $question[3] == "number")
-		if(isset($_POST[$question[2]]))
-			echo '<input type="text" name="' . $question[2] . '" value="' . $_POST[$question[2]] . '">' . "\n";
+	if ($question[2] == "text" || $question[2] == "number")
+		if(isset($_POST[$question[1]]))
+			echo '<input type="text" name="' . $question[1] . '" value="' . $_POST[$question[1]] . '">' . "\n";
 		else
-			echo '<input type="text" name="' . $question[2] . '" value="' . $question[4] . '">' . "\n";
+			echo '<input type="text" name="' . $question[1] . '" value="' . $question[3] . '">' . "\n";
 
-	if ($question[3] == "password")
-		if(isset($_POST[$question[2]]))
-			echo '<input type="password" name="' . $question[2] . '" value="' . $_POST[$question[2]] . '">' . "\n";
+	if ($question[2] == "password")
+		if(isset($_POST[$question[1]]))
+			echo '<input type="password" name="' . $question[1] . '" value="' . $_POST[$question[1]] . '">' . "\n";
 		else
-			echo '<input type="password" name="' . $question[2] . '" value="' . $question[4] . '">' . "\n";
+			echo '<input type="password" name="' . $question[1] . '" value="' . $question[3] . '">' . "\n";
 
-	if ($question[3] == "select") {
-		$options = str_getcsv($question[4]);
+	if ($question[2] == "select") {
+		$options = str_getcsv($question[3]);
 
 		echo '<select name="' . $question[2] . '">' . "\n";
 	
 		foreach($options as $option)
-			if ($_POST[$question[2] == $option[1])
-				echo "\t" . '<option value="' . $option[1] . '" selected="yes">' . $option[1] . '</option>' . "\n";
+			if ($_POST[$question[1]] == $option)
+				echo "\t" . '<option value="' . $option . '" selected="yes">' . $option . '</option>' . "\n";
 			else
-				echo "\t" . '<option value="' . $option[1] . '">' . $option[1] . '</option>' . "\n";
+				echo "\t" . '<option value="' . $option . '">' . $option . '</option>' . "\n";
 	}
 
-	if ($question[3] == "checkbox")
-		if(isset($_POST[$question[2]]))
-			echo '<input type="checkbox" name="' . $question[2] . '" checked="yes">' . "\n";
+	if ($question[2] == "checkbox")
+		if(isset($_POST[$question[1]]))
+			echo '<input type="checkbox" name="' . $question[1] . '" checked="yes">' . "\n";
 		else
-			echo '<input type="checkbox" name="' . $question[2] . '">' . "\n";
+			echo '<input type="checkbox" name="' . $question[1] . '">' . "\n";
 			
-	echo "</p>";
+	echo "</p>\n";
 }
 ?>
 <input type="submit" value="Submit">
