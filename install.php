@@ -27,7 +27,7 @@ $validationerror = false;
 if (!empty($_POST)) {
 	foreach ($questions as $question)
 		if (!isset($_POST[$question[1]]))
-			validationerror = true;
+			$validationerror = true;
 }
 
 // Om valideringen misslyckats, eller config-data saknas, så fråga efter config-data.
@@ -46,8 +46,8 @@ Conman - Förstagångsinstallation
 <form name="input" action="install.php" method="post">
 <?php
 foreach($questions as $question) {
-	if ($curgroup != $question[1]) {
-		$curgroup = $question[1];
+	if ($curgroup != $question[0]) {
+		$curgroup = $question[0];
 		echo "<h2>$curgroup</h2>\n";
 	}
 	
@@ -59,6 +59,12 @@ foreach($questions as $question) {
 			echo '<input type="text" name="' . $question[1] . '" value="' . $_POST[$question[1]] . '">' . "\n";
 		else
 			echo '<input type="text" name="' . $question[1] . '" value="' . $question[3] . '">' . "\n";
+
+	if ($question[2] == "date")
+		if(isset($_POST[$question[1]]))
+			echo '<input type="date" name="' . $question[1] . '" value="' . $_POST[$question[1]] . '">' . "\n";
+		else
+			echo '<input type="date" name="' . $question[1] . '" value="' . $question[3] . '">' . "\n";
 
 	if ($question[2] == "password")
 		if(isset($_POST[$question[1]]))
@@ -76,6 +82,8 @@ foreach($questions as $question) {
 				echo "\t" . '<option value="' . $option . '" selected="yes">' . $option . '</option>' . "\n";
 			else
 				echo "\t" . '<option value="' . $option . '">' . $option . '</option>' . "\n";
+				
+		echo '</select>' . "\n";
 	}
 
 	if ($question[2] == "checkbox")
