@@ -32,7 +32,7 @@ if (!empty($_POST)) {
 			else
 				$_POST[$question[1]] = "false";
 
-		if (!isset($_POST[$question[1]]))
+		if (empty($_POST[$question[1]]))
 			$validationerror = true;
 	}
 }
