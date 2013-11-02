@@ -94,7 +94,7 @@ foreach($questions as $question) {
 	}
 
 	if ($question[2] == "checkbox")
-		if($_POST[$question[1] == "true"])
+		if($_POST[$question[1]] == "true")
 			echo '<input type="checkbox" name="' . $question[1] . '" checked="yes">' . "\n";
 		else
 			echo '<input type="checkbox" name="' . $question[1] . '">' . "\n";
@@ -127,7 +127,7 @@ foreach($questions as $question) {
 			$filedata .= "\n";
 		}
 		
-		if ($question[2] == "number" || $question[2] == "checkbox")
+		if ($question[2] == "number" || $question[2] == "checkbox" || $question[1] == "ErrorReporting")
 			$filedata .= "\t\tstatic \$" . $question[1] . " = " . $_POST[$question[1]] . ";\n";
 		else
 			$filedata .= "\t\tstatic \$" . $question[1] . " = \"" . $_POST[$question[1]] . "\";\n";
