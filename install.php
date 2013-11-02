@@ -75,7 +75,7 @@ foreach($questions as $question) {
 	if ($question[2] == "select") {
 		$options = str_getcsv($question[3]);
 
-		echo '<select name="' . $question[2] . '">' . "\n";
+		echo '<select name="' . $question[1] . '">' . "\n";
 	
 		foreach($options as $option)
 			if ($_POST[$question[1]] == $option)
