@@ -15,7 +15,7 @@ if (file_exists("config.php"))
 	include("config.php");
 else {
 	include("install.php");
-	die();
+	include("config.php");
 }
 
 include("includes/controller.php");

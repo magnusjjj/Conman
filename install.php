@@ -50,7 +50,7 @@ Conman - Förstagångsinstallation
 </head>
 <body>
 <h1>Conman - Förstagångsinstallation</h1>
-<form name="input" action="install.php" method="post">
+<form name="input" action="" method="post">
 <?php
 foreach($questions as $question) {
 	if ($curgroup != $question[0]) {
@@ -107,6 +107,8 @@ foreach($questions as $question) {
 </body>
 </html>
 <?php
+die();
+
 // Om valideringen lyckats så skapa config.php med config-datan.
 } else {
 	$filedata = "<?php\n";
