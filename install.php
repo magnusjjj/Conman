@@ -133,6 +133,8 @@ die();
 			$filedata .= "\t\tstatic \$" . $question[1] . " = " . $_POST[$question[1]] . ";\n";
 		else
 			$filedata .= "\t\tstatic \$" . $question[1] . " = \"" . $_POST[$question[1]] . "\";\n";
+			
+		filedata .= " // " . $question[5] . "\n";
 	}
 
 	$filedata .= "\t}\n";

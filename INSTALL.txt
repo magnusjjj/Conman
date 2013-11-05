@@ -1,3 +1,5 @@
+Conman INSTALL.txt
+
 Systemkrav:
 Apache
 PHP 5.3.0 eller högre
