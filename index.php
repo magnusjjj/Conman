@@ -13,10 +13,8 @@ Auth::initSession();
 // Inställningarna för Conman
 if (file_exists("config.php"))
 	include("config.php");
-else {
+else
 	include("install.php");
-	include("config.php");
-}
 
 include("includes/controller.php");
 include("includes/error.php");

@@ -9,6 +9,14 @@ Apache-krav:
 LoadModule rewrite_module
 AllowOverride FileInfo
 
+PHP-krav:
+mysql
+mysqli
+
+MySQL-krav:
+En tom databas.
+En användare med access till databasen.
+
 Vissa konfigurationer kräver förändring av .htaccess, exempelvis Loopia.
 
 Installationsanvisningar:
