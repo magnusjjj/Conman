@@ -151,9 +151,9 @@ include("config.php");
 $mysqli = new mysqli(Settings::$DbHost, Settings::$DbUser, Settings::$DbPassword, Settings::$DbName);
 
 if ($mysqli->connect_errno) {
-    printf("Databasanslutningen misslyckades: %s\n\n", $mysqli->connect_error);
+	printf("Databasanslutningen misslyckades: %s\n\n", $mysqli->connect_error);
 	printf("Redigera config.php manuellt och rätta till inställningarna!\nKör efter det install.sql manuellt!");
-    die();
+	die();
 }
 
 if (!$mysqli->multi_query(file_get_contents("install.sql"))) {
