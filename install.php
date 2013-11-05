@@ -152,7 +152,7 @@ $mysqli = new mysqli(Settings::$DbHost, Settings::$DbUser, Settings::$DbPassword
 
 if ($mysqli->connect_errno) {
     printf("Databasanslutningen misslyckades: %s\n\n", $mysqli->connect_error);
-	printf("Redigera config.php manuellt och rätta till inställningarna!\n");
+	printf("Redigera config.php manuellt och rätta till inställningarna!\nKör efter det install.sql manuellt!");
     die();
 }
 
