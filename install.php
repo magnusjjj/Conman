@@ -130,11 +130,11 @@ die();
 		}
 		
 		if ($question[2] == "number" || $question[2] == "checkbox" || $question[1] == "ErrorReporting")
-			$filedata .= "\t\tstatic \$" . $question[1] . " = " . $_POST[$question[1]] . ";\n";
+			$filedata .= "\t\tstatic \$" . $question[1] . " = " . $_POST[$question[1]] . ';';
 		else
-			$filedata .= "\t\tstatic \$" . $question[1] . " = \"" . $_POST[$question[1]] . "\";\n";
+			$filedata .= "\t\tstatic \$" . $question[1] . " = \"" . $_POST[$question[1]] . '";';
 			
-		filedata .= " // " . $question[5] . "\n";
+		$filedata .= " // " . $question[5] . "\n";
 	}
 
 	$filedata .= "\t}\n";
