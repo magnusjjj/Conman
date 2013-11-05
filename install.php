@@ -15,7 +15,7 @@ if (!file_exists("install.csv"))
 // Läs in install.csv
 $questions = array();
 $handle = fopen("install.csv", "r");
-fgetcsv($handle, null, ';'); // Ignorera första raden i filen, som bara innehåller syntaxbeskrivning.
+fgetcsv($handle); // Ignorera första raden i filen, som bara innehåller syntaxbeskrivning.
 
 while ($row = fgetcsv($handle, null, ';'))
 	$questions[] = $row;
@@ -80,7 +80,7 @@ foreach($questions as $question) {
 			echo '<input type="password" name="' . $question[1] . '" value="' . $question[3] . '">' . "\n";
 
 	if ($question[2] == "select") {
-		$options = str_getcsv($question[3]);
+		$options = str_getcsv($question[3], ";");
 
 		echo '<select name="' . $question[1] . '">' . "\n";
 	

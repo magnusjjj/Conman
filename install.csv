@@ -1,26 +1,26 @@
-Grupp;Namn;Datatyp;Standardvärde;Beskrivning
-Installationsinformation;path;text;/;The url path of the root, with a / on the end. Example: '/conmantest/'
-Installationsinformation;Url;text;;Url to the website, without a dash to end
-Installationsinformation;ErrorReporting;select;E_ALL,E_WARNING,E_ERROR,E_NOTICE,0;Debugging, error_reporting
-Databasinformation;DbHost;text;localhost;Database host
-Databasinformation;DbUser;text;;Database user
-Databasinformation;DbPassword;password;;Database password
-Databasinformation;DbName;text;Conman;Database name
-Arrangemangsinformation;EventName;text;;Name of the event
-Arrangemangsinformation;ConEnds;date;;The date the event ends. Used to calculate when a member needs to renew their membership
-Arrangemangsinformation;BarKey;text;;Key for encoding the barcode
-Arrangemangsinformation;Template;text;newer;Template used :)
-Arrangörsinformation;Society;text;;Name of those that hold the event
-Arrangörsinformation;MembershipCost;number;;The membership cost
-Arrangörsinformation;CustomerserviceUrl;text;;URL to external customer service site
-Arrangörsinformation;CustomerserviceEmail;text;;Email to customer service
-Arrangörsinformation;TechEmail;text;;Email to technical support
-Arrangörsinformation;StatutesUrl;text;;URL to statutes document
-Arrangörsinformation;TermsUrl;text;;URL to terms of purchase
-Arrangörsinformation;AllowPayson;checkbox;;Is payson used for the final payment?
-Arrangörsinformation;RequireEmail;checkbox;;Do you require email activation?
-E-postserverinformation;MailFrom;text;;Email the notifications are sent from
-E-postserverinformation;SMTPServer;text;;SMTP-server
-E-postserverinformation;SMTPPort;number;25;Smtp port
-E-postserverinformation;SMTPUser;text;;SMTP-user
-E-postserverinformation;SMTPPassword;password;;SMTP-password
+Grupp,Namn,Datatyp,Standardvärde,Beskrivning
+Installationsinformation,path,text,/,"The url path of the root, with a / on the end. Example: '/conmantest/'"
+Installationsinformation,Url,text,,"Url to the website, without a dash to end"
+Installationsinformation,ErrorReporting,select,E_ALL;E_WARNING;E_ERROR;E_NOTICE;0,"Debugging, error_reporting"
+Databasinformation,DbHost,text,localhost,"Database host"
+Databasinformation,DbUser,text,,"Database user"
+Databasinformation,DbPassword,password,,"Database password"
+Databasinformation,DbName,text,Conman,"Database name"
+Arrangemangsinformation,EventName,text,,"Name of the event"
+Arrangemangsinformation,ConEnds,date,,"The date the event ends. Used to calculate when a member needs to renew their membership"
+Arrangemangsinformation,BarKey,text,,"Key for encoding the barcode"
+Arrangemangsinformation,Template,text,newer,"Template used :)"
+Arrangörsinformation,Society,text,,"Name of those that hold the event"
+Arrangörsinformation,MembershipCost,number,,"The membership cost"
+Arrangörsinformation,CustomerserviceUrl,text,,"URL to external customer service site"
+Arrangörsinformation,CustomerserviceEmail,text,,"Email to customer service"
+Arrangörsinformation,TechEmail,text,,"Email to technical support"
+Arrangörsinformation,StatutesUrl,text,,"URL to statutes document"
+Arrangörsinformation,TermsUrl,text,,"URL to terms of purchase"
+Arrangörsinformation,AllowPayson,checkbox,,"Is payson used for the final payment?"
+Arrangörsinformation,RequireEmail,checkbox,,"Do you require email activation?"
+E-postserverinformation,MailFrom,text,,"Email the notifications are sent from"
+E-postserverinformation,SMTPServer,text,,"SMTP-server"
+E-postserverinformation,SMTPPort,number,25,"Smtp port"
+E-postserverinformation,SMTPUser,text,,"SMTP-user"
+E-postserverinformation,SMTPPassword,password,,"SMTP-password"
