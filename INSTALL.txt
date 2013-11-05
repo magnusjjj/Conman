@@ -3,6 +3,12 @@ Apache
 PHP 5.3.0 eller högre
 MySQL
 
+Apache-krav:
+LoadModule rewrite_module
+AllowOverride FileInfo
+
+Vissa konfigurationer kräver förändring av .htaccess, exempelvis Loopia.
+
 Installationsanvisningar:
 1. Lägg filerna på din webbserver.
 2. Navigera till din webbservers URL i din webbläsare.
