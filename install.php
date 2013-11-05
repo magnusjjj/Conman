@@ -17,7 +17,7 @@ $questions = array();
 $handle = fopen("install.csv", "r");
 fgetcsv($handle); // Ignorera första raden i filen, som bara innehåller syntaxbeskrivning.
 
-while ($row = fgetcsv($handle, null, ';'))
+while ($row = fgetcsv($handle))
 	$questions[] = $row;
 
 fclose($handle);
