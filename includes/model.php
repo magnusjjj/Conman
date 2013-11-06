@@ -9,7 +9,7 @@ abstract class Model {
 	
 	public static function getModel($name)
 	{
-		include_once(Settings::getRoot() . '/models/' . strtolower($name) . '_model.php');
+		include_once(__DIR__ . '/../models/' . strtolower($name) . '_model.php');
 		$modelname = ucfirst(strtolower($name)) . 'Model';
 		return new $modelname();
 	}

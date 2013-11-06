@@ -4,11 +4,6 @@ class Database {
 
 	private function __construct()
 	{
-		if(!mysql_connect(Settings::$DbHost, Settings::$DbUser, Settings::$DbPassword))
-			ErrorHelper::error('Fel! Kunde inte kontakta databasen!');
-		if(!mysql_select_db(Settings::$DbName))
-			ErrorHelper::error('Fel! Kunde inte välja databasen: ' . Settings::$DbName);
-		mysql_query("SET NAMES utf8;");
 	}
 	
 	public static function getInstance()
@@ -19,13 +14,6 @@ class Database {
 		return self::$_instance;
 	}
 	
-	private function _safe($var)
-	{
-        if(is_array($var))
-            var_dump(debug_backtrace());
-		return mysql_real_escape_string($var);
-    }
-	
 	public function insertid()
 	{
 		return mysql_insert_id();
@@ -34,7 +22,16 @@ class Database {
 	// Takes infinite parameters
 	public function query()
 	{
+		global $wpdb;
 		$arguments = func_get_args();
+		if(count($arguments) > 1){
+			$prepared = call_user_func_array(array($wpdb, 'prepare'), $arguments); // It takes the same type of parameters as the old Conman DB function, woo!
+			return $wpdb->get_results($prepared, ARRAY_A); 
+		} else {
+			return $wpdb->get_results($arguments[0], ARRAY_A);
+		}
+		
+/*		$arguments = func_get_args();
 		if (count($arguments > 1)) {
 			$nosafe = array_shift($arguments); // Remove the first part of the array
 			foreach($arguments as &$v)
@@ -63,5 +60,6 @@ class Database {
 			
 			return $resultarr;
 		}
+		*/
 	}
 }

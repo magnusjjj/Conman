@@ -1,16 +1,6 @@
 <?php
 	class Settings
 	{
-		static $path = "/"; // The url path of the root, with a / on the end. Example: "/conmantest/"
-		static function getRoot(){
-			return dirname(__FILE__);
-		}
-		static $DbHost = "localhost"; // Database host
-		static $DbUser = ""; // Database user
-		static $DbPassword = ""; // Database password
-		static $DbName = ""; // Database name
-		static $Url = "http://conman.nu"; // Url to the website, without a dash to end
-
 		static $PayAPI = array('Name' => 'Payson',
 			'Test' => true,
 			'_application_email' => 'yourpaysonemail@mail.com');
@@ -18,12 +8,6 @@
 		static $MembershipCost = 50; // The membership cost
 
 		static $ConEnds = "2012-01-08"; // The date the event ends. Used to calculate when a member needs to renew their membership.
-
-		static $MailFrom = 'noreply@conman.nu'; // Email the notifications are sent from
-		static $SMTPServer = 'smtp.gmail.com'; // SMTP-server
-		static $SMTPPort = 25; // Smtp port
-		static $SMTPUser = 'noreply@conman.nu'; // SMTP-user
-		static $SMTPPassword = ''; // SMTP-password
 
 		static $ErrorReporting = E_ALL; // Debugging, error_reporting
 

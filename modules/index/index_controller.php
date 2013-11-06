@@ -45,12 +45,13 @@ class IndexController extends Controller
 	{
 		$verificationcode = Model::getModel('verificationcode');
 		$thecode = $verificationcode->putCode($pnr);
-		$mailer = CFactory::getMailer();
 		$this->_set('email', $the_member[0]['eMail']);
-		$mailer->AddAddress($the_member[0]['eMail']);
-		$mailer->Subject = 'Registering till ' . Settings::$EventName;
-		$mailer->MsgHTML("<p>Hej!</p><p>Nu har du snart en användare i ConMan och kan köpa din biljett till " . Settings::$EventName . ". <a href=\"".Router::url("validatecode/$pnr/$thecode", true)."\">Klicka här</a> för att verifiera din emailadress, välja användarnamn och fortsätta i registreringsprocessen.</p><p>Med vänliga hälsningar,<br />" . Settings::$Society . " och ConMan</p>");		
-		if (!$mailer->Send()) {
+        $success = wp_mail($the_member[0]['eMail'],
+            'Registering till ' . Settings::$EventName,
+            "<p>Hej!</p><p>Nu har du snart en användare i ConMan och kan köpa din biljett till " . Settings::$EventName . ". <a href=\"".Router::url("validatecode/$pnr/$thecode", true)."\">Klicka här</a> för att verifiera din emailadress, välja användarnamn och fortsätta i registreringsprocessen.</p><p>Med vänliga hälsningar,<br />" . Settings::$Society . " och ConMan</p>"
+        );
+
+		if (!$success) {
 			die("Kunde inte skicka");
 		}
 		return $thecode;
@@ -64,13 +65,13 @@ class IndexController extends Controller
 		
 		$user = Model::getModel('user'); //Samuel added, to present username	
 		$users_member = $user->getByMemberID($id); //Samuel added stuff, to present username
-		
-		$mailer = CFactory::getMailer();
+
 		$this->_set('email', $the_member[0]['eMail']);
-		$mailer->AddAddress($the_member[0]['eMail']);
-		$mailer->Subject = 'Lösenordsåterställning till ' . Settings::$EventName;
-		$mailer->MsgHTML("Hej " . $users_member[0]['username'] . "!<br /><a href=\"".Router::url("passwordreset/$id/$thecode", true)."\">Klicka här för att återställa ditt lösenord</a>");
-		if (!$mailer->Send()) {
+        $success = wp_mail($the_member[0]['eMail'],
+            'Lösenordsåterställning till ' . Settings::$EventName,
+            "Hej " . $users_member[0]['username'] . "!<br /><a href=\"".Router::url("passwordreset/$id/$thecode", true)."\">Klicka här för att återställa ditt lösenord</a>"
+        );
+		if (!$success) {
 			die("Kunde inte skicka");
 		}
 	}

@@ -1,12 +1,12 @@
 <?php
-abstract class Controller 
+class Controller 
 {
 	public $view; // The view file name
 	public $name;
 	
 	private $_vars = array();
 	
-	public function __construct() // Måste existera
+	public function __construct() // MÃ¥ste existera
 	{
 	
 	}
@@ -26,7 +26,8 @@ abstract class Controller
 		foreach ($this->_vars as $key => $var) {
 			$$key = $var;
 		}
-		if (file_exists('modules/'.$this->name.'/views/'.$this->view))
-			include('modules/'.$this->name.'/views/'.$this->view);
+		
+		if (file_exists(__DIR__ .'/..//modules/'.$this->name.'/views/'.$this->view))
+			include(__DIR__ .'/..//modules/'.$this->name.'/views/'.$this->view);
 	}
 }
