@@ -17,17 +17,17 @@ class PayapisaveModel extends Model {
 	public function save($in)
 	{
 		$this->_db->query("INSERT INTO payapi_save (user_id, order_id, extref_id, extref_other, originalresponse, status, `type`)
-		VALUES ('%s','%s','%s','%s','%s','%s', '%s')",
+		VALUES (%s,%s,%s,%s,%s,%s, %s)",
 		$in['user_id'], $in['order_id'], $in['extref_id'], $in['extref_other'], $in['originalresponse'], $in['status'], $in['type']);
 		return $this->_db->insertid();
 	}
 
 	public function updateWithOrderId($payapi_id, $order_id){
-		$this->_db->query("UPDATE payapi_save SET order_id = '%s' WHERE id = '%s' LIMIT 1", $order_id, $payapi_id);
+		$this->_db->query("UPDATE payapi_save SET order_id = %s WHERE id = %s LIMIT 1", $order_id, $payapi_id);
 	}
 
 	public function getByExternalReference($extref, $type = 'INIT')
 	{
-		return $this->_db->query("SELECT * FROM payapi_save WHERE order_id != 0 AND extref_other = '%s' AND `type` = '%s'", $extref, $type);
+		return $this->_db->query("SELECT * FROM payapi_save WHERE order_id != 0 AND extref_other = %s AND `type` = %s", $extref, $type);
 	}
 }

@@ -13,7 +13,7 @@ class OrdersalternativesModel extends Model {
 	{
 		return $this->_db->query("SELECT orders_alternatives.*, SUM(IF(orders.status = 'COMPLETED', orders_values.ammount,0)) AS ammount_compare,
 		(SELECT SUM(orders_values.ammount) FROM orders_values INNER JOIN orders ON orders.id = orders_values.order_id AND orders.status = 'COMPLETED'
-		WHERE orders.user_id = '%s' AND orders_values.order_alternative_id = orders_alternatives.id) AS users_count
+		WHERE orders.user_id = %s AND orders_values.order_alternative_id = orders_alternatives.id) AS users_count
 		FROM orders_alternatives
 		LEFT OUTER JOIN orders_values ON orders_values.order_alternative_id = orders_alternatives.id
 		LEFT OUTER JOIN orders ON orders.id = orders_values.order_id AND orders.status = 'COMPLETED'
