@@ -17,9 +17,15 @@ MySQL-krav:
 En tom databas.
 En användare med access till databasen.
 
-Vissa konfigurationer kräver förändring av .htaccess, exempelvis Loopia.
-
 Installationsanvisningar:
 1. Lägg filerna på din webbserver.
 2. Navigera till din webbservers URL i din webbläsare.
 3. Följ instruktionerna på skärmen.
+
+.htaccess-exempel (skapas under installation):
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
+
+Vissa konfigurationer kräver förändring av .htaccess, exempelvis Loopia.

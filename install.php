@@ -145,6 +145,16 @@ $filedata .= "\t}\n";
 
 file_put_contents("config.php", $filedata);
 
+// Skapa .htaccess om den inte redan existerar.
+if (!file_exists(".htaccess") {
+	$filedata = "RewriteEngine On\n";
+	$filedata .= 'RewriteCond %{REQUEST_FILENAME} !-f' . "\n";
+	$filedata .= 'RewriteCond %{REQUEST_FILENAME} !-d' . "\n";
+	$filedata .= 'RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]' . "\n";
+	
+	file_put_contents(".htaccess", $filedata);
+}
+
 // Testa att ansluta till databasen och populera den.
 include("config.php");
 
