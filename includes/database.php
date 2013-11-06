@@ -38,7 +38,7 @@ class Database {
 		if (count($arguments > 1)) {
 			$nosafe = array_shift($arguments); // Remove the first part of the array
 			foreach($arguments as &$v)
-				$v = $this->_safe($v);
+				$v = "'" . $this->_safe($v) . "'";
 			array_unshift($arguments, $nosafe);
 			$result = mysql_query(call_user_func_array('sprintf', $arguments));
 			$resultarr = array();

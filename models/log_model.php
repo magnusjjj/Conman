@@ -21,17 +21,17 @@ class LogModel extends Model {
 		{
 			$vars = "";
 		}
-		$this->_db->query("INSERT INTO log (user_id, event, content) values('%s', '%s', '%s');", Auth::user(), $event, $content . $vars);
+		$this->_db->query("INSERT INTO log (user_id, event, content) values(%s, %s, %s);", Auth::user(), $event, $content . $vars);
 	}
 	
 	public function logTransfer($from_user_id, $to_user_id, $from_order_id, $to_order_id, $alternative_id, $amount)
 	{
 		if ($this->transfer_id === null)
 		{
-			$this->_db->query("INSERT INTO `log_transfer`(`from_user_id`, `to_user_id`) VALUES ('{$from_user_id}', '{$to_user_id}')");
+			$this->_db->query("INSERT INTO `log_transfer`(`from_user_id`, `to_user_id`) VALUES (%s,%s)", $from_user_id, $to_user_id);
 			$this->transfer_id = $this->_db->insertid();
 		}
-		$this->_db->query("INSERT INTO `log_transfer_values`(`log_transfer_id`, `from_order_id`, `to_order_id`, `alternative_id`, `ammount`) VALUES ('{$this->transfer_id}', '{$from_order_id}', '{$to_order_id}', '{$alternative_id}', '{$amount}')");
+		$this->_db->query("INSERT INTO `log_transfer_values`(`log_transfer_id`, `from_order_id`, `to_order_id`, `alternative_id`, `ammount`) VALUES (%s, %s, %s, %s, %s)", $this->transfer_id, $from_order_id, $to_order_id, $alternative_id, $amount));
 		return $this->transfer_id;
 	}
 
