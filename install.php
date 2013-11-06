@@ -146,7 +146,7 @@ $filedata .= "\t}\n";
 file_put_contents("config.php", $filedata);
 
 // Skapa .htaccess om den inte redan existerar.
-if (!file_exists(".htaccess") {
+if (!file_exists(".htaccess")) {
 	$filedata = "RewriteEngine On\n";
 	$filedata .= 'RewriteCond %{REQUEST_FILENAME} !-f' . "\n";
 	$filedata .= 'RewriteCond %{REQUEST_FILENAME} !-d' . "\n";
